@@ -29,14 +29,14 @@ public class LoginController {
     private LoginService loginService;
 
     //admin Login
-    @GetMapping("/Adminlogin")
+    @PostMapping("/Adminlogin")
 	public ResponseEntity<Object> checkAdminExistence(@RequestPart AdminLogin adminLogin,@RequestPart String key) throws Exception{
         String response = adminService.adminLogin(adminLogin, key);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
     //forgot password and OTP generation
-    @GetMapping("/ForgotPassword/{email}")
+    @PostMapping("/ForgotPassword")
     public String ForgotPassword(@PathVariable String email) throws Exception{
         String access=loginService.forgotPassword(email);
         return access;

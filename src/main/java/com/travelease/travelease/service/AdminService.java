@@ -49,14 +49,9 @@ public class AdminService {
         if("1".equals(result)){
             throw new ResourceNotFoundException("User Aleredy Exist");
         }else{  
-            String password = admin.getAdminPassword();
-            String encodePassword= encodePassword(password);
-            admin.setAdminPassword(encodePassword);          
-            LocalDateTime currentTime = LocalDateTime.now();
-            admin.setAdminDateRegistered(currentTime);
-            admin.setAdminLastLogin(null);
+            admin.setAdminPassword(encodePassword(admin.getAdminPassword()));          
+            admin.setAdminDateRegistered(LocalDateTime.now());
             admin.setAdminIsActive(true);
-            System.out.println(admin);
             Admin adminObject=adminRepository.save(admin);
             Role roleObject=roleRepository.findByAdminRoleName(roleName);
             UserRoleAssociation URAssociation=new UserRoleAssociation();
@@ -77,8 +72,7 @@ public class AdminService {
             admin.setAdminPhone(adminDetails.getAdminPhone());;
             admin.setAdminFirstName(adminDetails.getAdminFirstName());
             admin.setAdminLastName(adminDetails.getAdminLastName());
-            LocalDateTime currentTime = LocalDateTime.now();
-            admin.setAdminDateRegistered(currentTime);
+            admin.setAdminDateRegistered(LocalDateTime.now());
             adminRepository.save(admin);
             return "Updated";
         }	
@@ -110,10 +104,9 @@ public class AdminService {
             loginuser=adminLoginRepository.findByAdminEmail((String)newLogin.getAdminEmail());
         }       
         if(loginuser!=null ){
-            System.out.println(newLogin.getAdminPassword()+" &&&& "+loginuser.getAdminPassword()+" 888 "+loginuser);
             if(verifyPassword(newLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
-                LocalDateTime currentTime = LocalDateTime.now();
-                loginuser.setTimestamp(currentTime);
+                loginuser.setTimestamp(LocalDateTime.now());
+                admin.setAdminLastLogin(LocalDateTime.now());
                 return admin.getAdminFirstName();
             }else{
                 throw new Exception("Password does not match");
@@ -122,8 +115,8 @@ public class AdminService {
         }else if(loginuser==null && admin!=null){
             if(verifyPassword(newLogin.getAdminPassword(), admin.getAdminPassword())){
                 newLogin.setAdminPassword(encodePassword(newLogin.getAdminPassword()));
-                LocalDateTime currentTime = LocalDateTime.now();
-                newLogin.setTimestamp(currentTime);
+                newLogin.setTimestamp(LocalDateTime.now());
+                admin.setAdminLastLogin(LocalDateTime.now());
                 entityManager.persist(newLogin);
                 return admin.getAdminFirstName();
             }else{
@@ -172,5 +165,4 @@ public class AdminService {
             throw new Exception(e);
         }
     }  
-
 }
