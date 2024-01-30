@@ -93,18 +93,21 @@ public class AdminService {
     private AdminLoginRepository adminLoginRepository;
     //Admin Login
     @Transactional
-    public String adminLogin(AdminLogin newLogin,String key) throws Exception{
+    public String adminLogin(String email,BigInteger phone,String password,String key) throws Exception{
         Admin admin=new Admin();
         AdminLogin loginuser=new AdminLogin();
+        AdminLogin newLogin=new AdminLogin();
         if("phone".equals(key)){
-            admin=adminRepository.findByAdminPhone((BigInteger)newLogin.getAdminPhone());
-            loginuser=adminLoginRepository.findByAdminPhone((BigInteger)newLogin.getAdminPhone());
+            admin=adminRepository.findByAdminPhone(phone);
+            loginuser=adminLoginRepository.findByAdminPhone(phone);
+            newLogin.setAdminPhone(phone);
         }else if("email".equals(key)){
-            admin=adminRepository.findByAdminEmail((String)newLogin.getAdminEmail());
-            loginuser=adminLoginRepository.findByAdminEmail((String)newLogin.getAdminEmail());
+            admin=adminRepository.findByAdminEmail(email);
+            loginuser=adminLoginRepository.findByAdminEmail(email);
+            newLogin.setAdminEmail(email);
         }       
         if(loginuser!=null ){
-            if(verifyPassword(newLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
+            if(verifyPassword(password, loginuser.getAdminPassword())){ 
                 loginuser.setTimestamp(LocalDateTime.now());
                 admin.setAdminLastLogin(LocalDateTime.now());
                 return admin.getAdminFirstName();
@@ -113,8 +116,8 @@ public class AdminService {
             }
 
         }else if(loginuser==null && admin!=null){
-            if(verifyPassword(newLogin.getAdminPassword(), admin.getAdminPassword())){
-                newLogin.setAdminPassword(encodePassword(newLogin.getAdminPassword()));
+            if(verifyPassword(password, admin.getAdminPassword())){
+                newLogin.setAdminPassword(encodePassword(password));
                 newLogin.setTimestamp(LocalDateTime.now());
                 admin.setAdminLastLogin(LocalDateTime.now());
                 entityManager.persist(newLogin);
