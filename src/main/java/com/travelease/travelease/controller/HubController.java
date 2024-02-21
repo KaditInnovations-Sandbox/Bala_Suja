@@ -8,12 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
@@ -46,16 +44,24 @@ public class HubController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //get all vehicle details
-    @GetMapping("/Vehicle")
-    public List<Vehicle> getAllVehicle(){
-        return hubService.getAllVehicle();
+    //get all active vehicle details
+    @GetMapping("/ActiveVehicle")
+    public List<Vehicle> getAllActiveVehicle(){
+        return hubService.getAllActiveVehicle();
     }
+
+    //get all inactive vehicle details 
+    @GetMapping("/InactiveVehicle")
+    public List<Vehicle> getAllInactiveVehicle(){
+        return hubService.getAllInactiveVehicle();
+    }
+
 
     //get vehicle by id
     @GetMapping("/VehicleByID")
     public ResponseEntity<Vehicle> getEmployeeById(@RequestBody Long id) {
-		Vehicle vehicle = vehicleRepository.findById(id)
+		@SuppressWarnings("null")
+        Vehicle vehicle = vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("vehicle not exist with id :" + id));
 		return ResponseEntity.ok(vehicle);
 	}
@@ -64,6 +70,12 @@ public class HubController {
 	@PutMapping("/Vehicle")
 	public ResponseEntity<String> updateVehicle(@RequestBody Vehicle vehicleDetails) throws Exception{
 		String response=hubService.updateVehicle(vehicleDetails);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+    @PutMapping("/BindVehicle")
+	public ResponseEntity<String> BindVehicle(@RequestBody String vehicleNumber) throws Exception{
+		String response=hubService.bindVehicle(vehicleNumber);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
