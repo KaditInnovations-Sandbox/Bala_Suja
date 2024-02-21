@@ -4,6 +4,9 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +38,7 @@ public class Admin {
     private Long AdminId;
     @Column(name = "AdminName")
     private String AdminName;
+    @JsonIgnore
     @Column(name = "AdminPassword")
     private String AdminPassword;
     @Column(name = "AdminEmail")

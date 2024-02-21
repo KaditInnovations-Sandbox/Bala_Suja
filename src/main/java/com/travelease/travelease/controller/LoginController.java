@@ -1,21 +1,15 @@
 package com.travelease.travelease.controller;
 
-import java.math.BigInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 import com.travelease.travelease.service.AdminService;
 import com.travelease.travelease.service.LoginService;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,17 +25,18 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    //admin Login
-    @PostMapping("/Adminlogin")
-	public ResponseEntity<Object> checkAdminExistence(
-        @RequestParam("adminLogin.admin_email") String adminEmail,
-        @RequestParam("adminLogin.admin_phone") BigInteger adminPhone,
-        @RequestParam("adminLogin.admin_password") String adminPassword,
-        @RequestParam("key") String key,
-        @RequestParam(value = "file", required = false) MultipartFile file)
-         throws Exception{
-        String response = adminService.adminLogin(adminEmail,adminPhone,adminPassword, key);
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+    //admin Login via email
+    @PostMapping("/AdminEmaillogin")
+	public ResponseEntity<Object> checkAdminEmailExistence(@RequestBody AdminLogin adminLogin) throws Exception{
+        String response=adminService.adminEmailLogin(adminLogin);
+        return ResponseEntity.status(HttpStatus.OK).body(response);   
+	}
+
+    //admin Login via phone
+    @PostMapping("/AdminPhonelogin")
+	public ResponseEntity<Object> checkAdminPhoneExistence(@RequestBody AdminLogin adminLogin) throws Exception{
+        String response=adminService.adminPhoneLogin(adminLogin);
+        return ResponseEntity.status(HttpStatus.OK).body(response);   
 	}
 
     //forgot password and OTP generationl

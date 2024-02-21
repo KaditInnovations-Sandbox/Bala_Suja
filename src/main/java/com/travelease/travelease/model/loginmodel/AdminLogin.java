@@ -3,11 +3,15 @@ package com.travelease.travelease.model.loginmodel;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+import com.travelease.travelease.model.adminmodel.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,8 +41,8 @@ public class AdminLogin {
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
-    // @ManyToOne
-    // @JoinColumn(name = "roleAccess", nullable = false)
-    // private Role role;
+    @ManyToOne
+    @JoinColumn(name = "roleAccess", nullable = false)
+    private Role role;
     
 }

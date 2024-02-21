@@ -1,6 +1,7 @@
 package com.travelease.travelease.model.companymodel;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,5 +31,13 @@ public class company {
     private BigInteger companyPhone;
     @Column(name = "companypoc")
     private String companyPoc;
+    @Column(name = "companyactive")
+    private Boolean active;
+    @Column(name = "companydateregistered")
+    private LocalDateTime CompanyDateRegistered;
+    @Column(name = "companylastlogin")
+    private LocalDateTime CompanyLastLogin;
+    @Column(name = "companyisactive")
+    private Boolean CompanyIsActive;
 
 }

@@ -1,10 +1,10 @@
 package com.travelease.travelease.service;
 
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,14 @@ import org.springframework.stereotype.Service;
 import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
 import com.travelease.travelease.repository.RoleRepository;
+import com.travelease.travelease.repository.UserRoleAssociationRepository;
+import com.travelease.travelease.util.JwtUtils;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import com.travelease.travelease.dto.AdminDriverDto;
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.Role;
@@ -32,6 +36,17 @@ public class AdminService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private UserRoleAssociationRepository userRoleAssociationRepository;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private AdminLoginRepository adminLoginRepository;
+
+
 
     public List<Admin> getAllAdmin(){
         return adminRepository.findAll();
@@ -89,45 +104,94 @@ public class AdminService {
         }
     }
 
-    @Autowired
-    private AdminLoginRepository adminLoginRepository;
-    //Admin Login
+    //Admin Login via Email
     @Transactional
-    public String adminLogin(String email,BigInteger phone,String password,String key) throws Exception{
-        Admin admin=new Admin();
-        AdminLogin loginuser=new AdminLogin();
-        AdminLogin newLogin=new AdminLogin();
-        if("phone".equals(key)){
-            admin=adminRepository.findByAdminPhone(phone);
-            loginuser=adminLoginRepository.findByAdminPhone(phone);
-            newLogin.setAdminPhone(phone);
-        }else if("email".equals(key)){
-            admin=adminRepository.findByAdminEmail(email);
-            loginuser=adminLoginRepository.findByAdminEmail(email);
-            newLogin.setAdminEmail(email);
-        }       
+    public String adminEmailLogin(AdminLogin adminLogin) throws Exception{
+        Admin admin=adminRepository.findByAdminEmail(adminLogin.getAdminEmail());
+        AdminLogin loginuser=adminLoginRepository.findByAdminEmail(adminLogin.getAdminEmail());
+        UserRoleAssociation userRole=userRoleAssociationRepository.findByAdmin(admin.getAdminId()); 
         if(loginuser!=null ){
-            if(verifyPassword(password, loginuser.getAdminPassword())){ 
+            if(verifyPassword(adminLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
                 loginuser.setTimestamp(LocalDateTime.now());
                 admin.setAdminLastLogin(LocalDateTime.now());
                 return admin.getAdminFirstName();
             }else{
                 throw new Exception("Password does not match");
             }
-
         }else if(loginuser==null && admin!=null){
-            if(verifyPassword(password, admin.getAdminPassword())){
-                newLogin.setAdminPassword(encodePassword(password));
-                newLogin.setTimestamp(LocalDateTime.now());
+            if(verifyPassword(adminLogin.getAdminPassword(), admin.getAdminPassword())){
+                adminLogin.setAdminPassword(encodePassword(adminLogin.getAdminPassword()));
+                adminLogin.setTimestamp(LocalDateTime.now());
                 admin.setAdminLastLogin(LocalDateTime.now());
-                entityManager.persist(newLogin);
+                adminLogin.setRole(userRole.getRole());
+                String token=jwtUtils.generateJwt(admin);
+                entityManager.persist(adminLogin);
+                String ans=admin.getAdminFirstName()+" , "+token;
+                return ans;
+            }else{
+                throw new Exception("Password does not match");
+            }
+        }else{
+            throw new Exception("User not found");
+        }   
+    }
+
+    //Admin Login via Phone
+    @Transactional
+    public String adminPhoneLogin(AdminLogin adminLogin) throws Exception{
+        Admin admin=adminRepository.findByAdminPhone(adminLogin.getAdminPhone());
+        AdminLogin loginuser=adminLoginRepository.findByAdminPhone(adminLogin.getAdminPhone());
+        UserRoleAssociation userRole=userRoleAssociationRepository.findByAdmin(admin.getAdminId()); 
+        if(loginuser!=null ){
+            if(verifyPassword(adminLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
+                loginuser.setTimestamp(LocalDateTime.now());
+                admin.setAdminLastLogin(LocalDateTime.now());
                 return admin.getAdminFirstName();
             }else{
                 throw new Exception("Password does not match");
             }
-        }
-        return null;     
+        }else if(loginuser==null && admin!=null){
+            if(verifyPassword(adminLogin.getAdminPassword(), admin.getAdminPassword())){
+                adminLogin.setAdminPassword(encodePassword(adminLogin.getAdminPassword()));
+                adminLogin.setTimestamp(LocalDateTime.now());
+                admin.setAdminLastLogin(LocalDateTime.now());
+                adminLogin.setRole(userRole.getRole());
+                entityManager.persist(adminLogin);
+                return admin.getAdminFirstName();
+            }else{
+                throw new Exception("Password does not match");
+            }
+        }else{
+            throw new Exception("User not found");
+        }   
     }
+
+    //get created Admin through Admin Dto
+    public List<?> getAllAssignedUser(Admin admin){
+
+        return adminRepository.findAll()
+            .stream()
+            .map(this::convertEntityToDto)
+            .collect(Collectors.toList());
+    }
+
+    private AdminDriverDto convertEntityToDto(Admin admin){
+        AdminDriverDto admindriverDto=new AdminDriverDto();
+        admindriverDto.setAdminName(admin.getAdminName());
+        admindriverDto.setAdminFirstName(admin.getAdminFirstName());
+        admindriverDto.setAdminLastName(admin.getAdminLastName());
+        admindriverDto.setAdminEmail(admin.getAdminEmail());
+        admindriverDto.setAdminPhone(admin.getAdminPhone());
+        Role role=userRoleAssociationRepository.findRoleByAdmin(admin.getAdminId());
+        admindriverDto.setRole(role.getAdminRoleName());
+        // userdriverDto.setDriverName(user.getDriver().getDriverName());
+        // userdriverDto.setLatitude(user.getDriver().getLatitude());
+        // userdriverDto.setLongitude(user.getDriver().getLongitude());
+
+        // userdriverDto = modelMapper.map(user,UserDriverDto.class);
+        return admindriverDto;
+    }
+    
     
     //password encode method -- 
     public static String encodePassword(String rawPassword) {
@@ -169,3 +233,6 @@ public class AdminService {
         }
     }  
 }
+
+
+
