@@ -12,5 +12,7 @@ public interface RoleRepository extends JpaRepository<Role,Long>{
     @Query(nativeQuery = true, value ="SELECT * FROM Role e WHERE e.admin_role_name = :AdminRoleName")
     Role findByAdminRoleName(@Param("AdminRoleName") String AdminRoleName);
 
+    @Query(nativeQuery = true, value ="SELECT Admin_role_name FROM Role e WHERE e.admin_role_id = :AdminRoleId")
+    String findByAdminRoleId(@Param("AdminRoleId") Long AdminRoleId);
 
 }

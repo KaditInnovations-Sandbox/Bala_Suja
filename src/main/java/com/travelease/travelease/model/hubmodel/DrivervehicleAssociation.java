@@ -17,19 +17,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Drivervehicleassociation")
-public class Drivervehicle {
+@Table(name = "DrivervehicleAssociation")
+public class DrivervehicleAssociation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "drivervehicleid")
-    private Long drivervechicleid;
+    @Column(name = "driverVehicleId")
+    private Long driverVechicleId;
 
     @ManyToOne
-    @JoinColumn(name = "driverid", nullable = false)
-    private Driver driver;
+    @JoinColumn(name = "driverId", nullable = false)
+    private Driver driverId;
 
     @ManyToOne
-    @JoinColumn(name = "vehicleid", nullable = false)
-    private Vehicle vehicle;
+    @JoinColumn(name = "vehicleId", nullable = false)
+    private Vehicle vehicleId;
     
 }

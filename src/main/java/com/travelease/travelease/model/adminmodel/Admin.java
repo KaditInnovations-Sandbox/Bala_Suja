@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +28,7 @@ public class Admin {
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @Parameter(name = "sequence_name", value = "admin_sequence"),
-                    @Parameter(name = "initial_value", value = "234000"),
+                    @Parameter(name = "initial_value", value = "1"),
                     @Parameter(name = "increment_size", value = "1")
             }
     )
@@ -38,19 +36,14 @@ public class Admin {
     private Long AdminId;
     @Column(name = "AdminName")
     private String AdminName;
-    @JsonIgnore
-    @Column(name = "AdminPassword")
-    private String AdminPassword;
     @Column(name = "AdminEmail")
     private String AdminEmail;
-    @Column(name = "AdminPhone")
+    @Column(name = "AdminPhone") 
     private BigInteger AdminPhone;
-    @Column(name = "AdminFirstName")
-    private String AdminFirstName;
-    @Column(name = "AdminLastName")
-    private String AdminLastName;
-    @Column(name = "AdminDateRegistered")
-    private LocalDateTime AdminDateRegistered;
+    @Column(name = "AdminPassword")
+    private String AdminPassword;
+    @Column(name = "AdminCreatedAt")
+    private LocalDateTime AdminCreatedAt;
     @Column(name = "AdminLastLogin")
     private LocalDateTime AdminLastLogin;
     @Column(name = "AdminIsActive")

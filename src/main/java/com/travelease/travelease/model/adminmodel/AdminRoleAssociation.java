@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Roleassociation")
-public class UserRoleAssociation {
+public class AdminRoleAssociation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "userRoleAssociationIdGenerator")
     @GenericGenerator(

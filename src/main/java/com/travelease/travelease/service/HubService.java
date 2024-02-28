@@ -22,7 +22,7 @@ public class HubService {
     public String CreateVehicle(Vehicle vehicle)throws Exception{
         Vehicle isvehicle=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
         if(isvehicle==null){
-            vehicle.setVehicleRegistered(LocalDateTime.now());
+            // vehicle.setVehicleRegistered(LocalDateTime.now());
             vehicle.setVehicleAccess(true);
             vehicleRepository.save(vehicle);
             return "created";
@@ -75,7 +75,7 @@ public class HubService {
         }else{
             vehicle.setVehicleCapacity(vehicleDetails.getVehicleCapacity());
             vehicle.setVehicleNumber(vehicleDetails.getVehicleNumber());
-            vehicle.setVehicleRegistered(LocalDateTime.now());
+            // vehicle.setVehicleRegistered(LocalDateTime.now());
             vehicleRepository.save(vehicle);
             return "updated";
         }

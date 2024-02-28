@@ -1,8 +1,8 @@
 package com.travelease.travelease.model.loginmodel;
-
 import java.time.LocalDateTime;
 
-import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.hubmodel.Driver;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,21 +19,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Adminlogin")
-public class AdminLogin {
-
+@Table(name = "DriverLogin")
+public class DriverLogin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long AdminLoginId;
+    private Long DriverLoginId;
 
     @OneToOne
-    @JoinColumn(name = "Admin",nullable = false)
-    private Admin Admin;
+    @JoinColumn(name = "Driver",nullable = false)
+    private Driver Driver;
 
-    @Column(name = "TokenId")
-    private String TokenId;
-
-    @Column(name = "Timestamp")
-    private LocalDateTime Timestamp;
-    
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
 }

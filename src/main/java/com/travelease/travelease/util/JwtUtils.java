@@ -12,14 +12,14 @@ import io.jsonwebtoken.Jwts;
 @Component
 public class JwtUtils {
     
-    @Autowired
-    com.travelease.travelease.repository.TokenRepository tokenRepository;
+    // @Autowired
+    // com.travelease.travelease.repository.TokenRepository tokenRepository;
 
     private static String secret="this_is_secret";
 
     private static long expiryDuration = 60 * 60;
 
-    public String generateJwt(Admin admin){
+    public String generateJwtAdmin(Admin admin){
 
         
         // long millisec = System.currentTimeMillis();
@@ -45,9 +45,10 @@ public class JwtUtils {
 
     }
     
-    public void verify(String authorization) throws Exception{
+    public Boolean verify(String authorization) throws Exception{
         try{
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(authorization);   
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(authorization);  
+            return true; 
         }catch(Exception exception){
             //tokenRepository.deleteToken(authorization);
             throw new TimeoutException("Your Time is Over Please Login again");

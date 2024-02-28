@@ -1,6 +1,7 @@
 package com.travelease.travelease.model.hubmodel;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,21 +22,21 @@ public class Driver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Driverid")
+    @Column(name = "DriverId")
     private Long DriverId;
-    @Column(name = "Drivername")
+    @Column(name = "DriverName")
     private String DriverName;
-    @Column(name = "Driverphonenumber")
+    @Column(name = "DriverPhonenumber")
     private BigInteger DriverPhoneNumber;
-    @Column(name = "Driveremail")
+    @Column(name = "DriverEmail")
     private String DriverEmail;
-    @Column(name = "Drivertype")
+    @Column(name = "DriverPassword")
+    private String DriverPassword;
+    @Column(name = "DriverType")
     private String DriverType;
-    @Column(name = "Vehiclecapacity")
-    private String VehicleCapacity;
-    @Column(name = "Vehiclenumber")
-    private String VehicleNumber;
-    @Column(name = "Driveraccess")
-    private Boolean DriverAccess;
+    @Column(name = "DriverIsActive")
+    private Boolean DriverIsActive;
+    @Column(name = "DriverCreatedAt")
+    private LocalDateTime DriverCreatedAt;
     
 }

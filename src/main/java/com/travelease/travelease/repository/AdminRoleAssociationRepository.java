@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.travelease.travelease.model.adminmodel.Role;
-import com.travelease.travelease.model.adminmodel.UserRoleAssociation;
+import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 
 
-public interface UserRoleAssociationRepository extends JpaRepository<UserRoleAssociation,Long> {
+public interface AdminRoleAssociationRepository extends JpaRepository<AdminRoleAssociation,Long> {
 
     @Query(nativeQuery = true, value ="SELECT * from roleassociation e WHERE e.userid=:Admin")
-    UserRoleAssociation findByAdmin(@Param("Admin")Long Admin);
+    AdminRoleAssociation findByAdmin(@Param("Admin")Long Admin);
 
     @Query(nativeQuery = true, value ="SELECT roleid from roleassociation e WHERE e.userid=:Admin")
     Role findRoleByAdmin(@Param("Admin")Long Admin);
