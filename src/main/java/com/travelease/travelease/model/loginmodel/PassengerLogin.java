@@ -12,7 +12,7 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.travelease.travelease.model.passengermodel.Passenger;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 @Entity
 @Data
@@ -26,7 +26,7 @@ public class PassengerLogin {
 
     @OneToOne
     @JoinColumn(name = "Passenger",nullable = false)
-    private Passenger Passenger;
+    private passenger Passenger;
 
     @Column(name = "Tokenid")
     private String TokenId;

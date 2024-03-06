@@ -2,12 +2,11 @@ package com.travelease.travelease.util;
 import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.hubmodel.Driver;
-import com.travelease.travelease.model.passengermodel.Passenger;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -63,7 +62,7 @@ public class JwtUtils {
     
     }
 
-    public String generateJwtPassenger(Passenger passenger){ 
+    public String generateJwtPassenger(passenger passenger){ 
         long millisec = System.currentTimeMillis();
         long expiryTime = millisec + expiryDuration * 1000;
 

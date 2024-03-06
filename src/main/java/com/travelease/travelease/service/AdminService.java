@@ -33,7 +33,7 @@ import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 import com.travelease.travelease.model.loginmodel.DriverLogin;
 import com.travelease.travelease.model.loginmodel.PassengerLogin;
-import com.travelease.travelease.model.passengermodel.Passenger;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 @Service
 public class AdminService {
@@ -190,7 +190,7 @@ public class AdminService {
     //Passenger login
     public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
-        Passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
+        passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
         if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
                 if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
                     //token creation and store login table

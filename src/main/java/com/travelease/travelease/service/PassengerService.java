@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import com.travelease.travelease.model.passengermodel.Passenger;
+import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.repository.CompanyPassengerRepository;
 import com.travelease.travelease.repository.PassengerRepository;
 
@@ -19,7 +19,7 @@ public class PassengerService {
     @Autowired
     private CompanyPassengerRepository companyPassengerRepository;
 
-    public List<Passenger> getAllPassengerDetails(Long CompanyId){
+    public List<passenger> getAllPassengerDetails(Long CompanyId){
         // companyPassengerRepository.findByCompanyId(CompanyId);
         return null;
     }

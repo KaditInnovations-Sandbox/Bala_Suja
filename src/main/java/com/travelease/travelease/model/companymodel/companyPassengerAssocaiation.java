@@ -1,7 +1,6 @@
 package com.travelease.travelease.model.companymodel;
 
-import com.travelease.travelease.model.passengermodel.Passenger;
-import com.travelease.travelease.model.routemodel.RouteStopAssociation;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +32,7 @@ public class companyPassengerAssocaiation {
 
     @ManyToOne
     @JoinColumn(name = "Passengerid", nullable = false)
-    private Passenger PassengerId;
+    private passenger PassengerId;
 
     
 }
