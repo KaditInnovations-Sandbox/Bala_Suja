@@ -1,6 +1,6 @@
 package com.travelease.travelease.service;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +22,77 @@ public class CompanyService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //get all company
     public List<company> getAllCompanyDetails(){
         return companyRepository.findAll();
     }
 
-    @SuppressWarnings("null")
-    public String createCompany(company company) throws IOException{
-        companyRepository.save(company);
-        return "created";
-    }
-
-    public String deleteCompany(String email) {
-        company company=companyRepository.findByCompanyEmail(email);
-        if(company==null){
-            throw new ResourceNotFoundException("Company not found");
-        }else{
-            // company.setAdminIsActive(false);
+    //create company
+    public String createCompany(company company) throws Exception{
+        company iscompany=companyRepository.findByComapnyName(company.getCompanyName());
+        if(iscompany==null){
+            company.setCompanyIsActive(true);
+            company.setCompanyCreatedAt(LocalDateTime.now());
             companyRepository.save(company);
-            return "Deleted";
+            return "created";
+        }else{
+            throw new Exception();
         }
     }
+
+    //get all active vehicle
+    public List<company> getAllActiveCompany(){
+        return companyRepository.findByAccessTrue();
+    }
+
+
+    //get all inactive vehicle
+    public List<company> getAllInactiveCompany(){
+        return companyRepository.findByAccessFalse();
+    }
+
+    //update company
+    public String updateCompany(company companyDetails)throws Exception{
+        company company=companyRepository.findByComapnyName(companyDetails.getCompanyName());
+        if(company==null){
+            throw new ResourceNotFoundException("company not found");
+        }else{
+            company.setCompanyName(companyDetails.getCompanyName());;
+            company.setCompanyEmail(companyDetails.getCompanyEmail());
+            company.setCompanyPhone(companyDetails.getCompanyPhone());
+            company.setCompanyStartDate(companyDetails.getCompanyStartDate());
+            company.setCompanyEndDate(companyDetails.getCompanyEndDate());
+            company.setCompanyPoc(companyDetails.getCompanyPoc());
+            company.setCompanyLastUpdatedTime(LocalDateTime.now());
+            companyRepository.save(company);
+            return "updated";
+        }
+    }
+
+    //Company Remove access
+    public String DeleteCompany(String companyName) throws Exception{
+        company company=companyRepository.findByComapnyName(companyName);
+        if(company==null){
+            throw new ResourceNotFoundException("Company Not found");
+        }else{
+            company.setCompanyIsActive(false);
+            companyRepository.save(company);
+            return "Deleted";
+        }       
+        
+    }
+
+    //Bind Company
+    public String BindCompany(String companyName) throws Exception{
+        company company=companyRepository.findByComapnyName(companyName);
+        if(company==null){
+            throw new ResourceNotFoundException("Company Not found");
+        }else{
+            company.setCompanyIsActive(true);
+            companyRepository.save(company);
+            return "Deleted";
+        }       
+        
+    }
+    
 }

@@ -20,7 +20,7 @@ public class LoginService {
     @Autowired
     private EmailService emailService;
 
-    public String forgotPassword(String email) throws Exception {
+    public String AdminforgotPassword(String email) throws Exception {
         Admin admin=adminRepository.findByAdminEmail(email);
         if(admin!=null){
             String otp=generateOTP(6);

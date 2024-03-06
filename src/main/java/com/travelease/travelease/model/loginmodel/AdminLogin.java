@@ -30,7 +30,7 @@ public class AdminLogin {
     @JoinColumn(name = "Admin",nullable = false)
     private Admin Admin;
 
-    @Column(name = "TokenId")
+    @Column(name = "Tokenid")
     private String TokenId;
 
     @Column(name = "Timestamp")

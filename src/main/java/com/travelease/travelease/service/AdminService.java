@@ -1,12 +1,12 @@
 package com.travelease.travelease.service;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,10 @@ import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
 import com.travelease.travelease.repository.RoleRepository;
 import com.travelease.travelease.repository.AdminRoleAssociationRepository;
+import com.travelease.travelease.repository.DriverLoginRepository;
+import com.travelease.travelease.repository.DriverRepository;
+import com.travelease.travelease.repository.PassengerLoginRepository;
+import com.travelease.travelease.repository.PassengerRepository;
 import com.travelease.travelease.util.JwtUtils;
 
 import jakarta.persistence.EntityManager;
@@ -24,8 +28,12 @@ import jakarta.transaction.Transactional;
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.Role;
+import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
+import com.travelease.travelease.model.loginmodel.DriverLogin;
+import com.travelease.travelease.model.loginmodel.PassengerLogin;
+import com.travelease.travelease.model.passengermodel.Passenger;
 
 @Service
 public class AdminService {
@@ -46,6 +54,18 @@ public class AdminService {
 
     @Autowired
     private AdminLoginRepository adminLoginRepository;
+
+    @Autowired
+    private DriverRepository driverRepository;
+
+    @Autowired
+    private DriverLoginRepository driverLoginRepository;
+
+    @Autowired
+    private PassengerRepository passengerRepository;
+
+    @Autowired
+    private PassengerLoginRepository passengerLoginRepository;
 
     public List<Admin> getAllAdmin(){
         return adminRepository.findAll();
@@ -102,124 +122,104 @@ public class AdminService {
         }
     }
 
-    //Admin Login via Email
-    // @Transactional
-    // public String adminEmailLogin(AdminLogin adminLogin) throws Exception{
-    //     Admin admin=adminRepository.findByAdminEmail(adminLogin.getAdminEmail());
-    //     AdminLogin loginuser=adminLoginRepository.findByAdminEmail(adminLogin.getAdminEmail());
-    //     AdminRoleAssociation userRole=adminRoleAssociationRepository.findByAdmin(admin.getAdminId()); 
-    //     if(loginuser!=null ){
-    //         if(verifyPassword(adminLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
-    //             loginuser.setTimestamp(LocalDateTime.now());
-    //             admin.setAdminLastLogin(LocalDateTime.now());
-    //             return admin.getAdminName();
-    //         }else{
-    //             throw new Exception("Password does not match");
-    //         }
-    //     }else if(loginuser==null && admin!=null){
-    //         if(verifyPassword(adminLogin.getAdminPassword(), admin.getAdminPassword())){
-    //             adminLogin.setAdminPassword(encodePassword(adminLogin.getAdminPassword()));
-    //             adminLogin.setTimestamp(LocalDateTime.now());
-    //             admin.setAdminLastLogin(LocalDateTime.now());
-    //             adminLogin.setRole(userRole.getRole());
-    //             String token=jwtUtils.generateJwt(admin);
-    //             entityManager.persist(adminLogin);
-    //             String ans=admin.getAdminName()+" , "+token;
-    //             return ans;
-    //         }else{
-    //             throw new Exception("Password does not match");
-    //         }
-    //     }else{
-    //         throw new Exception("User not found");
-    //     }   
-    // }
-
     //Admin Login
     public Map<String,String> adminLogin(Map<String,String> adminLogin) throws Exception{
-        if(adminLogin.get("token")==null && adminRepository.findByAdminEmail(adminLogin.get("email"))!=null){
-            Admin admin=adminRepository.findByAdminEmail(adminLogin.get("email"));
-            if(admin.getAdminIsActive()){
-                if(verifyPassword(admin.getAdminPassword(), adminLogin.get("password"))){
+        Map<String, String> resultMap = new HashMap<>();
+        Admin admin=adminRepository.findByAdminEmail(adminLogin.get("email"));
+        if(adminLogin.get("token")==null && admin!=null && admin.getAdminIsActive()){
+                if(verifyPassword(adminLogin.get("password"), admin.getAdminPassword())){
                     //token creation and store login table
                     AdminLogin loginuser=new AdminLogin();
-                    Map<String, String> resultMap = new HashMap<>();
                     loginuser.setAdmin(admin);
                     loginuser.setTimestamp(LocalDateTime.now());
                     loginuser.setTokenId(jwtUtils.generateJwtAdmin(admin));
                     resultMap.put("token", jwtUtils.generateJwtAdmin(admin));
-                    resultMap.put("role",adminRoleAssociationRepository.findRoleByAdmin(admin.getAdminId()).getAdminRoleName());
+                    resultMap.put("role",adminRoleAssociationRepository.findByAdmin(admin.getAdminId()).getRole().getAdminRoleName());
                     adminLoginRepository.save(loginuser);
+                    admin.setAdminLastLogin(LocalDateTime.now());
+                    adminRepository.save(admin);
                     return resultMap; 
                 }else{
-                    //Exception Admin Password Does not match
+                    throw new Exception();
+                    //Exception Admin is not match
                 }
-            }else{
-               //Exception Admin is not active
-            }
-        }else if(adminLogin.get("token")!=null && adminRepository.findByAdminEmail(adminLogin.get("email"))!=null){
-            if(jwtUtils.verify(adminLogin.get("token"))){
-                
-            }
+        }else if(adminLogin.get("token")!=null && admin!=null && admin.getAdminIsActive()){
+            resultMap.put("email", jwtUtils.verify(adminLogin.get("token")));
+            admin.setAdminLastLogin(LocalDateTime.now());
+            adminRepository.save(admin);
+            return resultMap;
+
         }else{
-            //Exception Admin is not found
+            throw new Exception();
+            //Exception Admin is not found or not active
         }
-        return null;
     }
 
-    //Admin Login via Phone
-    // @Transactional
-    // public String adminPhoneLogin(AdminLogin adminLogin) throws Exception{
-    //     Admin admin=adminRepository.findByAdminPhone(adminLogin.getAdminPhone());
-    //     AdminLogin loginuser=adminLoginRepository.findByAdminPhone(adminLogin.getAdminPhone());
-    //     AdminRoleAssociation userRole=adminRoleAssociationRepository.findByAdmin(admin.getAdminId()); 
-    //     if(loginuser!=null ){
-    //         if(verifyPassword(adminLogin.getAdminPassword(), loginuser.getAdminPassword())){ 
-    //             loginuser.setTimestamp(LocalDateTime.now());
-    //             admin.setAdminLastLogin(LocalDateTime.now());
-    //             return admin.getAdminName();
-    //         }else{
-    //             throw new Exception("Password does not match");
-    //         }
-    //     }else if(loginuser==null && admin!=null){
-    //         if(verifyPassword(adminLogin.getAdminPassword(), admin.getAdminPassword())){
-    //             adminLogin.setAdminPassword(encodePassword(adminLogin.getAdminPassword()));
-    //             adminLogin.setTimestamp(LocalDateTime.now());
-    //             admin.setAdminLastLogin(LocalDateTime.now());
-    //             adminLogin.setRole(userRole.getRole());
-    //             entityManager.persist(adminLogin);
-    //             return admin.getAdminName();
-    //         }else{
-    //             throw new Exception("Password does not match");
-    //         }
-    //     }else{
-    //         throw new Exception("User not found");
-    //     }   
-    // }
+    //Driver Login
+    public Map<String,Object> driverLogin(Map<String,Object> driverLogin) throws Exception{
+        Map<String, Object> resultMap = new HashMap<>();
+        Driver driver=driverRepository.findByDriverPhone((BigInteger)driverLogin.get("phone"));
+        if(driverLogin.get("token")==null && driver!=null && driver.getDriverIsActive()){
+                if(verifyPassword((String)driverLogin.get("password"), driver.getDriverPassword())){
+                    //token creation and store login table
+                    DriverLogin logindriver=new DriverLogin();
+                    logindriver.setDriver(driver);
+                    logindriver.setTimestamp(LocalDateTime.now());
+                    logindriver.setTokenId(jwtUtils.generateJwtDriver(driver));
+                    resultMap.put("token", jwtUtils.generateJwtDriver(driver));
+                    driverLoginRepository.save(logindriver);
+                    driver.setDriverLastLogin(LocalDateTime.now());
+                    driverRepository.save(driver);
+                    return resultMap; 
+                }else{
+                    throw new Exception();
+                    //Exception Driver is not match
+                }
+        }else if(driverLogin.get("token")!=null && driver!=null && driver.getDriverIsActive()){
+            resultMap.put("email", jwtUtils.verify((String)driverLogin.get("token")));
+            driver.setDriverLastLogin(LocalDateTime.now());
+            driverRepository.save(driver);
+            return resultMap;
 
-    //get created Admin through Admin Dto
-    // public List<?> getAllAssignedUser(Admin admin){
+        }else{
+            throw new Exception();
+            //Exception Driver is not active or not found
+        }
+    }
+   
+    //Passenger login
+    public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
+        Map<String, Object> resultMap = new HashMap<>();
+        Passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
+        if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
+                if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
+                    //token creation and store login table
+                    PassengerLogin loginpassenger=new PassengerLogin();
+                    loginpassenger.setPassenger(passenger);
+                    loginpassenger.setTimestamp(LocalDateTime.now());
+                    loginpassenger.setTokenId(jwtUtils.generateJwtPassenger(passenger));
+                    resultMap.put("token", jwtUtils.generateJwtPassenger(passenger));
+                    passengerLoginRepository.save(loginpassenger);
+                    passenger.setPassengerLastLogin(LocalDateTime.now());
+                    passengerRepository.save(passenger);
+                    return resultMap; 
+                }else{
+                    System.out.println("Driver is not match");
+                    throw new Exception();
+                    //Exception Admin Password Does not match
+                }
+        }else if(passengerLogin.get("token")!=null && passenger!=null && passenger.getPassengerIsActive()){
+            resultMap.put("email", jwtUtils.verify((String)passengerLogin.get("token")));
+            passenger.setPassengerLastLogin(LocalDateTime.now());
+            passengerRepository.save(passenger);
+            return resultMap; 
 
-    //     return adminRepository.findAll()
-    //         .stream()
-    //         .map(this::convertEntityToDto)
-    //         .collect(Collectors.toList());
-    // }
-
-    // private AdminDriverDto convertEntityToDto(Admin admin){
-    //     AdminDriverDto admindriverDto=new AdminDriverDto();
-    //     admindriverDto.setAdminName(admin.getAdminName());
-    //     admindriverDto.setAdminEmail(admin.getAdminEmail());
-    //     admindriverDto.setAdminPhone(admin.getAdminPhone());
-    //     Role role=adminRoleAssociationRepository.findRoleByAdmin(admin.getAdminId());
-    //     admindriverDto.setRole(role.getAdminRoleName());
-    //     // userdriverDto.setDriverName(user.getDriver().getDriverName());
-    //     // userdriverDto.setLatitude(user.getDriver().getLatitude());
-    //     // userdriverDto.setLongitude(user.getDriver().getLongitude());
-
-    //     // userdriverDto = modelMapper.map(user,UserDriverDto.class);
-    //     return admindriverDto;
-    // }
-    
+        }else{
+            System.out.println("Passenger is not active or not found");
+            throw new Exception();
+            //Exception Admin is not found
+        }
+    }
     
     //password encode method -- 
     public static String encodePassword(String rawPassword) {

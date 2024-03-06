@@ -31,13 +31,17 @@ public class company {
     private BigInteger companyPhone;
     @Column(name = "companypoc")
     private String companyPoc;
-    @Column(name = "companyactive")
-    private Boolean active;
-    @Column(name = "companydateregistered")
-    private LocalDateTime CompanyDateRegistered;
-    @Column(name = "companylastlogin")
-    private LocalDateTime CompanyLastLogin;
+    @Column(name = "companycreatedat")
+    private LocalDateTime CompanyCreatedAt;
+    @Column(name = "companystartdate")
+    private LocalDateTime CompanyStartDate;
+    @Column(name = "companyenddate")
+    private LocalDateTime CompanyEndDate;
     @Column(name = "companyisactive")
     private Boolean CompanyIsActive;
+    @Column(name = "Companydeletedtime")
+    private LocalDateTime CompanyDeletedTime;
+    @Column(name = "Companylastupdatedtime")
+    private LocalDateTime CompanyLastUpdatedTime;
 
 }

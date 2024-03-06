@@ -1,15 +1,18 @@
 package com.travelease.travelease.model.loginmodel;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.travelease.travelease.model.passengermodel.Passenger;
 
 @Entity
 @Data
@@ -17,18 +20,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PassengerLogin {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private Long userId;
+    private Long PassengerLoginId;
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
+    @OneToOne
+    @JoinColumn(name = "Passenger",nullable = false)
+    private Passenger Passenger;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "Tokenid")
+    private String TokenId;
 
-    @Column(name = "timestamp")
-    private Date timestamp;
+    @Column(name = "Timestamp")
+    private LocalDateTime Timestamp;
     
 }

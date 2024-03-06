@@ -36,7 +36,11 @@ public class Driver {
     private String DriverType;
     @Column(name = "DriverIsActive")
     private Boolean DriverIsActive;
+    @Column(name = "DriverLastLogin")
+    private LocalDateTime DriverLastLogin;
     @Column(name = "DriverCreatedAt")
     private LocalDateTime DriverCreatedAt;
+    @Column(name = "LastUpdatedTime")
+    private LocalDateTime LastUpdatedTime;
     
 }

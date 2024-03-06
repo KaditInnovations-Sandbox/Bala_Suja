@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.service.CompanyService;
 
@@ -32,18 +31,42 @@ public class CompanyController {
 		return companyService.getAllCompanyDetails();
 	}
 
+	//get all active Company details
+    @GetMapping("/ActiveCompany")
+    public List<company> getAllActiveVehicle(){
+        return companyService.getAllActiveCompany();
+    }
+
+    //get all inactive Company details 
+    @GetMapping("/InactiveCompany")
+    public List<company> getAllInactiveVehicle(){
+        return companyService.getAllInactiveCompany();
+    }
+
     //create company
     @PostMapping("/Company")
 	public ResponseEntity<String> createAdmin(@RequestBody company company) throws Exception {
-		String response=companyService.createCompany(company);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(company));
 	}
 
-	
+    //Edit for company	
+	@PutMapping("/Company")
+	public ResponseEntity<String> updateCompany(@RequestBody company companyDetails) throws Exception{
+		String response=companyService.updateCompany(companyDetails);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+    //bind company
+    @PutMapping("/BindCompany")
+	public ResponseEntity<String> BindCompany(@RequestBody String companyName) throws Exception{
+		String response=companyService.BindCompany(companyName);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
     // delete Company
 	@DeleteMapping("/Company")
-	public ResponseEntity<String> deleteAdmin(@RequestBody String email) throws Exception{
-		String response=companyService.deleteCompany(email);
+	public ResponseEntity<String> deleteCompany(@RequestBody String companyName) throws Exception{
+		String response=companyService.DeleteCompany(companyName);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

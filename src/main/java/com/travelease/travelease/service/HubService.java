@@ -50,12 +50,18 @@ public class HubService {
         return vehicleRepository.findByAccessTrue();
     }
 
+    //get all active vehicle
+    public List<Vehicle> getAllVehicle(){
+        return vehicleRepository.findAll();
+    }
+
 
     //get all inactive vehicle
     public List<Vehicle> getAllInactiveVehicle(){
         return vehicleRepository.findByAccessFalse();
     }
 
+    //Grand Access 
     public String bindVehicle(String vehicleNumber){
         Vehicle vehicle=vehicleRepository.findByVehicleNumber(vehicleNumber);
         if(vehicle==null){

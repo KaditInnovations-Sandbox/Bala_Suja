@@ -56,6 +56,12 @@ public class HubController {
         return hubService.getAllInactiveVehicle();
     }
 
+    //get all inactive vehicle details 
+    @GetMapping("/AllVehicle")
+    public List<Vehicle> getAllVehicle(){
+        return hubService.getAllVehicle();
+    }
+
 
     //get vehicle by id
     @GetMapping("/VehicleByID")

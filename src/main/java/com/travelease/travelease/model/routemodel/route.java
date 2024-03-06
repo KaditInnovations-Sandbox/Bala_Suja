@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "route")
-public class route {
+@Table(name = "Route")
+public class Route {
     
     @Id
     @GeneratedValue

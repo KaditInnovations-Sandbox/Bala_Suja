@@ -1,10 +1,12 @@
 package com.travelease.travelease.model.passengermodel;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,20 +17,30 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "passenger")
-public class passenger {
+@Table(name = "Passenger")                  
+public class Passenger {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "passengerid")
-    private long passengerId;
+    private long PassengerId;
     @Column(name = "passengername")
-    private String passengerName;
+    private String PassengerName;
     @Column(name = "passengeremail")
-    private String passengerEmail;
+    private String PassengerEmail;
     @Column(name = "passengerphone")
-    private BigInteger passengerPhone;
-    @Column(name = "passengerpickup")
-    private String passengerPickup;
+    private BigInteger PassengerPhone;
+    @Column(name = "passengerLocation")
+    private String PassengerLocation;
+    @Column(name = "PassengerPassword")
+    private String PassengerPassword;
+    @Column(name = "PassengerIsActive")
+    private Boolean PassengerIsActive;
+    @Column(name = "PassengerLastLogin")
+    private LocalDateTime PassengerLastLogin;
+    @Column(name = "PassengerCreatedAt")
+    private LocalDateTime PassengerCreatedAt;
+    @Column(name = "LastUpdatedTime")
+    private LocalDateTime LastUpdatedTime;
     
 }

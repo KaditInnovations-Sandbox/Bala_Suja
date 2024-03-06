@@ -1,53 +1,26 @@
-2024-02-59 16:52:21 {main} INFO  c.t.t.TraveleaseApplicationTests - Starting TraveleaseApplicationTests using Java 17.0.9 with PID 15792 (started by Preethi Julius in C:\BalaSuja_Backend\Bala-Suja)
-2024-02-59 16:52:21 {main} INFO  c.t.t.TraveleaseApplicationTests - No active profile set, falling back to 1 default profile: "default"
-2024-02-59 16:52:21 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-02-59 16:52:22 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 74 ms. Found 7 JPA repository interfaces.
-2024-02-59 16:52:22 {main} INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-02-59 16:52:22 {main} INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
-2024-02-59 16:52:22 {main} INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2024-02-59 16:52:22 {main} INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-02-59 16:52:22 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2024-02-59 16:52:23 {main} INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6c6928c
-2024-02-59 16:52:23 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2024-02-59 16:52:23 {main} WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-02-59 16:52:24 {main} INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-02-59 16:52:24 {main} WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
-2024-02-59 16:52:24 {main} WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk_cla4g218gjmqgdb4d7mcrbj9l" of relation "adminlogin" does not exist, skipping
-2024-02-59 16:52:24 {main} WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
-2024-02-59 16:52:24 {main} WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk_qr3qm3ppiwldexxi10utc0c6m" of relation "driver_login" does not exist, skipping
-2024-02-59 16:52:24 {main} INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-02-59 16:52:24 {main} INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2024-02-59 16:52:25 {main} WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-02-59 16:52:25 {main} INFO  c.t.t.TraveleaseApplicationTests - Started TraveleaseApplicationTests in 4.396 seconds (process running for 5.276)
-2024-02-59 16:52:26 {SpringApplicationShutdownHook} INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2024-02-59 16:52:26 {SpringApplicationShutdownHook} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2024-02-59 16:52:26 {SpringApplicationShutdownHook} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2024-02-59 16:52:39 {main} INFO  c.t.travelease.TraveleaseApplication - Starting TraveleaseApplication using Java 17.0.9 with PID 32036 (C:\BalaSuja_Backend\Bala-Suja\target\classes started by Preethi Julius in C:\BalaSuja_Backend\Bala-Suja)
-2024-02-59 16:52:39 {main} INFO  c.t.travelease.TraveleaseApplication - No active profile set, falling back to 1 default profile: "default"
-2024-02-59 16:52:40 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-02-59 16:52:40 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 82 ms. Found 7 JPA repository interfaces.
-2024-02-59 16:52:40 {main} INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
-2024-02-59 16:52:40 {main} INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2024-02-59 16:52:40 {main} INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
-2024-02-59 16:52:40 {main} INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2024-02-59 16:52:40 {main} INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 989 ms
-2024-02-59 16:52:41 {main} INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-02-59 16:52:41 {main} INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
-2024-02-59 16:52:41 {main} INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2024-02-59 16:52:41 {main} INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-02-59 16:52:41 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2024-02-59 16:52:41 {main} INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1491cd6c
-2024-02-59 16:52:41 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2024-02-59 16:52:41 {main} WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-02-59 16:52:42 {main} INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-02-59 16:52:42 {main} INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-02-59 16:52:42 {main} INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2024-02-59 16:52:42 {main} WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-02-59 16:52:42 {main} INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path ''
-2024-02-59 16:52:42 {main} INFO  c.t.travelease.TraveleaseApplication - Started TraveleaseApplication in 3.444 seconds (process running for 3.694)
-2024-02-59 17:02:44 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m2s769ms361µs700ns).
-2024-02-59 17:34:12 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m56s513ms237µs100ns).
-2024-02-59 19:58:58 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h51m45s631ms920µs100ns).
-2024-02-59 20:59:15 {SpringApplicationShutdownHook} INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2024-02-59 20:59:15 {SpringApplicationShutdownHook} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2024-02-59 20:59:15 {SpringApplicationShutdownHook} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-03-65 21:01:53 {main} INFO  c.t.travelease.TraveleaseApplication - Starting TraveleaseApplication using Java 17.0.9 with PID 1792 (C:\BalaSuja_Backend\Bala-Suja\target\classes started by Preethi Julius in C:\BalaSuja_Backend\Bala-Suja)
+2024-03-65 21:01:53 {main} INFO  c.t.travelease.TraveleaseApplication - No active profile set, falling back to 1 default profile: "default"
+2024-03-65 21:01:54 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-65 21:01:54 {main} INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 170 ms. Found 11 JPA repository interfaces.
+2024-03-65 21:01:54 {main} INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2024-03-65 21:01:55 {main} INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-03-65 21:01:55 {main} INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-03-65 21:01:55 {main} INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-03-65 21:01:55 {main} INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2025 ms
+2024-03-65 21:01:55 {main} INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-65 21:01:55 {main} INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+2024-03-65 21:01:55 {main} INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-03-65 21:01:55 {main} INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-65 21:01:56 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-03-65 21:01:56 {main} INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5203c80f
+2024-03-65 21:01:56 {main} INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-03-65 21:01:56 {main} WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-03-65 21:01:57 {main} INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-65 21:01:58 {main} INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-65 21:01:58 {main} INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-03-65 21:01:59 {main} WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-65 21:01:59 {main} INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path ''
+2024-03-65 21:01:59 {main} INFO  c.t.travelease.TraveleaseApplication - Started TraveleaseApplication in 7.061 seconds (process running for 7.531)
+2024-03-65 21:02:50 {http-nio-8081-exec-2} INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-03-65 21:02:50 {http-nio-8081-exec-2} INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-03-65 21:02:50 {http-nio-8081-exec-2} INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
