@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Route")
-public class Route {
+public class route {
     
     @Id
     @GeneratedValue

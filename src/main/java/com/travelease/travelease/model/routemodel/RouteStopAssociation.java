@@ -25,7 +25,7 @@ public class RouteStopAssociation {
 
     @ManyToOne
     @JoinColumn(name = "routeid", nullable = false)
-    private Route routeid;
+    private route routeid;
 
     @ManyToOne
     @JoinColumn(name = "stopid", nullable = false)

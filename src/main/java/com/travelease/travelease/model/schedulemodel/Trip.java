@@ -3,10 +3,8 @@ package com.travelease.travelease.model.schedulemodel;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import com.travelease.travelease.model.hubmodel.Driver;
-import com.travelease.travelease.model.routemodel.Route;
+import com.travelease.travelease.model.routemodel.route;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,5 +48,5 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(name = "routeId", nullable = false)
-    private Route routeId;
+    private route routeId;
 }
