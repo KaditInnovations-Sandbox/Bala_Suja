@@ -82,6 +82,8 @@ public class CompanyService {
             throw new ResourceNotFoundException("Company Not found");
         }else{
             company.setCompanyIsActive(false);
+            company.setCompanyDeletedTime(LocalDateTime.now());
+            company.setCompanyLastUpdatedTime(LocalDateTime.now());
             companyRepository.save(company);
             return "Deleted";
         }       
@@ -95,6 +97,8 @@ public class CompanyService {
             throw new ResourceNotFoundException("Company Not found");
         }else{
             company.setCompanyIsActive(true);
+            company.setCompanyLastUpdatedTime(LocalDateTime.now());
+            company.setCompanyDeletedTime(null);
             companyRepository.save(company);
             return "Added";
         }       

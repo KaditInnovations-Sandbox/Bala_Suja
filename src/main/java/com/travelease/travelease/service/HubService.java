@@ -24,6 +24,7 @@ public class HubService {
         if(isvehicle==null){
             // vehicle.setVehicleRegistered(LocalDateTime.now());
             vehicle.setVehicleAccess(true);
+            vehicle.setVehicleCreatedAt(LocalDateTime.now());
             vehicleRepository.save(vehicle);
             return "created";
         }else{

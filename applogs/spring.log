@@ -130,3 +130,9 @@ java.lang.IllegalArgumentException: Invalid character found in the request targe
 2024-03-67 14:58:35 {http-nio-8081-exec-4} INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2024-03-67 14:58:35 {http-nio-8081-exec-4} INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2024-03-67 14:58:35 {http-nio-8081-exec-4} INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2024-03-67 14:58:45 {http-nio-8081-exec-3} WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+2024-03-67 14:58:45 {http-nio-8081-exec-3} ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: duplicate key value violates unique constraint "uk_q79x7jkwu0i9bfqnmu01398be"
+  Detail: Key (companyname)=(XXX) already exists.
+2024-03-67 16:56:38 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=25m36s892ms756µs700ns).
+2024-03-67 17:57:29 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m49s559ms709µs600ns).
+2024-03-67 19:57:12 {HikariPool-1 housekeeper} WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h43m12s789ms884µs300ns).
