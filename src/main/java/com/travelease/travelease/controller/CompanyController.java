@@ -33,19 +33,19 @@ public class CompanyController {
 
 	//get all active Company details
     @GetMapping("/ActiveCompany")
-    public List<company> getAllActiveVehicle(){
+    public List<company> getAllActiveCompany(){
         return companyService.getAllActiveCompany();
     }
 
     //get all inactive Company details 
     @GetMapping("/InactiveCompany")
-    public List<company> getAllInactiveVehicle(){
+    public List<company> getAllInactiveCompany(){
         return companyService.getAllInactiveCompany();
     }
 
     //create company
     @PostMapping("/Company")
-	public ResponseEntity<String> createAdmin(@RequestBody company company) throws Exception {
+	public ResponseEntity<String> createCompany(@RequestBody company company) throws Exception {
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(company));
 	}
 

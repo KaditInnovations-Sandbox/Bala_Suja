@@ -53,10 +53,8 @@ public class CompanyService {
 
     //update company
     public String updateCompany(company companyDetails)throws Exception{
-        company company=companyRepository.findByComapnyName(companyDetails.getCompanyName());
-        if(company==null){
-            throw new ResourceNotFoundException("company not found");
-        }else{
+        company company=companyRepository.checkById(companyDetails.getCompanyId());
+        if(companyRepository.findById(companyDetails.getCompanyId()).isPresent()){
             company.setCompanyName(companyDetails.getCompanyName());;
             company.setCompanyEmail(companyDetails.getCompanyEmail());
             company.setCompanyPhone(companyDetails.getCompanyPhone());
@@ -66,6 +64,8 @@ public class CompanyService {
             company.setCompanyLastUpdatedTime(LocalDateTime.now());
             companyRepository.save(company);
             return "updated";
+        }else{
+            throw new Exception();
         }
     }
 
@@ -90,7 +90,7 @@ public class CompanyService {
         }else{
             company.setCompanyIsActive(true);
             companyRepository.save(company);
-            return "Deleted";
+            return "Added";
         }       
         
     }

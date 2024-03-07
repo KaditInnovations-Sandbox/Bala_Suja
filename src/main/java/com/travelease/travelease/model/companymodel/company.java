@@ -1,11 +1,17 @@
 package com.travelease.travelease.model.companymodel;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.validator.constraints.UniqueElements;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,10 +26,10 @@ import lombok.NoArgsConstructor;
 public class company {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "companyid")
     private long companyId;
-    @Column(name = "companyname")
+    @Column(name = "companyname", unique = true)
     private String companyName;
     @Column(name = "companyemail")
     private String companyEmail;
@@ -33,10 +39,12 @@ public class company {
     private String companyPoc;
     @Column(name = "companycreatedat")
     private LocalDateTime CompanyCreatedAt;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name = "companystartdate")
-    private LocalDateTime CompanyStartDate;
+    private LocalDate CompanyStartDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name = "companyenddate")
-    private LocalDateTime CompanyEndDate;
+    private LocalDate CompanyEndDate;
     @Column(name = "companyisactive")
     private Boolean CompanyIsActive;
     @Column(name = "Companydeletedtime")
