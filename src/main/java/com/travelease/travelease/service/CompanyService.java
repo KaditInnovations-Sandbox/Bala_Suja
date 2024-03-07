@@ -1,10 +1,18 @@
 package com.travelease.travelease.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.companymodel.company;
@@ -31,8 +39,6 @@ public class CompanyService {
     public String createCompany(company company) throws Exception{
         company iscompany=companyRepository.findByComapnyName(company.getCompanyName());
         if(iscompany==null){
-            company.setCompanyIsActive(true);
-            company.setCompanyCreatedAt(LocalDateTime.now());
             companyRepository.save(company);
             return "created";
         }else{
@@ -92,7 +98,27 @@ public class CompanyService {
             companyRepository.save(company);
             return "Added";
         }       
-        
+    }
+
+    //data read from csv
+    public void saveCompanyFromCsv(MultipartFile file) throws IOException {
+        List<company> companys = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                company company = new company();
+                company.setCompanyName(data[0]);
+                company.setCompanyEmail(data[1]);
+                company.setCompanyPhone(new BigInteger(data[2]));
+                company.setCompanyPoc(data[3]);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                company.setCompanyStartDate(LocalDate.parse(data[4],formatter));
+                company.setCompanyEndDate(LocalDate.parse(data[5],formatter));
+                companys.add(company);
+            }
+        }
+        companyRepository.saveAll(companys);
     }
     
 }

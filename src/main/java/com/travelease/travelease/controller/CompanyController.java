@@ -1,5 +1,6 @@
 package com.travelease.travelease.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.service.CompanyService;
@@ -69,4 +72,18 @@ public class CompanyController {
 		String response=companyService.DeleteCompany(companyName);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+
+	@PostMapping("/Companyupload")
+    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            companyService.saveCompanyFromCsv(file);
+            return new ResponseEntity<>("File uploaded successfully!", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

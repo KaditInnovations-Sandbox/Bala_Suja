@@ -27,5 +27,48 @@ public class PassengerController {
     @Autowired
     private PassengerService passengerService;
 
-    
+    // //get all Passenger details
+    // @GetMapping("/Passenger")
+	// public List<passenger> getAllPassengerDetatils(){
+	// 	return passengerService.getAllPassengerDetails();
+	// }
+
+	// //get all active Passenger details
+    // @GetMapping("/ActivePassenger")
+    // public List<passenger> getAllActivePassenger(){
+    //     return passengerService.getAllActivePassenger();
+    // }
+
+    // //get all inactive Passenger details 
+    // @GetMapping("/InactivePassenger")
+    // public List<passenger> getAllInactivePassenger(){
+    //     return passengerService.getAllInactivePassenger();
+    // }
+
+    // //create passenger
+    // @PostMapping("/Passenger")
+	// public ResponseEntity<String> createPassenger(@RequestBody passenger passenger) throws Exception {
+	// 	return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(company));
+	// }
+
+    // //Edit for company	
+	// @PutMapping("/Company")
+	// public ResponseEntity<String> updateCompany(@RequestBody company companyDetails) throws Exception{
+	// 	String response=companyService.updateCompany(companyDetails);
+	// 	return ResponseEntity.status(HttpStatus.OK).body(response);
+	// }
+
+    // //bind company
+    // @PutMapping("/BindCompany")
+	// public ResponseEntity<String> BindCompany(@RequestBody String companyName) throws Exception{
+	// 	String response=companyService.BindCompany(companyName);
+	// 	return ResponseEntity.status(HttpStatus.OK).body(response);
+	// }
+
+    // // delete Company
+	// @DeleteMapping("/Company")
+	// public ResponseEntity<String> deleteCompany(@RequestBody String companyName) throws Exception{
+	// 	String response=companyService.DeleteCompany(companyName);
+	// 	return ResponseEntity.status(HttpStatus.OK).body(response);
+	// }
 }
