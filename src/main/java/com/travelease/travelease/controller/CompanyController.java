@@ -61,15 +61,15 @@ public class CompanyController {
 
     //bind company
     @PutMapping("/BindCompany")
-	public ResponseEntity<String> BindCompany(@RequestBody String companyName) throws Exception{
-		String response=companyService.BindCompany(companyName);
+	public ResponseEntity<String> BindCompany(@RequestBody company company) throws Exception{
+		String response=companyService.BindCompany(company);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
     // delete Company
 	@DeleteMapping("/Company")
-	public ResponseEntity<String> deleteCompany(@RequestBody String companyName) throws Exception{
-		String response=companyService.DeleteCompany(companyName);
+	public ResponseEntity<String> deleteCompany(@RequestBody company company) throws Exception{
+		String response=companyService.DeleteCompany(company);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 

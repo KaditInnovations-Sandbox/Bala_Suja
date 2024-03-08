@@ -76,8 +76,8 @@ public class CompanyService {
     }
 
     //Company Remove access
-    public String DeleteCompany(String companyName) throws Exception{
-        company company=companyRepository.findByComapnyName(companyName);
+    public String DeleteCompany(company companys) throws Exception{
+        company company=companyRepository.findByComapnyName(companys.getCompanyName());
         if(company==null){
             throw new ResourceNotFoundException("Company Not found");
         }else{
@@ -91,8 +91,8 @@ public class CompanyService {
     }
 
     //Bind Company
-    public String BindCompany(String companyName) throws Exception{
-        company company=companyRepository.findByComapnyName(companyName);
+    public String BindCompany(company companys) throws Exception{
+        company company=companyRepository.findByComapnyName(companys.getCompanyName());
         if(company==null){
             throw new ResourceNotFoundException("Company Not found");
         }else{
