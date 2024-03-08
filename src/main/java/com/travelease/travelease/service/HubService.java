@@ -32,6 +32,7 @@ public class HubService {
     public String CreateVehicle(Vehicle vehicle)throws Exception{
         Vehicle isvehicle=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
         if(isvehicle==null){
+            vehicle.setVehicleType("sevilai");
             vehicleRepository.save(vehicle);
             return "created";
         }else{
