@@ -22,12 +22,18 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicleId")
     private Long vehicleId;
-    @Column(name = "vehicleCapacity")
+    @Column(name = "vehicleCapacity",  nullable = false)
     private String vehicleCapacity;
-    @Column(name = "vehicleNumber")
+    @Column(name = "vehicleNumber", unique = true)
     private String vehicleNumber;
     @Column (name = "vehicleCreatedAt")  
-    private LocalDateTime vehicleCreatedAt;
-    @Column(name = "VehicleIsActive")
-    private Boolean VehicleAccess;
+    private LocalDateTime vehicleCreatedAt = LocalDateTime.now();
+    @Column(name = "vehicleIsActive")
+    private Boolean VehicleIsActive = true;;
+    @Column(name = "vehicleType",  nullable = false)
+    private String VehicleType;
+    @Column(name = "lastUpdatedTime")
+    private LocalDateTime LastUpdatedTime;
+    @Column(name = "vehicleDeletedTime")
+    private LocalDateTime VehicleDeletedTime;
 }

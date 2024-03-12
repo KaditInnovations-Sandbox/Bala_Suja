@@ -1,6 +1,6 @@
 package com.travelease.travelease.model.companymodel;
 
-import com.travelease.travelease.model.routemodel.RouteStopAssociation;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,22 +18,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "companyrouteassociation")
-public class companyrouteassociation {
-
+@Table(name = "companyPassengerAssociation")
+public class companyPassengerAssocaiation {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "companyrouteid")
-    private Long companyRouteId;
+    @Column(name = "CompanyPassengerId")
+    private Long CompanyPassengerId;
 
     @ManyToOne
     @JoinColumn(name = "companyid", nullable = false)
     private company companyId;
 
     @ManyToOne
-    @JoinColumn(name = "routeid", nullable = false)
-    private RouteStopAssociation routeStopAssociationId;
-
+    @JoinColumn(name = "Passengerid", nullable = false)
+    private passenger PassengerId;
 
     
 }

@@ -1,4 +1,6 @@
 package com.travelease.travelease.model.hubmodel;
+import com.travelease.travelease.model.schedulemodel.Trip;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "DriverLiveLocation")
-public class DriverLiveLocation {
+public class DriverTripAssociation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +34,9 @@ public class DriverLiveLocation {
 
     @Column(name = "Latitude")
     private Double Latitude;
+
+    @ManyToOne
+    @JoinColumn(name = "TripId", nullable = false)
+    private Trip TripId;
 
 }

@@ -1,7 +1,6 @@
 package com.travelease.travelease.controller;
 
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +33,10 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.adminLogin(adminLogin));   
 	}
 
-    // //admin Login via email
-    // @PostMapping("/AdminEmaillogin")
-	// public ResponseEntity<Object> checkAdminEmailExistence(@RequestBody AdminLogin adminLogin) throws Exception{
-    //     String response=adminService.adminEmailLogin(adminLogin);
-    //     return ResponseEntity.status(HttpStatus.OK).body(response);   
-	// }
-
-    // //admin Login via phone
-    // @PostMapping("/AdminPhonelogin")
-	// public ResponseEntity<Object> checkAdminPhoneExistence(@RequestBody AdminLogin adminLogin) throws Exception{
-    //     String response=adminService.adminPhoneLogin(adminLogin);
-    //     return ResponseEntity.status(HttpStatus.OK).body(response);   
-	// }
-
     //forgot password and OTP generationl
-    @PostMapping("/ForgotPassword")
-    public String ForgotPassword(@RequestBody String email) throws Exception{
-        String access=loginService.forgotPassword(email);
+    @PostMapping("/AdminForgotPassword")
+    public String AdminForgotPassword(@RequestBody String email) throws Exception{
+        String access=loginService.AdminforgotPassword(email);
         return access;
     }
 
@@ -62,5 +47,16 @@ public class LoginController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
     
+    //Passenger Login
+    @PostMapping("/PassengerLogin")
+	public ResponseEntity<Map<String,Object>> PassengerLogin(@RequestBody Map<String,Object> passengerLogin) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.passengerLogin(passengerLogin));   
+	}
+
+    //Driver Login
+    @PostMapping("/DriverLogin")
+	public ResponseEntity<Map<String,Object>> DriverLogin(@RequestBody Map<String,Object> driverLogin) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.driverLogin(driverLogin));   
+	}
 
 }

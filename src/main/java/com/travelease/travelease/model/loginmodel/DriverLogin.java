@@ -29,6 +29,9 @@ public class DriverLogin {
     @JoinColumn(name = "Driver",nullable = false)
     private Driver Driver;
 
-    @Column(name = "timestamp")
-    private LocalDateTime timestamp;
+    @Column(name = "Tokenid")
+    private String TokenId;
+
+    @Column(name = "Timestamp")
+    private LocalDateTime Timestamp;
 }

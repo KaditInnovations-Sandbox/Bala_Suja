@@ -1,10 +1,20 @@
 package com.travelease.travelease.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.travelease.travelease.exception.ResourceNotFoundException;
+import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.hubmodel.Vehicle;
 import com.travelease.travelease.repository.DriverRepository;
 import com.travelease.travelease.repository.VehicleRepository;
@@ -22,24 +32,25 @@ public class HubService {
     public String CreateVehicle(Vehicle vehicle)throws Exception{
         Vehicle isvehicle=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
         if(isvehicle==null){
-            // vehicle.setVehicleRegistered(LocalDateTime.now());
-            vehicle.setVehicleAccess(true);
+            vehicle.setVehicleType("sevilai");
             vehicleRepository.save(vehicle);
             return "created";
         }else{
-            throw new Exception();
+            throw new Exception("Vehicle already exists");
         }
         
     }
 
     //vehicle Remove access
-    public String DeleteVehicle(String vehiclenumber) throws Exception{
-        Vehicle vehicle=vehicleRepository.findByVehicleNumber(vehiclenumber);
-        if(vehicle==null){
+    public String DeleteVehicle(Vehicle vehicle) throws Exception{
+        Vehicle vehicles=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
+        System.out.println(vehicle);
+        if(vehicles==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
-            vehicle.setVehicleAccess(false);
-            vehicleRepository.save(vehicle);
+            vehicles.setVehicleIsActive(false);
+            vehicles.setVehicleDeletedTime(LocalDateTime.now());
+            vehicleRepository.save(vehicles);
             return "Deleted";
         }       
         
@@ -50,18 +61,26 @@ public class HubService {
         return vehicleRepository.findByAccessTrue();
     }
 
+    //get all active vehicle
+    public List<Vehicle> getAllVehicle(){
+        return vehicleRepository.findAll();
+    }
+
 
     //get all inactive vehicle
     public List<Vehicle> getAllInactiveVehicle(){
         return vehicleRepository.findByAccessFalse();
     }
 
-    public String bindVehicle(String vehicleNumber){
-        Vehicle vehicle=vehicleRepository.findByVehicleNumber(vehicleNumber);
+    //Grand Access 
+    public String bindVehicle(Vehicle vehicles){
+        Vehicle vehicle=vehicleRepository.findByVehicleNumber(vehicles.getVehicleNumber());
         if(vehicle==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
-            vehicle.setVehicleAccess(true);
+            vehicle.setVehicleIsActive(true);
+            vehicle.setVehicleDeletedTime(null);
+            vehicle.setLastUpdatedTime(LocalDateTime.now());
             vehicleRepository.save(vehicle);
             return "Access Updated";
         }       
@@ -75,10 +94,30 @@ public class HubService {
         }else{
             vehicle.setVehicleCapacity(vehicleDetails.getVehicleCapacity());
             vehicle.setVehicleNumber(vehicleDetails.getVehicleNumber());
-            // vehicle.setVehicleRegistered(LocalDateTime.now());
+            vehicle.setLastUpdatedTime(LocalDateTime.now());
             vehicleRepository.save(vehicle);
             return "updated";
         }
+    }
+
+    //Vehicle data read from csv
+    public Integer saveVehicleFromCsv(MultipartFile file) throws IOException {
+        List<Vehicle> vehicles = new ArrayList<>();
+        Integer count=0;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                count++;
+                String[] data = line.split(",");
+                Vehicle vehicle = new Vehicle();
+                vehicle.setVehicleCapacity(data[0]);
+                vehicle.setVehicleNumber(data[1]);
+                vehicle.setVehicleType("sevilai");
+                vehicles.add(vehicle);
+            }
+        }
+        vehicleRepository.saveAll(vehicles);
+        return count;
     }
 
 }

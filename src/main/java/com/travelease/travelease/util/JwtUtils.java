@@ -1,54 +1,90 @@
 package com.travelease.travelease.util;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.hubmodel.Driver;
+import com.travelease.travelease.model.passengermodel.passenger;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtils {
     
-    // @Autowired
-    // com.travelease.travelease.repository.TokenRepository tokenRepository;
-
     private static String secret="this_is_secret";
 
-    private static long expiryDuration = 60 * 60;
+    private static long expiryDuration =30 * 24 * 60 * 60;
 
     public String generateJwtAdmin(Admin admin){
 
-        
-        // long millisec = System.currentTimeMillis();
-        // long expiryTime = millisec + expiryDuration * 1000;
+        long millisec = System.currentTimeMillis();
+        long expiryTime = millisec + expiryDuration * 1000;
 
-        // Date issueAt = new Date(millisec);
-        // Date expirDate = new Date(expiryTime);
+        Date issueAt = new Date(millisec);
+        Date expirDate = new Date(expiryTime);
 
         Claims claims=(Claims) Jwts.claims()
-        .setIssuer(admin.getAdminEmail().toString());
+        .setIssuer(admin.getAdminEmail().toString())
+        .setIssuedAt(issueAt)
+        .setExpiration(expirDate);
         
-        
-        
-        // .setExpiration(expirDate);
-
-        // .setIssuedAt(issueAt)
-        // //optional claims
+        //optional claims
         // claims.put("type", employee.getFirstName());
 
         return Jwts.builder()
         .setClaims(claims)
+        .signWith(SignatureAlgorithm.HS512, secret)
         .compact();
 
     }
+
+    public String generateJwtDriver(Driver driver){ 
+        long millisec = System.currentTimeMillis();
+        long expiryTime = millisec + expiryDuration * 1000;
+
+        Date issueAt = new Date(millisec);
+        Date expirDate = new Date(expiryTime);
+
+        Claims claims=(Claims) Jwts.claims()
+        .setIssuer(driver.getDriverPhoneNumber().toString())
+        .setIssuedAt(issueAt)
+        .setExpiration(expirDate);
+        
+        return Jwts.builder()
+        .setClaims(claims)
+        .signWith(SignatureAlgorithm.HS512, secret)
+        .compact();
     
-    public Boolean verify(String authorization) throws Exception{
+    }
+
+    public String generateJwtPassenger(passenger passenger){ 
+        long millisec = System.currentTimeMillis();
+        long expiryTime = millisec + expiryDuration * 1000;
+
+        Date issueAt = new Date(millisec);
+        Date expirDate = new Date(expiryTime);
+
+        Claims claims=(Claims) Jwts.claims()
+        .setIssuer(passenger.getPassengerPhone().toString())
+        .setIssuedAt(issueAt)
+        .setExpiration(expirDate);
+        
+        return Jwts.builder()
+        .setClaims(claims)
+        .signWith(SignatureAlgorithm.HS512, secret)
+        .compact();
+    
+    }
+    
+    public String verify(String authorization) throws Exception{
         try{
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(authorization);  
-            return true; 
+            Jws<Claims> claims=Jwts.parser().setSigningKey(secret).parseClaimsJws(authorization);  
+            return claims.getBody().getIssuer(); 
         }catch(Exception exception){
             //tokenRepository.deleteToken(authorization);
             throw new TimeoutException("Your Time is Over Please Login again");
