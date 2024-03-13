@@ -1,6 +1,8 @@
 package com.travelease.travelease.repository;
 
 
+import java.math.BigInteger;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +17,7 @@ public interface AdminRoleAssociationRepository extends JpaRepository<AdminRoleA
     AdminRoleAssociation findByAdmin(@Param("Admin")Long Admin);
 
     @Query(nativeQuery = true, value ="SELECT roleid from roleassociation e WHERE e.userid=:Admin")
-    Role findRoleByAdmin(@Param("Admin")Long Admin);
+    Role findRoleByAdmin(@Param("Admin")BigInteger Admin);
 
 
 } 

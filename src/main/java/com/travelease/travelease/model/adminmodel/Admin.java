@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.type.descriptor.jdbc.LongVarbinaryJdbcType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,10 +44,14 @@ public class Admin {
     @Column(name = "AdminPassword")
     private String AdminPassword;
     @Column(name = "AdminCreatedAt")
-    private LocalDateTime AdminCreatedAt;
+    private LocalDateTime AdminCreatedAt = LocalDateTime.now();
     @Column(name = "AdminLastLogin")
     private LocalDateTime AdminLastLogin;
     @Column(name = "AdminIsActive")
-    private Boolean AdminIsActive;
+    private Boolean AdminIsActive = true;
+    @Column(name = "AdminLastUpdatedTime")
+    private LocalDateTime AdminLastUpdatedTime;
+    @Column(name = "AdminDeletedTime")
+    private LocalDateTime AdminDeletedTime;
 
 }

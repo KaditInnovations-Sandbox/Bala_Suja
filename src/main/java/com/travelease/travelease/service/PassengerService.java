@@ -16,10 +16,8 @@ public class PassengerService {
     @Autowired
     private PassengerRepository passengerRepository;
 
-    @Autowired
-    private CompanyPassengerRepository companyPassengerRepository;
-
-    public List<passenger> getAllPassengerDetails(Long CompanyId){
+    
+    public List<passenger> getAllPassengerDetails(){
         // companyPassengerRepository.findByCompanyId(CompanyId);
         return null;
     }

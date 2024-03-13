@@ -27,11 +27,11 @@ public class PassengerController {
     @Autowired
     private PassengerService passengerService;
 
-    // //get all Passenger details
-    // @GetMapping("/Passenger")
-	// public List<passenger> getAllPassengerDetatils(){
-	// 	return passengerService.getAllPassengerDetails();
-	// }
+    //get all Passenger details
+    @GetMapping("/Passenger")
+	public List<passenger> getAllPassengerDetatils(){
+		return passengerService.getAllPassengerDetails();
+	}
 
 	// //get all active Passenger details
     // @GetMapping("/ActivePassenger")

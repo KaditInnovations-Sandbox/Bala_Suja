@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.travelease.travelease.repository.AdminLoginRepository;
@@ -29,6 +33,7 @@ import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.Role;
 import com.travelease.travelease.model.hubmodel.Driver;
+import com.travelease.travelease.model.hubmodel.Vehicle;
 import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 import com.travelease.travelease.model.loginmodel.DriverLogin;
@@ -36,7 +41,7 @@ import com.travelease.travelease.model.loginmodel.PassengerLogin;
 import com.travelease.travelease.model.passengermodel.passenger;
 
 @Service
-public class AdminService {
+public class AdminService implements UserDetailsService{
     @Autowired
     private AdminRepository adminRepository;
 
@@ -70,6 +75,10 @@ public class AdminService {
     public List<Admin> getAllAdmin(){
         return adminRepository.findAll();
     }
+
+    public List<AdminRoleAssociation> getAllAdminWithRole(){
+        return adminRoleAssociationRepository.findAll();
+    }
     
     public Object getAdminByEmail(String email){
         Admin admin=adminRepository.findByAdminEmail(email);
@@ -84,8 +93,6 @@ public class AdminService {
             throw new ResourceNotFoundException("User Aleredy Exist");
         }else{  
             admin.setAdminPassword(encodePassword(admin.getAdminPassword()));          
-            // admin.setAdminDateRegistered(LocalDateTime.now());
-            admin.setAdminIsActive(true);
             Admin adminObject=adminRepository.save(admin);
             Role roleObject=roleRepository.findByAdminRoleName(roleName);
             AdminRoleAssociation URAssociation=new AdminRoleAssociation();
@@ -94,6 +101,20 @@ public class AdminService {
             entityManager.persist(URAssociation);
             return "Created";
         }
+    }
+
+    //Grand Access 
+    public String bindAdmin(Admin adminDetails){
+        Admin admin=adminRepository.findByAdminEmail(adminDetails.getAdminEmail());
+        if(admin==null){
+            throw new ResourceNotFoundException("Admin Not found");
+        }else{
+            admin.setAdminDeletedTime(null);
+            admin.setAdminIsActive(true);
+            admin.setAdminLastUpdatedTime(LocalDateTime.now());
+            adminRepository.save(admin);
+            return "Access Updated";
+        }       
     }
 
     public String updateAdmin(Admin adminDetails)throws Exception{
@@ -260,7 +281,37 @@ public class AdminService {
             throw new Exception(e);
         }
     }
- 
+
+    // @Override
+    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    //     AdminRoleAssociation adminRoleAssociation = adminRoleAssociationRepository.findByAdmin(adminRepository.findByAdminIdEmail(username));
+    //     return adminRoleAssociation.map(AdminInfoDetails::new)
+    //             .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
+
+    // }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Retrieve AdminRoleAssociation based on username
+        Long adminId = adminRepository.findByAdminIdEmail(username);
+        if (adminId == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+
+        // Retrieve AdminRoleAssociation based on admin
+        AdminRoleAssociation adminRoleAssociation = adminRoleAssociationRepository.findByAdmin(adminId);
+        if (adminRoleAssociation == null) {
+            throw new UsernameNotFoundException("Roles not found for user: " + username);
+        }
+
+        // Create UserDetails from AdminRoleAssociation
+        AdminInfoDetails adminInfoDetails = new AdminInfoDetails(adminRoleAssociation);
+
+        return adminInfoDetails;
+    }
+
+
+
+    
 }
 
 

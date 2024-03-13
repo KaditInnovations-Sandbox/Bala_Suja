@@ -18,4 +18,7 @@ public interface AdminRepository extends JpaRepository<Admin,Long>{
 
     @Query(nativeQuery = true, value ="SELECT * from Admin e WHERE e.admin_phone=:AdminPhone")
     Admin findByAdminPhone(@Param("AdminPhone")BigInteger AdminPhone);
+
+    @Query(nativeQuery = true, value ="SELECT admin_id from Admin e WHERE e.admin_email=:AdminEmail")
+    Long findByAdminIdEmail(@Param("AdminEmail")String AdminEmail);
 }
