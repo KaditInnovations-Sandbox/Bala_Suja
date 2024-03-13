@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
+import com.travelease.travelease.model.hubmodel.Vehicle;
 import com.travelease.travelease.service.AdminService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -71,6 +72,13 @@ public class AdminController {
 	@PutMapping("/updatePassword")
 	public ResponseEntity<String> updatePassword(@RequestParam String password,@RequestParam String email) throws Exception{
 		String response=adminService.PasswordChange(email,password);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+
+	@PutMapping("/BindAdmin")
+	public ResponseEntity<String> BindAdmin(@RequestBody Admin admin) throws Exception{
+		String response=adminService.bindAdmin(admin);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
     
