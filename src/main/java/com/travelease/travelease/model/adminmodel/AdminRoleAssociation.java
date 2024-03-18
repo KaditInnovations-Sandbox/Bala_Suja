@@ -1,6 +1,11 @@
 package com.travelease.travelease.model.adminmodel;
+import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Roleassociation")
-public class AdminRoleAssociation {
+public class AdminRoleAssociation{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "userRoleAssociationIdGenerator")
     @GenericGenerator(
@@ -39,5 +44,7 @@ public class AdminRoleAssociation {
     @ManyToOne
     @JoinColumn(name = "roleid", nullable = false)
     private Role role;
+
+   
     
 }

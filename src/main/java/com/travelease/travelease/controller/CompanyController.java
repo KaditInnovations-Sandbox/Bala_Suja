@@ -22,7 +22,7 @@ import com.travelease.travelease.service.CompanyService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/superadmin/")
+@RequestMapping("/travelease/")
 public class CompanyController {
 
     @Autowired

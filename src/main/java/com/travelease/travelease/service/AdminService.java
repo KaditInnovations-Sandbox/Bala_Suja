@@ -7,12 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.travelease.travelease.repository.AdminLoginRepository;
@@ -33,7 +28,6 @@ import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.Role;
 import com.travelease.travelease.model.hubmodel.Driver;
-import com.travelease.travelease.model.hubmodel.Vehicle;
 import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 import com.travelease.travelease.model.loginmodel.DriverLogin;
@@ -41,7 +35,7 @@ import com.travelease.travelease.model.loginmodel.PassengerLogin;
 import com.travelease.travelease.model.passengermodel.passenger;
 
 @Service
-public class AdminService implements UserDetailsService{
+public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
 
@@ -282,36 +276,7 @@ public class AdminService implements UserDetailsService{
         }
     }
 
-    // @Override
-    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //     AdminRoleAssociation adminRoleAssociation = adminRoleAssociationRepository.findByAdmin(adminRepository.findByAdminIdEmail(username));
-    //     return adminRoleAssociation.map(AdminInfoDetails::new)
-    //             .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
-
-    // }
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Retrieve AdminRoleAssociation based on username
-        Long adminId = adminRepository.findByAdminIdEmail(username);
-        if (adminId == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-
-        // Retrieve AdminRoleAssociation based on admin
-        AdminRoleAssociation adminRoleAssociation = adminRoleAssociationRepository.findByAdmin(adminId);
-        if (adminRoleAssociation == null) {
-            throw new UsernameNotFoundException("Roles not found for user: " + username);
-        }
-
-        // Create UserDetails from AdminRoleAssociation
-        AdminInfoDetails adminInfoDetails = new AdminInfoDetails(adminRoleAssociation);
-
-        return adminInfoDetails;
-    }
-
-
-
-    
+       
 }
 
 
