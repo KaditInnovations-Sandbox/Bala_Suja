@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
+import com.travelease.travelease.model.companymodel.companyPassengerAssocaiation;
 import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.service.PassengerService;
 
@@ -37,6 +38,12 @@ public class PassengerController {
 	public List<passenger> getAllPassengerDetatils(){
 		return passengerService.getAllPassengerDetails();
 	}
+
+	//get passenger based on company name
+	@GetMapping("/CompanyBasedPassenger")
+    public List<passenger> getCompanyBasedPassenger(@RequestParam Long companyid){
+        return passengerService.getCompanyBasedPassenger(companyid);
+    }
 
 	//get all active Passenger details
     @GetMapping("/ActivePassenger")

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "companyPassengerAssociation")
+@Table(name = "companypassengerassociation")
 public class companyPassengerAssocaiation {
     
     @Id

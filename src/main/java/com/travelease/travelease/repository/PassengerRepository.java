@@ -22,5 +22,6 @@ public interface PassengerRepository extends JpaRepository<passenger,Long>{
     @Query(nativeQuery = true, value ="SELECT * from passenger e WHERE e.passengerid=:id")
     passenger checkById(@Param("id")Long passengerId);
 
+   
     
 }

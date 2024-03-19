@@ -8,7 +8,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.companymodel.companyPassengerAssocaiation;
+import com.travelease.travelease.model.loginmodel.PassengerLogin;
 import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.repository.CompanyPassengerRepository;
 import com.travelease.travelease.repository.CompanyRepository;
+import com.travelease.travelease.repository.PassengerLoginRepository;
 import com.travelease.travelease.repository.PassengerRepository;
+import com.travelease.travelease.util.JwtUtils;
 
 @Service
 public class PassengerService {
+
+    @Autowired
+    private JwtUtils jwtUtils;
     
     @Autowired
     private PassengerRepository passengerRepository;
@@ -33,6 +41,8 @@ public class PassengerService {
     @Autowired
     private CompanyPassengerRepository companyPassengerRepository;
 
+    @Autowired
+    private PassengerLoginRepository passengerLoginRepository;
     
     //get all passenger
     public List<passenger> getAllPassengerDetails(){
@@ -44,6 +54,15 @@ public class PassengerService {
         return passengerRepository.findByAccessTrue();
     }
 
+    //get passenger based on company
+    public List<passenger> getCompanyBasedPassenger(Long companyid) {
+        List<companyPassengerAssocaiation> companypassengers=companyPassengerRepository.findPassengerByCompany(companyid);
+        List<passenger> passengers=new ArrayList<>();
+        for (companyPassengerAssocaiation item : companypassengers) {
+            passengers.add(item.getPassengerId());
+        }
+        return passengers;
+    }
 
     //get all inactive passenger
     public List<passenger> getAllInactivePassenger(){
@@ -127,18 +146,58 @@ public class PassengerService {
                     passenger.setPassengerName(data[0]);
                     passenger.setPassengerEmail(data[1]);
                     passenger.setPassengerPhone(new BigInteger(data[2]));
+                    passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
                     passenger.setPassengerLocation(data[3]);
                     passengers.add(passenger);
                 }
             }
             passengerRepository.saveAll(passengers);
+            for (passenger item : passengers) {
+                companyPassengerAssocaiation companyPassenger=new companyPassengerAssocaiation();
+                companyPassenger.setCompanyId(companyRepository.findByComapnyName(companyname));
+                companyPassenger.setPassengerId(item);
+                companyPassengerRepository.save(companyPassenger);
+            }
         }else{
             throw new ResourceNotFoundException("Company Not found.");
         }
         
     }
    
+    //Passenger login
+    public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
+        Map<String, Object> resultMap = new HashMap<>();
+        passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
+        if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
+                if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
+                    //token creation and store login table
+                    PassengerLogin loginpassenger=new PassengerLogin();
+                    loginpassenger.setPassenger(passenger);
+                    loginpassenger.setTimestamp(LocalDateTime.now());
+                    loginpassenger.setTokenId(jwtUtils.generateJwtPassenger(passenger));
+                    resultMap.put("token", jwtUtils.generateJwtPassenger(passenger));
+                    passengerLoginRepository.save(loginpassenger);
+                    passenger.setPassengerLastLogin(LocalDateTime.now());
+                    passengerRepository.save(passenger);
+                    return resultMap; 
+                }else{
+                    System.out.println("Driver is not match");
+                    throw new Exception();
+                    //Exception Admin Password Does not match
+                }
+        }else if(passengerLogin.get("token")!=null && passenger!=null && passenger.getPassengerIsActive()){
+            resultMap.put("email", jwtUtils.verify((String)passengerLogin.get("token")));
+            passenger.setPassengerLastLogin(LocalDateTime.now());
+            passengerRepository.save(passenger);
+            return resultMap; 
 
+        }else{
+            System.out.println("Passenger is not active or not found");
+            throw new Exception();
+            //Exception Admin is not found
+        }
+    }
+    
 
     //password encode method -- 
     public static String encodePassword(String rawPassword) {
@@ -166,4 +225,6 @@ public class PassengerService {
         // Compare the entered hash with the stored hash
         return enteredHash.equals(storedHash);
     }
+
+    
 }
