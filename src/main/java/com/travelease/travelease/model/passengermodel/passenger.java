@@ -31,16 +31,8 @@ public class passenger {
     @Id
     @Column(name = "passengerid")
     @JsonView(PublicView.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "adminIdGenerator")
-    @GenericGenerator(
-            name = "adminIdGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "admin_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     private Long PassengerId;
     @Column(name = "passengername", nullable = false)
     @JsonView(PublicView.class)
