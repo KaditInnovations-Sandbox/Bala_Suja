@@ -24,7 +24,7 @@ public class Vehicle {
     private Long vehicleId;
     @Column(name = "vehicleCapacity",  nullable = false)
     private String vehicleCapacity;
-    @Column(name = "vehicleNumber", unique = true)
+    @Column(name = "vehicleNumber", unique = true, nullable = false)
     private String vehicleNumber;
     @Column (name = "vehicleCreatedAt")  
     private LocalDateTime vehicleCreatedAt = LocalDateTime.now();

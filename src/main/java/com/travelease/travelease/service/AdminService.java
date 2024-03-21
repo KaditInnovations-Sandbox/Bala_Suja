@@ -55,12 +55,6 @@ public class AdminService {
     private AdminLoginRepository adminLoginRepository;
 
     @Autowired
-    private DriverRepository driverRepository;
-
-    @Autowired
-    private DriverLoginRepository driverLoginRepository;
-
-    @Autowired
     private PassengerRepository passengerRepository;
 
     @Autowired
@@ -169,73 +163,7 @@ public class AdminService {
             //Exception Admin is not found or not active
         }
     }
-
-    //Driver Login
-    public Map<String,Object> driverLogin(Map<String,Object> driverLogin) throws Exception{
-        Map<String, Object> resultMap = new HashMap<>();
-        Driver driver=driverRepository.findByDriverPhone((BigInteger)driverLogin.get("phone"));
-        if(driverLogin.get("token")==null && driver!=null && driver.getDriverIsActive()){
-                if(verifyPassword((String)driverLogin.get("password"), driver.getDriverPassword())){
-                    //token creation and store login table
-                    DriverLogin logindriver=new DriverLogin();
-                    logindriver.setDriver(driver);
-                    logindriver.setTimestamp(LocalDateTime.now());
-                    logindriver.setTokenId(jwtUtils.generateJwtDriver(driver));
-                    resultMap.put("token", jwtUtils.generateJwtDriver(driver));
-                    driverLoginRepository.save(logindriver);
-                    driver.setDriverLastLogin(LocalDateTime.now());
-                    driverRepository.save(driver);
-                    return resultMap; 
-                }else{
-                    throw new Exception();
-                    //Exception Driver is not match
-                }
-        }else if(driverLogin.get("token")!=null && driver!=null && driver.getDriverIsActive()){
-            resultMap.put("email", jwtUtils.verify((String)driverLogin.get("token")));
-            driver.setDriverLastLogin(LocalDateTime.now());
-            driverRepository.save(driver);
-            return resultMap;
-
-        }else{
-            throw new Exception();
-            //Exception Driver is not active or not found
-        }
-    }
-   
-    //Passenger login
-    public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
-        Map<String, Object> resultMap = new HashMap<>();
-        passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
-        if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
-                if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
-                    //token creation and store login table
-                    PassengerLogin loginpassenger=new PassengerLogin();
-                    loginpassenger.setPassenger(passenger);
-                    loginpassenger.setTimestamp(LocalDateTime.now());
-                    loginpassenger.setTokenId(jwtUtils.generateJwtPassenger(passenger));
-                    resultMap.put("token", jwtUtils.generateJwtPassenger(passenger));
-                    passengerLoginRepository.save(loginpassenger);
-                    passenger.setPassengerLastLogin(LocalDateTime.now());
-                    passengerRepository.save(passenger);
-                    return resultMap; 
-                }else{
-                    System.out.println("Driver is not match");
-                    throw new Exception();
-                    //Exception Admin Password Does not match
-                }
-        }else if(passengerLogin.get("token")!=null && passenger!=null && passenger.getPassengerIsActive()){
-            resultMap.put("email", jwtUtils.verify((String)passengerLogin.get("token")));
-            passenger.setPassengerLastLogin(LocalDateTime.now());
-            passengerRepository.save(passenger);
-            return resultMap; 
-
-        }else{
-            System.out.println("Passenger is not active or not found");
-            throw new Exception();
-            //Exception Admin is not found
-        }
-    }
-    
+  
     //password encode method -- 
     public static String encodePassword(String rawPassword) {
         try {

@@ -26,7 +26,7 @@ public class Driver {
     private Long DriverId;
     @Column(name = "DriverName")
     private String DriverName;
-    @Column(name = "DriverPhonenumber")
+    @Column(name = "DriverPhonenumber",unique = true, nullable = false )
     private BigInteger DriverPhoneNumber;
     @Column(name = "DriverEmail")
     private String DriverEmail;
@@ -35,12 +35,14 @@ public class Driver {
     @Column(name = "DriverType")
     private String DriverType;
     @Column(name = "DriverIsActive")
-    private Boolean DriverIsActive;
+    private Boolean DriverIsActive=true;
     @Column(name = "DriverLastLogin")
     private LocalDateTime DriverLastLogin;
     @Column(name = "DriverCreatedAt")
-    private LocalDateTime DriverCreatedAt;
+    private LocalDateTime DriverCreatedAt=LocalDateTime.now();
     @Column(name = "LastUpdatedTime")
     private LocalDateTime LastUpdatedTime;
+    @Column(name = "DriverDeletedTime")
+    private LocalDateTime DriverDeletedTime;
     
 }

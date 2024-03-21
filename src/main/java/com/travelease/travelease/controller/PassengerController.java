@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.travelease.travelease.model.companymodel.company;
-import com.travelease.travelease.model.companymodel.companyPassengerAssocaiation;
 import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.service.PassengerService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://192.168.20.26:4200")
 @RestController
 @RequestMapping("/travelease/")
 public class PassengerController {
