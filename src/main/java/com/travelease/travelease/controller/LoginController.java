@@ -4,6 +4,7 @@ package com.travelease.travelease.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@CrossOrigin(origins = "http://192.168.20.26:4200")
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease/")
 public class LoginController {
@@ -29,6 +30,8 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    @Value("${crossorigin}")
+	private String crossorigin;
 
     @Autowired
     private PassengerService passengerService;

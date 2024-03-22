@@ -211,6 +211,42 @@ public class HubService {
         }
     }
 
+    //Vehicle data read from csv
+    // public Integer saveOutsideDriverFromCsv(MultipartFile file) throws IOException {
+    //     List<Driver> drivers = new ArrayList<>();
+    //     List<Vehicle> vehicles=new ArrayList<>();
+    //     Integer count=0;
+    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+    //         String line;
+    //         while ((line = reader.readLine()) != null) {
+    //             count++;
+    //             String[] data = line.split(",");
+    //             Driver driver=new Driver();
+    //             driver.setDriverName(data[0]);
+    //             driver.setDriverPhoneNumber(new BigInteger(data[1]));
+    //             driver.setDriverEmail(data[2]);
+    //             driver.setDriverPassword(encodePassword(data[1]));
+    //             driver.setDriverType(env.getProperty("Outsidedrivertype"));
+    //             Vehicle vehicle=vehicleRepository.findByVehicleNumber(data[4]);
+    //             Vehicle newVehicle = new Vehicle();
+    //             if(vehicle == null){
+    //                 newVehicle.setVehicleCapacity(data[3]);
+    //                 newVehicle.setVehicleNumber(data[4]);
+    //                 newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
+    //                 vehicles.add(newVehicle);
+    //                 DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
+    //                 drivervehicleAssociation.setDriverId(driver);
+    //                 drivervehicleAssociation.setVehicleId(newVehicle);
+    //                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
+    //             }
+    //             drivers.add(driver);
+
+    //         }
+    //     }
+    //     vehicleRepository.saveAll(vehicles);
+    //     return count;
+    // }
+
     //Update Driver
     public String UpdateDriver(Map<String,Object> driverdetails)throws Exception{
         Driver driver=driverRepository.checkById(Long.valueOf(driverdetails.get("DriverId").toString()));

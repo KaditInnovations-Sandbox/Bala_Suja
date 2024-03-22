@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,13 +23,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.service.PassengerService;
 
-@CrossOrigin(origins = "http://192.168.20.26:4200")
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease/")
 public class PassengerController {
     
     @Autowired
     private PassengerService passengerService;
+
+    @Value("${crossorigin}")
+	private String crossorigin;
 
     //get all Passenger details
 	@JsonView(passenger.PublicView.class)

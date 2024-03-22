@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +27,7 @@ import com.travelease.travelease.model.hubmodel.Vehicle;
 import com.travelease.travelease.repository.VehicleRepository;
 import com.travelease.travelease.service.HubService;
 
-@CrossOrigin(origins = "http://192.168.20.26:4200")
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease")
 public class HubController {
@@ -36,6 +37,9 @@ public class HubController {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Value("${crossorigin}")
+	private String crossorigin;
     
     //create vehicle
     @PostMapping("/Vehicle")

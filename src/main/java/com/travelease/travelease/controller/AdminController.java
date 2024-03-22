@@ -2,6 +2,7 @@ package com.travelease.travelease.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,13 +20,18 @@ import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.service.AdminService;
 
-@CrossOrigin(origins = "http://192.168.20.26:4200")
+
+
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease/")
 public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+	@Value("${crossorigin}")
+	private String crossorigin;
 
     //get all admin details
     @GetMapping("/Admin")
