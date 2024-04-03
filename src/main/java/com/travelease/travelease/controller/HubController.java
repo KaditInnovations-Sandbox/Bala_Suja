@@ -2,8 +2,10 @@ package com.travelease.travelease.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,17 +14,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.exception.ResourceNotFoundException;
+import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.hubmodel.Vehicle;
+import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.repository.VehicleRepository;
 import com.travelease.travelease.service.HubService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease")
 public class HubController {
@@ -32,6 +38,9 @@ public class HubController {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Value("${crossorigin}")
+	private String crossorigin;
     
     //create vehicle
     @PostMapping("/Vehicle")
@@ -65,12 +74,11 @@ public class HubController {
         return hubService.getAllVehicle();
     }
 
-
     //get vehicle by id
+    @SuppressWarnings("null")
     @GetMapping("/VehicleByID")
     public ResponseEntity<Vehicle> getEmployeeById(@RequestBody Long id) {
-		@SuppressWarnings("null")
-        Vehicle vehicle = vehicleRepository.findById(id)
+		Vehicle vehicle = vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("vehicle not exist with id :" + id));
 		return ResponseEntity.ok(vehicle);
 	}
@@ -82,6 +90,7 @@ public class HubController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+    //grand access for vehicle
     @PutMapping("/BindVehicle")
 	public ResponseEntity<String> BindVehicle(@RequestBody Vehicle vehicle) throws Exception{
 		String response=hubService.bindVehicle(vehicle);
@@ -89,7 +98,7 @@ public class HubController {
 	}
 
     @PostMapping("/SevilaiVehicleUpload")
-    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadVehicleCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
         }
@@ -97,6 +106,128 @@ public class HubController {
         try {
             Integer line=hubService.saveVehicleFromCsv(file);
             return new ResponseEntity<>("File uploaded successfully!\n"+line+"Rows added successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/GetVehicle/Type/{VehicleType}")
+    public List<Vehicle> GetVehicleType(@RequestHeader String VehicleType) {
+        return hubService.getVehicleType(VehicleType);
+    }
+
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/GetVehicle/Number/{VehicleNumber}")
+    public Vehicle GetVehicleNumber(@RequestHeader String VehicleNumber){
+        return hubService.getVehicleNumber(VehicleNumber);
+    }
+    
+
+     //get all Driver details 
+     @JsonView(Driver.PublicView.class)
+     @GetMapping("/Driver")
+     public List<Driver> getAllDriver(){
+         return hubService.getAllDriver();
+     }
+
+    //get all Mapped Driver by type details 
+    @GetMapping("/MappedDriver/{DriverType}")
+    public List<Map<String, Object>> getAllMappedDriverByType(@RequestHeader String DriverType){
+        return hubService.getAllMappedDriverByType(DriverType);
+    }
+
+   
+    //get all Mapped Driver and Vehicle by type details
+    @JsonView(Driver.PublicView.class) 
+    @GetMapping("/AllDriverWithVehicle/{DriverType}")
+    public List<Map<String, Object>> getAllDriverWithVehicle(@RequestHeader String DriverType){
+        List<Map<String, Object>> answer=hubService.getAllDriverWithVehicle(DriverType);
+        System.out.println(answer);
+        return answer;
+    }
+    
+     //get Driver based on type
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/GetDriver/Type/{DriverType}")
+    public List<Driver> GetDriverType(@RequestHeader String DriverType) {
+        return hubService.getDriverType(DriverType);
+    }
+
+    //get all active driver details
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/AllActiveDriver")
+    public List<Driver> getAllActiveDriver(){
+        return hubService.getAllActiveDriver();
+    }
+
+    //Active Driver Based on Type
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/ActiveDriver/Type/{DriverType}")
+    public List<Driver> GetActiveDriverType(@RequestHeader String DriverType) {
+        return hubService.getActiveDriverType(DriverType);
+    }
+
+    //InActive Driver Based on Type
+    @JsonView(Driver.PublicView.class)
+    @GetMapping("/InactiveDriver/Type/{DriverType}")
+    public List<Driver> GetInactiveDriverType(@RequestHeader String DriverType) {
+        return hubService.getInactiveDriverType(DriverType);
+    }
+
+    //get all inactive driver details
+    @JsonView(Driver.PublicView.class) 
+    @GetMapping("/AllInactiveDriver")
+    public List<Driver> getAllInactiveDriver(){
+        return hubService.getAllInactiveDriver();
+    }
+
+    //create Driver
+    @PostMapping("/Driver")
+    public ResponseEntity<String> createDriver( @RequestBody Map<String,Object> driver)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(hubService.CreateDriver( driver));
+    }       
+
+
+    //update Driver
+    @PutMapping("/Driver")
+    public ResponseEntity<String> updateDriver( @RequestBody Map<String,Object> driver)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(hubService.UpdateDriver( driver));
+    }  
+
+    //delete driver
+    @DeleteMapping("/Driver")
+    public ResponseEntity<String> deleteDriver(@RequestBody Driver driver)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(hubService.DeleteDriver(driver));
+    }
+
+    //Bind driver
+    @PutMapping("/BindDriver")
+    public ResponseEntity<String> BindDriver(@RequestBody Driver driver)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(hubService.BindDriver(driver));
+    }
+
+    @PostMapping("/SevilaiDriverUpload")
+    public ResponseEntity<String> uploadSevilaiDriverCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(hubService.saveInsideDriverFromCsv(file)+" Rows Added Successfully");
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/ContractDriverUpload")
+    public ResponseEntity<String> uploadContractDriverCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(hubService.saveOutsideDriverFromCsv(file)+" Rows Added Successfully");
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

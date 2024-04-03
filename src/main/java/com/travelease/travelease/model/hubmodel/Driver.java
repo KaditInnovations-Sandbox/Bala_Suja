@@ -3,6 +3,10 @@ package com.travelease.travelease.model.hubmodel;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,27 +24,51 @@ import lombok.NoArgsConstructor;
 @Table(name = "Driver")
 public class Driver {
 
+    public interface PublicView {}
+    public interface PrivateView extends PublicView {}
+
     @Id
+    @JsonView(PublicView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "DriverId")
+    @Column(name = "Driver_id")
     private Long DriverId;
-    @Column(name = "DriverName")
+    @JsonView(PublicView.class)
+    @Column(name = "Driver_name")
     private String DriverName;
-    @Column(name = "DriverPhonenumber")
-    private BigInteger DriverPhoneNumber;
-    @Column(name = "DriverEmail")
+    @JsonView(PublicView.class)
+    @Column(name = "Driver_phone",unique = true, nullable = false )
+    private BigInteger DriverPhone;
+    @Column(name = "Driver_email")
+    @JsonView(PublicView.class)
     private String DriverEmail;
-    @Column(name = "DriverPassword")
+    @JsonView(PrivateView.class)
+    @Column(name = "Driver_password")
     private String DriverPassword;
-    @Column(name = "DriverType")
+    @Column(name = "Driver_type")
+    @JsonView(PublicView.class)
     private String DriverType;
-    @Column(name = "DriverIsActive")
-    private Boolean DriverIsActive;
-    @Column(name = "DriverLastLogin")
+    @Column(name = "Driver_is_active")
+    @JsonView(PublicView.class)
+    private Boolean DriverIsActive=true;
+    @Column(name = "Driver-last_login")
+    @JsonView(PublicView.class)
     private LocalDateTime DriverLastLogin;
-    @Column(name = "DriverCreatedAt")
-    private LocalDateTime DriverCreatedAt;
-    @Column(name = "LastUpdatedTime")
+    @Column(name = "Driver_created_at")
+    @JsonView(PublicView.class)
+    private LocalDateTime DriverCreatedAt=LocalDateTime.now();
+    @Column(name = "Last_updated_time")
     private LocalDateTime LastUpdatedTime;
+    @JsonView(PublicView.class)
+    @Column(name = "Driver_deleted_time")
+    private LocalDateTime DriverDeletedTime;
+    @JsonView(PublicView.class)
+    @Column(name = "Remarks")
+    private String Remarks;
+    @JsonView(PrivateView.class)
+    @Column(name = "Token_id")
+    private String TokenId;
+    @JsonView(PrivateView.class)
+    @Column(name = "Login_time")
+    private LocalDateTime LoginTime;
     
 }

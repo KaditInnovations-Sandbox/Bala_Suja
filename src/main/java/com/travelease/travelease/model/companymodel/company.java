@@ -51,5 +51,6 @@ public class company {
     private LocalDateTime CompanyDeletedTime;
     @Column(name = "Companylastupdatedtime")
     private LocalDateTime CompanyLastUpdatedTime;
-
+    @Column(name = "Remarks")
+    private String Remarks;
 }

@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.travelease.travelease.dto.OtpDto;
+import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.loginmodel.AdminLogin;
+import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
 import com.travelease.travelease.util.OTPStorage;
 
@@ -16,6 +19,9 @@ public class LoginService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private AdminLoginRepository adminLoginRepository;
 
     @Autowired
     private EmailService emailService;
@@ -55,6 +61,15 @@ public class LoginService {
         } else {
             return false; // OTP expired or not found
         }
+    }
+
+    public String AdminLogOut(String token) {
+        AdminLogin adminLogin=adminLoginRepository.findByTokenId(token);
+        if (adminLogin == null) {
+            throw new ResourceNotFoundException("AdminLogin not found");
+        }
+        adminLoginRepository.delete(adminLogin);
+        return "Deleted Successfully";
     }
     
 }

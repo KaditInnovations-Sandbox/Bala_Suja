@@ -11,9 +11,12 @@ import com.travelease.travelease.model.loginmodel.AdminLogin;
 public interface AdminLoginRepository extends JpaRepository<AdminLogin,Long>{
 
    
-    @Query(nativeQuery = true, value ="SELECT * from Adminlogin e WHERE e.admin_email=:AdminEmail")
-    AdminLogin findByAdminEmail(@Param("AdminEmail")String AdminEmail);
+    // @Query(nativeQuery = true, value ="SELECT * from Adminlogin e WHERE e.admin_email=:AdminEmail")
+    // AdminLogin findByAdminEmail(@Param("AdminEmail")String AdminEmail);
 
-    @Query(nativeQuery = true, value ="SELECT * from Adminlogin e WHERE e.admin_phone=:AdminPhone")
-    AdminLogin findByAdminPhone(@Param("AdminPhone")BigInteger AdminPhone);
+    // @Query(nativeQuery = true, value ="SELECT * from Adminlogin e WHERE e.admin_phone=:AdminPhone")
+    // AdminLogin findByAdminPhone(@Param("AdminPhone")BigInteger AdminPhone);
+
+    @Query(nativeQuery = true, value = "SELECT * from adminlogin e WHERE e.tokenid=:token")
+    AdminLogin findByTokenId(@Param("token")String token);
 }

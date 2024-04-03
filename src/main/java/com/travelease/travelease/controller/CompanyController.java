@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,13 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.service.CompanyService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${crossorigin}")
 @RestController
 @RequestMapping("/travelease/")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
+
+    @Value("${crossorigin}")
+	private String crossorigin;
 
     //get all Company details
     @GetMapping("/Company")

@@ -2,6 +2,9 @@ package com.travelease.travelease.model.hubmodel;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,20 +23,22 @@ import lombok.NoArgsConstructor;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehicleId")
+    @Column(name = "vehicle_id")
     private Long vehicleId;
-    @Column(name = "vehicleCapacity",  nullable = false)
+    @Column(name = "vehicle_capacity",  nullable = false)
     private String vehicleCapacity;
-    @Column(name = "vehicleNumber", unique = true)
+    @Column(name = "vehicle_number", unique = true, nullable = false)
     private String vehicleNumber;
-    @Column (name = "vehicleCreatedAt")  
+    @Column (name = "vehicle_created_at")  
     private LocalDateTime vehicleCreatedAt = LocalDateTime.now();
-    @Column(name = "vehicleIsActive")
+    @Column(name = "vehicle_is_active")
     private Boolean VehicleIsActive = true;;
-    @Column(name = "vehicleType",  nullable = false)
+    @Column(name = "vehicle_type",  nullable = false)
     private String VehicleType;
-    @Column(name = "lastUpdatedTime")
+    @Column(name = "last_updated_time")
     private LocalDateTime LastUpdatedTime;
-    @Column(name = "vehicleDeletedTime")
+    @Column(name = "vehicle_deleted_time")
     private LocalDateTime VehicleDeletedTime;
+    @Column(name = "remarks")
+    private String Remarks;
 }
