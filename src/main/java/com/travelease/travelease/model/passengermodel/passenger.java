@@ -7,12 +7,17 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.travelease.travelease.model.companymodel.company;
+import com.travelease.travelease.model.routemodel.route;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +37,6 @@ public class passenger {
     @Column(name = "passengerid")
     @JsonView(PublicView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long PassengerId;
     @Column(name = "passengername", nullable = false)
     @JsonView(PublicView.class)
@@ -64,5 +68,23 @@ public class passenger {
     @Column(name = "PassengerDeletedTime")
     @JsonView(PublicView.class)
     private LocalDateTime PassengerDeletedTime;
+    @Column(name = "TokenId")
+    @JsonView(PrivateView.class)
+    private String TokenId;
+    @Column(name = "LoginTime")
+    @JsonView(PrivateView.class)
+    private LocalDateTime LoginTime;
+    @Column(name = "Remarks")
+    private String Remarks;
+
+    
+    @ManyToOne
+    @JoinColumn(name = "RouteId", nullable = false)
+    private route RouteId;
+    
+    @ManyToOne
+    @JoinColumn(name = "CompanyId", nullable = false)
+    private company CompanyId;
+
     
 }

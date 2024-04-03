@@ -9,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,14 +28,17 @@ public class AdminLogin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long AdminLoginId;
 
-    @OneToOne
-    @JoinColumn(name = "Admin",nullable = false)
-    private Admin Admin;
+    @ManyToOne
+    @JoinColumn(name = "AdminId",nullable = false)
+    private Admin AdminId;
 
     @Column(name = "Tokenid")
     private String TokenId;
 
-    @Column(name = "Timestamp")
-    private LocalDateTime Timestamp;
+    @Column(name = "LoginTime")
+    private LocalDateTime LoginTime;
+
+    @Column(name = "DeviceType")
+    private String DeviceType;
     
 }

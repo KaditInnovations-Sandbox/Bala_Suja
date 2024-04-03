@@ -10,7 +10,7 @@ import com.travelease.travelease.model.adminmodel.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin,Long>{
     
-    @Query(nativeQuery = true, value = "SELECT CASE WHEN COUNT(e.admin_id) > 0 THEN '1' ELSE '0' END FROM admin e WHERE e.admin_email = :email")
+    @Query(nativeQuery = true, value = "SELECT case WHEN COUNT(e.admin_id) > 0 THEN 'true' ELSE 'false' END FROM admin e WHERE e.admin_email = :email GROUP BY e.admin_is_active")
     String checkAdminExistence(@Param("email")String email);
 
     @Query(nativeQuery = true, value ="SELECT * from Admin e WHERE e.admin_email=:AdminEmail")

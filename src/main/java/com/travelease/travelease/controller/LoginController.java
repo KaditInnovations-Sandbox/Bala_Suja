@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.service.AdminService;
 import com.travelease.travelease.service.HubService;
 import com.travelease.travelease.service.LoginService;
@@ -58,17 +61,22 @@ public class LoginController {
 		Boolean response=loginService.verifyOtp(email,OTP);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-    
-    //Passenger Login
-    @PostMapping("/PassengerLogin")
-	public ResponseEntity<Map<String,Object>> PassengerLogin(@RequestBody Map<String,Object> passengerLogin) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(passengerService.passengerLogin(passengerLogin));   
-	}
 
-    //Driver Login
-    @PostMapping("/DriverLogin")
-	public ResponseEntity<Map<String,Object>> DriverLogin(@RequestBody Map<String,Object> driverLogin) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(hubService.driverLogin(driverLogin));   
+    @DeleteMapping("/AdminLogOut")
+	public ResponseEntity<String> AdminLogOut(@RequestBody String token) throws Exception {
+		return ResponseEntity.status(HttpStatus.CREATED).body(loginService.AdminLogOut(token));
 	}
+    
+    // //Passenger Login
+    // @PostMapping("/PassengerLogin")
+	// public ResponseEntity<Map<String,Object>> PassengerLogin(@RequestBody Map<String,Object> passengerLogin) throws Exception{
+    //     return ResponseEntity.status(HttpStatus.OK).body(passengerService.passengerLogin(passengerLogin));   
+	// }
+
+    // //Driver Login
+    // @PostMapping("/DriverLogin")
+	// public ResponseEntity<Map<String,Object>> DriverLogin(@RequestBody Map<String,Object> driverLogin) throws Exception{
+    //     return ResponseEntity.status(HttpStatus.OK).body(hubService.driverLogin(driverLogin));   
+	// }
 
 }

@@ -2,6 +2,7 @@ package com.travelease.travelease.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,10 +43,10 @@ public class PassengerController {
 	}
 
 	//get passenger based on company name
-	@GetMapping("/CompanyBasedPassenger")
-    public List<passenger> getCompanyBasedPassenger(@RequestParam Long companyid){
-        return passengerService.getCompanyBasedPassenger(companyid);
-    }
+	// @GetMapping("/CompanyBasedPassenger")
+    // public List<passenger> getCompanyBasedPassenger(@RequestParam Long companyid){
+    //     return passengerService.getCompanyBasedPassenger(companyid);
+    // }
 
 	//get all active Passenger details
     @GetMapping("/ActivePassenger")
@@ -61,7 +62,7 @@ public class PassengerController {
 
     //create passenger
     @PostMapping("{companyname}/Passenger")
-	public ResponseEntity<String> createPassenger(@RequestHeader String companyname,@RequestBody passenger passenger) throws Exception {
+	public ResponseEntity<String> createPassenger(@RequestHeader String companyname,@RequestBody Map<String,Object> passenger) throws Exception {
 		return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.createPassenger(companyname, passenger));
 	}
 

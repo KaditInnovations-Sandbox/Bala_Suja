@@ -11,7 +11,7 @@ import com.travelease.travelease.model.hubmodel.Driver;
 
 public interface DriverRepository extends JpaRepository<Driver,Long>{
 
-    @Query(nativeQuery = true, value ="SELECT * from Driver e WHERE e.driver_phonenumber=:DriverPhonenumber")
+    @Query(nativeQuery = true, value ="SELECT * from Driver e WHERE e.driver_phone=:DriverPhonenumber")
     Driver findByDriverPhone(@Param("DriverPhonenumber")BigInteger DriverPhonenumber);
 
     @Query(nativeQuery = true, value = "SELECT * FROM Driver e WHERE e.driver_is_active = true")

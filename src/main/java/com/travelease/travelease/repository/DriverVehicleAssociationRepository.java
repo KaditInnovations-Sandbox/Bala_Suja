@@ -14,7 +14,9 @@ public interface DriverVehicleAssociationRepository extends JpaRepository<Driver
     @Query(nativeQuery = true, value ="SELECT * from drivervehicle_association e WHERE e.driver_id=:driverId")
     DrivervehicleAssociation findDriverVehicleByDriverId(@Param("driverId")Long driverId);
 
-   
+    @Query(nativeQuery = true, value ="SELECT * from drivervehicle_association e WHERE e.vehicle_id=:vehicleId")
+    DrivervehicleAssociation findDriverVehicleByVehicleId(@Param("vehicleId")Long vehicleId);   
+
     @Query(value = "SELECT d.*, v.*, e.* " +
                 "FROM driver d " +
                 "JOIN drivervehicle_association e ON d.driver_id = e.driver_id " +

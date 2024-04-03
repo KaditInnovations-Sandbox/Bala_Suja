@@ -6,6 +6,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.type.descriptor.jdbc.LongVarbinaryJdbcType;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +24,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "Admin")
 public class Admin {
+    
+    public interface PublicView {}
+    public interface PrivateView extends PublicView {}    
+        
     @Id
+    @JsonView(PublicView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "adminIdGenerator")
     @GenericGenerator(
             name = "adminIdGenerator",
@@ -35,24 +42,39 @@ public class Admin {
     )
     @Column(name = "AdminId")
     private Long AdminId;
+    @JsonView(PublicView.class)
     @Column(name = "AdminName")
     private String AdminName;
+    @JsonView(PublicView.class)
     @Column(name = "AdminEmail")
     private String AdminEmail;
-    @Column(name = "AdminPhone") 
+    @JsonView(PublicView.class)
+    @Column(name = "AdminPhone", unique = true, nullable = false) 
     private BigInteger AdminPhone;
+    @JsonView(PrivateView.class)
     @Column(name = "AdminPassword")
     private String AdminPassword;
+    @JsonView(PublicView.class)
     @Column(name = "AdminCreatedAt")
     private LocalDateTime AdminCreatedAt = LocalDateTime.now();
+    @JsonView(PublicView.class)
     @Column(name = "AdminLastLogin")
     private LocalDateTime AdminLastLogin;
+    @JsonView(PublicView.class)
     @Column(name = "AdminIsActive")
     private Boolean AdminIsActive = true;
+    @JsonView(PublicView.class)
     @Column(name = "AdminLastUpdatedTime")
     private LocalDateTime AdminLastUpdatedTime;
+    @JsonView(PublicView.class)
     @Column(name = "AdminDeletedTime")
     private LocalDateTime AdminDeletedTime;
-
+    @JsonView(PublicView.class)
+    @Column(name = "AdminRoleType", nullable = false)
+    private String AdminRoleType;
+    @JsonView(PublicView.class)
+    @Column(name = "Remarks")
+    private String Remarks;
+    
 
 }

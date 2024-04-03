@@ -29,9 +29,11 @@ public class JwtUtils {
         Date expirDate = new Date(expiryTime);
 
         Claims claims=(Claims) Jwts.claims()
-        .setIssuer(admin.getAdminEmail().toString())
+        .setIssuer(admin.getAdminEmail()+","+admin.getAdminName())
         .setIssuedAt(issueAt)
         .setExpiration(expirDate);
+
+        claims.put("Role",admin.getAdminRoleType());
         
         //optional claims
         // claims.put("type", employee.getFirstName());
@@ -51,7 +53,7 @@ public class JwtUtils {
         Date expirDate = new Date(expiryTime);
 
         Claims claims=(Claims) Jwts.claims()
-        .setIssuer(driver.getDriverPhoneNumber().toString())
+        .setIssuer(driver.getDriverPhone().toString())
         .setIssuedAt(issueAt)
         .setExpiration(expirDate);
         

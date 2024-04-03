@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.hubmodel.Driver;
-import com.travelease.travelease.model.hubmodel.DrivervehicleAssociation;
 import com.travelease.travelease.model.hubmodel.Vehicle;
+import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.repository.VehicleRepository;
 import com.travelease.travelease.service.HubService;
 
@@ -73,7 +74,6 @@ public class HubController {
         return hubService.getAllVehicle();
     }
 
-
     //get vehicle by id
     @SuppressWarnings("null")
     @GetMapping("/VehicleByID")
@@ -98,7 +98,7 @@ public class HubController {
 	}
 
     @PostMapping("/SevilaiVehicleUpload")
-    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadVehicleCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
         }
@@ -111,11 +111,13 @@ public class HubController {
         }
     }
 
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/GetVehicle/Type/{VehicleType}")
     public List<Vehicle> GetVehicleType(@RequestHeader String VehicleType) {
         return hubService.getVehicleType(VehicleType);
     }
 
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/GetVehicle/Number/{VehicleNumber}")
     public Vehicle GetVehicleNumber(@RequestHeader String VehicleNumber){
         return hubService.getVehicleNumber(VehicleNumber);
@@ -123,6 +125,7 @@ public class HubController {
     
 
      //get all Driver details 
+     @JsonView(Driver.PublicView.class)
      @GetMapping("/Driver")
      public List<Driver> getAllDriver(){
          return hubService.getAllDriver();
@@ -134,31 +137,46 @@ public class HubController {
         return hubService.getAllMappedDriverByType(DriverType);
     }
 
+   
+    //get all Mapped Driver and Vehicle by type details
+    @JsonView(Driver.PublicView.class) 
+    @GetMapping("/AllDriverWithVehicle/{DriverType}")
+    public List<Map<String, Object>> getAllDriverWithVehicle(@RequestHeader String DriverType){
+        List<Map<String, Object>> answer=hubService.getAllDriverWithVehicle(DriverType);
+        System.out.println(answer);
+        return answer;
+    }
+    
      //get Driver based on type
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/GetDriver/Type/{DriverType}")
     public List<Driver> GetDriverType(@RequestHeader String DriverType) {
         return hubService.getDriverType(DriverType);
     }
 
     //get all active driver details
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/AllActiveDriver")
     public List<Driver> getAllActiveDriver(){
         return hubService.getAllActiveDriver();
     }
 
     //Active Driver Based on Type
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/ActiveDriver/Type/{DriverType}")
     public List<Driver> GetActiveDriverType(@RequestHeader String DriverType) {
         return hubService.getActiveDriverType(DriverType);
     }
 
     //InActive Driver Based on Type
+    @JsonView(Driver.PublicView.class)
     @GetMapping("/InactiveDriver/Type/{DriverType}")
     public List<Driver> GetInactiveDriverType(@RequestHeader String DriverType) {
         return hubService.getInactiveDriverType(DriverType);
     }
 
-    //get all inactive driver details 
+    //get all inactive driver details
+    @JsonView(Driver.PublicView.class) 
     @GetMapping("/AllInactiveDriver")
     public List<Driver> getAllInactiveDriver(){
         return hubService.getAllInactiveDriver();
@@ -187,6 +205,32 @@ public class HubController {
     @PutMapping("/BindDriver")
     public ResponseEntity<String> BindDriver(@RequestBody Driver driver)throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(hubService.BindDriver(driver));
+    }
+
+    @PostMapping("/SevilaiDriverUpload")
+    public ResponseEntity<String> uploadSevilaiDriverCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(hubService.saveInsideDriverFromCsv(file)+" Rows Added Successfully");
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/ContractDriverUpload")
+    public ResponseEntity<String> uploadContractDriverCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(hubService.saveOutsideDriverFromCsv(file)+" Rows Added Successfully");
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

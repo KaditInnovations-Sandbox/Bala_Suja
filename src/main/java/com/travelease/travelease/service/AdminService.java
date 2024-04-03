@@ -1,38 +1,23 @@
 package com.travelease.travelease.service;
 
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
-import com.travelease.travelease.repository.RoleRepository;
-import com.travelease.travelease.repository.AdminRoleAssociationRepository;
-import com.travelease.travelease.repository.DriverLoginRepository;
-import com.travelease.travelease.repository.DriverRepository;
-import com.travelease.travelease.repository.PassengerLoginRepository;
-import com.travelease.travelease.repository.PassengerRepository;
 import com.travelease.travelease.util.JwtUtils;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
-import com.travelease.travelease.model.adminmodel.Role;
-import com.travelease.travelease.model.hubmodel.Driver;
-import com.travelease.travelease.model.adminmodel.AdminRoleAssociation;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
-import com.travelease.travelease.model.loginmodel.DriverLogin;
-import com.travelease.travelease.model.loginmodel.PassengerLogin;
-import com.travelease.travelease.model.passengermodel.passenger;
 
 @Service
 public class AdminService {
@@ -40,54 +25,26 @@ public class AdminService {
     private AdminRepository adminRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    private AdminRoleAssociationRepository adminRoleAssociationRepository;
-
+    private AdminLoginRepository adminLoginRepository;
+    
     @Autowired
     private JwtUtils jwtUtils;
-
-    @Autowired
-    private AdminLoginRepository adminLoginRepository;
-
-    @Autowired
-    private PassengerRepository passengerRepository;
-
-    @Autowired
-    private PassengerLoginRepository passengerLoginRepository;
 
     public List<Admin> getAllAdmin(){
         return adminRepository.findAll();
     }
-
-    public List<AdminRoleAssociation> getAllAdminWithRole(){
-        return adminRoleAssociationRepository.findAll();
-    }
-    
+   
     public Object getAdminByEmail(String email){
-        Admin admin=adminRepository.findByAdminEmail(email);
-        return admin;
+        return adminRepository.findByAdminEmail(email);
     }
 
-    @Transactional
-    public String createAdmin(Admin admin,String roleName) throws Exception{
-        String newEmail=admin.getAdminEmail();
-        String result = adminRepository.checkAdminExistence((String)newEmail);
-        if("1".equals(result)){
-            throw new ResourceNotFoundException("User Aleredy Exist");
-        }else{  
-            admin.setAdminPassword(encodePassword(admin.getAdminPassword()));          
-            Admin adminObject=adminRepository.save(admin);
-            Role roleObject=roleRepository.findByAdminRoleName(roleName);
-            AdminRoleAssociation URAssociation=new AdminRoleAssociation();
-            URAssociation.setUser(adminObject);
-            URAssociation.setRole(roleObject);
-            entityManager.persist(URAssociation);
+    public String createAdmin(Admin admin) throws Exception{
+        if(adminRepository.findByAdminEmail(admin.getAdminEmail())==null){
+            admin.setAdminPassword(encodePassword(admin.getAdminPhone().toString()));          
+            adminRepository.save(admin); 
             return "Created";
+        }else{  
+            throw new ResourceNotFoundException("User Aleredy Exist");  
         }
     }
 
@@ -100,6 +57,7 @@ public class AdminService {
             admin.setAdminDeletedTime(null);
             admin.setAdminIsActive(true);
             admin.setAdminLastUpdatedTime(LocalDateTime.now());
+            admin.setRemarks(null);
             adminRepository.save(admin);
             return "Access Updated";
         }       
@@ -112,20 +70,23 @@ public class AdminService {
         }else{
             admin.setAdminName(adminDetails.getAdminName());
             admin.setAdminEmail(adminDetails.getAdminEmail());
-            admin.setAdminPhone(adminDetails.getAdminPhone());;
-            admin.setAdminName(adminDetails.getAdminName());
+            admin.setAdminPhone(adminDetails.getAdminPhone());
+            admin.setAdminPassword(encodePassword(adminDetails.getAdminPhone().toString()));
+            admin.setAdminRoleType(adminDetails.getAdminRoleType());
             // admin.setAdminDateRegistered(LocalDateTime.now());
             adminRepository.save(admin);
             return "Updated";
         }	
     }
 
-    public String deleteAdmin(String email) throws Exception{
-        Admin admin=adminRepository.findByAdminEmail(email);
+    public String deleteAdmin(Admin admins) throws Exception{
+        Admin admin=adminRepository.findByAdminEmail(admins.getAdminEmail());
         if(admin==null){
             throw new ResourceNotFoundException("Admin not found");
         }else{
             admin.setAdminIsActive(false);
+            admin.setAdminDeletedTime(LocalDateTime.now());
+            admin.setRemarks(admin.getRemarks());
             adminRepository.save(admin);
             return "Deleted";
         }
@@ -139,17 +100,17 @@ public class AdminService {
                 if(verifyPassword(adminLogin.get("password"), admin.getAdminPassword())){
                     //token creation and store login table
                     AdminLogin loginuser=new AdminLogin();
-                    loginuser.setAdmin(admin);
-                    loginuser.setTimestamp(LocalDateTime.now());
+                    loginuser.setAdminId(admin);
+                    loginuser.setLoginTime(LocalDateTime.now());
                     loginuser.setTokenId(jwtUtils.generateJwtAdmin(admin));
                     resultMap.put("token", jwtUtils.generateJwtAdmin(admin));
-                    resultMap.put("role",adminRoleAssociationRepository.findByAdmin(admin.getAdminId()).getRole().getAdminRoleName());
+                    resultMap.put("role",admin.getAdminRoleType());
                     adminLoginRepository.save(loginuser);
                     admin.setAdminLastLogin(LocalDateTime.now());
                     adminRepository.save(admin);
                     return resultMap; 
                 }else{
-                    throw new Exception();
+                    throw new ResourceNotFoundException("Admin not found");
                     //Exception Admin is not match
                 }
         }else if(adminLogin.get("token")!=null && admin!=null && admin.getAdminIsActive()){
@@ -159,7 +120,7 @@ public class AdminService {
             return resultMap;
 
         }else{
-            throw new Exception();
+            throw new ResourceNotFoundException("Admin not Active");
             //Exception Admin is not found or not active
         }
     }
@@ -192,12 +153,11 @@ public class AdminService {
     }
 
     //Update password
-    @Transactional
     public String PasswordChange(String email, String password) throws Exception {
         try{
             Admin admin=adminRepository.findByAdminEmail(email); 
             admin.setAdminPassword(encodePassword(password));
-            entityManager.persist(admin);
+            adminRepository.save(admin);
             return "Updated";
         }catch(Exception e){
             throw new Exception(e);

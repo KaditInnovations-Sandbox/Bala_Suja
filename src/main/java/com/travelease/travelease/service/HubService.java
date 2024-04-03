@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.annotations.TimeZoneStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,6 @@ import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.hubmodel.DrivervehicleAssociation;
 import com.travelease.travelease.model.hubmodel.Vehicle;
-import com.travelease.travelease.model.loginmodel.DriverLogin;
-import com.travelease.travelease.repository.DriverLoginRepository;
 import com.travelease.travelease.repository.DriverRepository;
 import com.travelease.travelease.repository.DriverVehicleAssociationRepository;
 import com.travelease.travelease.repository.VehicleRepository;
@@ -35,9 +34,7 @@ public class HubService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private DriverLoginRepository driverLoginRepository;
-    
+     
     @Autowired
     private VehicleRepository vehicleRepository;
 
@@ -66,12 +63,12 @@ public class HubService {
     //vehicle Remove access
     public String DeleteVehicle(Vehicle vehicle) throws Exception{
         Vehicle vehicles=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
-        System.out.println(vehicle);
         if(vehicles==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
             vehicles.setVehicleIsActive(false);
             vehicles.setVehicleDeletedTime(LocalDateTime.now());
+            vehicles.setRemarks(vehicle.getRemarks());
             vehicleRepository.save(vehicles);
             return "Deleted";
         }       
@@ -169,83 +166,172 @@ public class HubService {
     }
 
     //Driver Create function
-    public String CreateDriver(Map<String,Object> driverdetails)throws Exception{
+     public String CreateDriver(Map<String,Object> driverdetails)throws Exception{
         Driver isDriver=driverRepository.findByDriverPhone((BigInteger)driverdetails.get("Driverphone"));
         Driver driver=new Driver();
-        //sevilai Drivers
-        if(driverdetails.get("DriverType").equals(env.getProperty("Insidedrivertype"))&& isDriver==null){
+        Vehicle vehicle=vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber"));
+        if(driverdetails.get("DriverType").equals(env.getProperty("Insidedrivertype"))&& isDriver==null&&vehicle!=null){
+            if(driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicle.getVehicleId())==null){
+                driver.setDriverName((String)driverdetails.get("DriverName"));
+                driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
+                driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
+                driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
+                driver.setDriverType(env.getProperty("Insidedrivertype"));
+                driverRepository.save(driver);
+                DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
+                drivervehicleAssociation.setDriverId(driver);
+                drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
+                driverVehicleAssociationRepository.save(drivervehicleAssociation);
+                return env.getProperty("Insidedrivertype")+" Driver and Vehicle Created";
+            }else{
+                throw new ResourceNotFoundException("Vehicle Mapped another driver");
+            }   
+        }else if(driverdetails.get("DriverType").equals(env.getProperty("Outsidedrivertype"))  && isDriver==null && vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber"))==null){
+            Vehicle newVehicle = new Vehicle();
             driver.setDriverName((String)driverdetails.get("DriverName"));
-            driver.setDriverPhoneNumber(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
-            driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
-            driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
-            driver.setDriverType(env.getProperty("Insidedrivertype"));
-            driverRepository.save(driver);
-            DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
-            drivervehicleAssociation.setDriverId(driver);
-            drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
-            driverVehicleAssociationRepository.save(drivervehicleAssociation);
-            return env.getProperty("Insidedrivertype")+" Driver Created";
-        }else if(driverdetails.get("DriverType").equals(env.getProperty("Outsidedrivertype"))  && isDriver==null){
-            driver.setDriverName((String)driverdetails.get("DriverName"));
-            driver.setDriverPhoneNumber(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
+            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
             driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
             driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
             driver.setDriverType(env.getProperty("Outsidedrivertype"));
+            newVehicle.setVehicleCapacity((String)driverdetails.get("VehicleCapacity"));
+            newVehicle.setVehicleNumber((String)driverdetails.get("VehicleNumber"));
+            newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
+            vehicleRepository.save(newVehicle);
             driverRepository.save(driver);
-            Vehicle vehicle=vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber"));
-            Vehicle newVehicle = new Vehicle();
-            if(vehicle == null){
-                newVehicle.setVehicleCapacity((String)driverdetails.get("VehicleCapacity"));
-                newVehicle.setVehicleNumber((String)driverdetails.get("VehicleNumber"));
-                newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
-                vehicleRepository.save(newVehicle);
-                DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
-                drivervehicleAssociation.setDriverId(driver);
-                drivervehicleAssociation.setVehicleId(newVehicle);
-                driverVehicleAssociationRepository.save(drivervehicleAssociation);
-            }
+            DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
+            drivervehicleAssociation.setDriverId(driver);
+            drivervehicleAssociation.setVehicleId(newVehicle);
+            driverVehicleAssociationRepository.save(drivervehicleAssociation);            
             return env.getProperty("Outsidedrivertype")+" Driver Created";
         }else{
-            System.out.println(driverdetails);
             throw new Exception("Driver already exists");
         }
     }
 
-    //Vehicle data read from csv
-    // public Integer saveOutsideDriverFromCsv(MultipartFile file) throws IOException {
+    // // Common method to read driver data from CSV
+    // private List<Driver> readDriversFromCsv(MultipartFile file, String driverType, List<DrivervehicleAssociation> drivervehicleAssociations, List<Vehicle> vehicles) throws IOException {
     //     List<Driver> drivers = new ArrayList<>();
-    //     List<Vehicle> vehicles=new ArrayList<>();
-    //     Integer count=0;
     //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
     //         String line;
     //         while ((line = reader.readLine()) != null) {
-    //             count++;
     //             String[] data = line.split(",");
-    //             Driver driver=new Driver();
+    //             Driver driver = new Driver();
     //             driver.setDriverName(data[0]);
-    //             driver.setDriverPhoneNumber(new BigInteger(data[1]));
+    //             driver.setDriverPhone(new BigInteger(data[1]));
     //             driver.setDriverEmail(data[2]);
     //             driver.setDriverPassword(encodePassword(data[1]));
-    //             driver.setDriverType(env.getProperty("Outsidedrivertype"));
-    //             Vehicle vehicle=vehicleRepository.findByVehicleNumber(data[4]);
-    //             Vehicle newVehicle = new Vehicle();
-    //             if(vehicle == null){
+    //             driver.setDriverType(driverType);
+    //             Vehicle vehicle = vehicleRepository.findByVehicleNumber(data[4]);
+    //             if (vehicle == null && driverType.equals(env.getProperty("Outsidedrivertype"))) {
+    //                 Vehicle newVehicle = new Vehicle();
     //                 newVehicle.setVehicleCapacity(data[3]);
     //                 newVehicle.setVehicleNumber(data[4]);
     //                 newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
     //                 vehicles.add(newVehicle);
-    //                 DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
+
+    //                 DrivervehicleAssociation drivervehicleAssociation = new DrivervehicleAssociation();
     //                 drivervehicleAssociation.setDriverId(driver);
     //                 drivervehicleAssociation.setVehicleId(newVehicle);
-    //                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
+    //                 drivervehicleAssociations.add(drivervehicleAssociation);
+    //             } else if (vehicle != null && driverType.equals(env.getProperty("Insidedrivertype"))) {
+    //                 DrivervehicleAssociation drivervehicleAssociation = new DrivervehicleAssociation();
+    //                 drivervehicleAssociation.setDriverId(driver);
+    //                 drivervehicleAssociation.setVehicleId(vehicle);
+    //                 drivervehicleAssociations.add(drivervehicleAssociation);
     //             }
-    //             drivers.add(driver);
 
+    //             drivers.add(driver);
     //         }
     //     }
-    //     vehicleRepository.saveAll(vehicles);
-    //     return count;
+    //     return drivers;
     // }
+
+    // // Common method to process and save drivers
+    // private void saveDrivers(List<Driver> drivers, List<Vehicle> vehicles, List<DrivervehicleAssociation> drivervehicleAssociations) {
+    //     vehicleRepository.saveAll(vehicles);
+    //     driverRepository.saveAll(drivers);
+    //     driverVehicleAssociationRepository.saveAll(drivervehicleAssociations);
+    // }
+
+    // // Contract Driver data read from csv
+    // public Integer saveContractDriverFromCsv(MultipartFile file) throws IOException {
+    //     List<Vehicle> vehicles = new ArrayList<>();
+    //     List<DrivervehicleAssociation> drivervehicleAssociations = new ArrayList<>();
+    //     List<Driver> drivers = readDriversFromCsv(file, env.getProperty("Outsidedrivertype"), drivervehicleAssociations, vehicles);
+    //     saveDrivers(drivers, vehicles, drivervehicleAssociations);
+    //     return drivers.size();
+    // }
+
+    // // Sevilai Driver data read from csv
+    // public Integer saveSevilaiDriverFromCsv(MultipartFile file) throws IOException {
+    //     List<DrivervehicleAssociation> drivervehicleAssociations = new ArrayList<>();
+    //     List<Vehicle> vehicles = new ArrayList<>();
+    //     List<Driver> drivers = readDriversFromCsv(file, env.getProperty("Insidedrivertype"), drivervehicleAssociations, vehicles);
+    //     saveDrivers(drivers, vehicles, drivervehicleAssociations);
+    //     return drivers.size();
+    // }
+
+
+    //upload contract driver 
+    public Integer saveOutsideDriverFromCsv(MultipartFile file) throws IOException {
+        List<Driver> drivers = new ArrayList<>();
+        List<Vehicle> vehicles=new ArrayList<>();
+        List<DrivervehicleAssociation> drivervehicleAssociations=new ArrayList<>();
+        Integer count=0;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                count++;
+                String[] data = line.split(",");
+                Driver driver=new Driver();
+                driver.setDriverName(data[0]);
+                driver.setDriverPhone(new BigInteger(data[1]));
+                driver.setDriverEmail(data[2]);
+                driver.setDriverPassword(encodePassword(data[1]));
+                driver.setDriverType(env.getProperty("Outsidedrivertype"));
+                Vehicle vehicle=vehicleRepository.findByVehicleNumber(data[4]);
+                Vehicle newVehicle = new Vehicle();
+                if (vehicle == null) {
+                    newVehicle.setVehicleCapacity(data[3]);
+                    newVehicle.setVehicleNumber(data[4]);
+                    newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
+                    vehicles.add(newVehicle);
+                    DrivervehicleAssociation drivervehicleAssociation = new DrivervehicleAssociation();
+                    drivervehicleAssociation.setDriverId(driver);
+                    drivervehicleAssociation.setVehicleId(newVehicle);
+                    drivervehicleAssociations.add(drivervehicleAssociation);
+                } 
+                drivers.add(driver);
+            }
+        }
+        driverRepository.saveAll(drivers);
+        vehicleRepository.saveAll(vehicles);
+        driverVehicleAssociationRepository.saveAll(drivervehicleAssociations);
+        return count;
+    }       
+
+    //upload sevilai driver 
+    public Integer saveInsideDriverFromCsv(MultipartFile file) throws IOException {
+        List<Driver> drivers = new ArrayList<>();
+        Integer count=0;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                count++;
+                String[] data = line.split(",");
+                Driver driver=new Driver();
+                driver.setDriverName(data[0]);
+                driver.setDriverPhone(new BigInteger(data[1]));
+                driver.setDriverEmail(data[2]);
+                driver.setDriverPassword(encodePassword(data[1]));
+                driver.setDriverType(env.getProperty("Insidedrivertype"));
+                drivers.add(driver);
+            }
+        }
+        driverRepository.saveAll(drivers);
+        return count;
+    }       
+
 
     //Update Driver
     public String UpdateDriver(Map<String,Object> driverdetails)throws Exception{
@@ -253,7 +339,7 @@ public class HubService {
         DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(Long.valueOf(driverdetails.get("DriverId").toString()));
         if(driver!=null){
             driver.setDriverName((String)driverdetails.get("DriverName"));
-            driver.setDriverPhoneNumber(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
+            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
             driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
             driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
             driver.setLastUpdatedTime(LocalDateTime.now());
@@ -297,38 +383,66 @@ public class HubService {
     public List<Map<String, Object>> getAllMappedDriverByType(String DriverType){
         return driverVehicleAssociationRepository.findDriversByType(DriverType);
     }
+
+    //get all Driver with vehicle
+    public List<Map<String, Object>> getAllDriverWithVehicle(String DriverType) {
+        List<Driver> drivers = driverRepository.findByDriverType(DriverType);
+        List<Map<String, Object>> driverAndVehicle = new ArrayList<>();
+    
+        for (Driver d : drivers) {
+            Map<String, Object> DriverWithVehicle = new HashMap<>();
+    
+            DrivervehicleAssociation drivervehicleAssociation = driverVehicleAssociationRepository.findDriverVehicleByDriverId(d.getDriverId());
+    
+            if (drivervehicleAssociation != null) {
+                DriverWithVehicle.put("Driver", d);
+                System.out.println(drivervehicleAssociation.getVehicleId());
+                DriverWithVehicle.put("Vehicle", vehicleRepository.findByVehicleId(drivervehicleAssociation.getVehicleId().getVehicleId()));
+                driverAndVehicle.add(DriverWithVehicle); // Assuming drivervehicleAssociation has a getVehicle() method
+            } else {
+                DriverWithVehicle.put("Driver", d);
+                DriverWithVehicle.put("Vehicle", "No Vehicle Associated");
+                driverAndVehicle.add(DriverWithVehicle); // Or you can set this to null or some default value
+            }
+    
+            
+        }
+    
+        return driverAndVehicle;
+    }
+    
     
     //Driver Login
-    public Map<String,Object> driverLogin(Map<String,Object> driverLogin) throws Exception{
-        Map<String, Object> resultMap = new HashMap<>();
-        Driver driver=driverRepository.findByDriverPhone((BigInteger)driverLogin.get("phone"));
-        if(driverLogin.get("token")==null && driver!=null && driver.getDriverIsActive()){
-                if(verifyPassword((String)driverLogin.get("password"), driver.getDriverPassword())){
-                    //token creation and store login table
-                    DriverLogin logindriver=new DriverLogin();
-                    logindriver.setDriver(driver);
-                    logindriver.setTimestamp(LocalDateTime.now());
-                    logindriver.setTokenId(jwtUtils.generateJwtDriver(driver));
-                    resultMap.put("token", jwtUtils.generateJwtDriver(driver));
-                    driverLoginRepository.save(logindriver);
-                    driver.setDriverLastLogin(LocalDateTime.now());
-                    driverRepository.save(driver);
-                    return resultMap; 
-                }else{
-                    throw new Exception();
-                    //Exception Driver is not match
-                }
-        }else if(driverLogin.get("token")!=null && driver!=null && driver.getDriverIsActive()){
-            resultMap.put("email", jwtUtils.verify((String)driverLogin.get("token")));
-            driver.setDriverLastLogin(LocalDateTime.now());
-            driverRepository.save(driver);
-            return resultMap;
+    // public Map<String,Object> driverLogin(Map<String,Object> driverLogin) throws Exception{
+    //     Map<String, Object> resultMap = new HashMap<>();
+    //     Driver driver=driverRepository.findByDriverPhone((BigInteger)driverLogin.get("phone"));
+    //     if(driverLogin.get("token")==null && driver!=null && driver.getDriverIsActive()){
+    //             if(verifyPassword((String)driverLogin.get("password"), driver.getDriverPassword())){
+    //                 //token creation and store login table
+    //                 DriverLogin logindriver=new DriverLogin();
+    //                 logindriver.setDriver(driver);
+    //                 logindriver.setTimestamp(LocalDateTime.now());
+    //                 logindriver.setTokenId(jwtUtils.generateJwtDriver(driver));
+    //                 resultMap.put("token", jwtUtils.generateJwtDriver(driver));
+    //                 driverLoginRepository.save(logindriver);
+    //                 driver.setDriverLastLogin(LocalDateTime.now());
+    //                 driverRepository.save(driver);
+    //                 return resultMap; 
+    //             }else{
+    //                 throw new Exception();
+    //                 //Exception Driver is not match
+    //             }
+    //     }else if(driverLogin.get("token")!=null && driver!=null && driver.getDriverIsActive()){
+    //         resultMap.put("email", jwtUtils.verify((String)driverLogin.get("token")));
+    //         driver.setDriverLastLogin(LocalDateTime.now());
+    //         driverRepository.save(driver);
+    //         return resultMap;
 
-        }else{
-            throw new Exception();
-            //Exception Driver is not active or not found
-        }
-    }
+    //     }else{
+    //         throw new Exception();
+    //         //Exception Driver is not active or not found
+    //     }
+    // }
 
     //password encode method -- 
     public static String encodePassword(String rawPassword) {
@@ -367,6 +481,7 @@ public class HubService {
         }else{
             drivers.setDriverIsActive(false);
             drivers.setDriverDeletedTime(LocalDateTime.now());
+            drivers.setRemarks(driver.getRemarks());
             driverRepository.save(drivers);
             System.out.println(drivers);
             if(drivers.getDriverType().equals(env.getProperty("Insidedrivertype"))){

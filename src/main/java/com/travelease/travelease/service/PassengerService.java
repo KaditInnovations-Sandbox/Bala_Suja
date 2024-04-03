@@ -17,12 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
-import com.travelease.travelease.model.companymodel.companyPassengerAssocaiation;
-import com.travelease.travelease.model.loginmodel.PassengerLogin;
+import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.passengermodel.passenger;
-import com.travelease.travelease.repository.CompanyPassengerRepository;
+import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.repository.CompanyRepository;
-import com.travelease.travelease.repository.PassengerLoginRepository;
 import com.travelease.travelease.repository.PassengerRepository;
 import com.travelease.travelease.util.JwtUtils;
 
@@ -37,13 +35,7 @@ public class PassengerService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-    @Autowired
-    private CompanyPassengerRepository companyPassengerRepository;
-
-    @Autowired
-    private PassengerLoginRepository passengerLoginRepository;
-    
+  
     //get all passenger
     public List<passenger> getAllPassengerDetails(){
         return passengerRepository.findAll();
@@ -55,14 +47,14 @@ public class PassengerService {
     }
 
     //get passenger based on company
-    public List<passenger> getCompanyBasedPassenger(Long companyid) {
-        List<companyPassengerAssocaiation> companypassengers=companyPassengerRepository.findPassengerByCompany(companyid);
-        List<passenger> passengers=new ArrayList<>();
-        for (companyPassengerAssocaiation item : companypassengers) {
-            passengers.add(item.getPassengerId());
-        }
-        return passengers;
-    }
+    // public List<passenger> getCompanyBasedPassenger(Long companyid) {
+        // List<companyPassengerAssocaiation> companypassengers=companyPassengerRepository.findPassengerByCompany(companyid);
+        // List<passenger> passengers=new ArrayList<>();
+        // for (companyPassengerAssocaiation item : companypassengers) {
+        //     passengers.add(item.getPassengerId());
+        // }
+        // return passengers;
+    // }
 
     //get all inactive passenger
     public List<passenger> getAllInactivePassenger(){
@@ -70,19 +62,34 @@ public class PassengerService {
     }
 
     //create passenger
-    public String createPassenger(String companyname, passenger passenger) {
+    public String createPassenger(String companyname, Map<String,Object> passengerDetails) {
         if(companyRepository.findByComapnyName(companyname)!=null){
-            if(passengerRepository.findByPassengerPhone(passenger.getPassengerPhone())==null){
-                passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
-                passengerRepository.save(passenger);
-                companyPassengerAssocaiation companyPassenger=new companyPassengerAssocaiation();
-                companyPassenger.setCompanyId(companyRepository.findByComapnyName(companyname));
-                companyPassenger.setPassengerId(passenger);
-                companyPassengerRepository.save(companyPassenger);
+            // if(passengerRepository.findByPassengerPhone(passengerDetails.get())==null){
+                // passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
+                
+
+
+                //Route and company must be added 
+                // passenger_id;
+                //  passenger_name;
+                //  passenger_email;
+                //  passenger-phone;
+                //  passenger_location;
+                //  passenger_password;
+                //  remarks;
+                //  route_id;
+
+
+
+
+
+
+
+                // passengerRepository.save(passenger);
                 return "created";
-            }else{
-                throw new ResourceNotFoundException("Passenger already exists.");
-            }
+            // }else{
+            //     throw new ResourceNotFoundException("Passenger already exists.");
+            // }
         }else{
             throw new ResourceNotFoundException("Company Not found.");
         }
@@ -113,6 +120,7 @@ public class PassengerService {
             passenger.setPassengerIsActive(false);
             passenger.setPassengerDeletedTime(LocalDateTime.now());
             passenger.setLastUpdatedTime(LocalDateTime.now());
+            passenger.setRemarks(passengers.getRemarks());
             passengerRepository.save(passenger);
             return "Deleted";
         }else{
@@ -153,10 +161,15 @@ public class PassengerService {
             }
             passengerRepository.saveAll(passengers);
             for (passenger item : passengers) {
-                companyPassengerAssocaiation companyPassenger=new companyPassengerAssocaiation();
-                companyPassenger.setCompanyId(companyRepository.findByComapnyName(companyname));
-                companyPassenger.setPassengerId(item);
-                companyPassengerRepository.save(companyPassenger);
+               
+
+
+                //Route and company must be added 
+
+
+
+
+
             }
         }else{
             throw new ResourceNotFoundException("Company Not found.");
@@ -165,38 +178,38 @@ public class PassengerService {
     }
    
     //Passenger login
-    public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
-        Map<String, Object> resultMap = new HashMap<>();
-        passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
-        if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
-                if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
-                    //token creation and store login table
-                    PassengerLogin loginpassenger=new PassengerLogin();
-                    loginpassenger.setPassenger(passenger);
-                    loginpassenger.setTimestamp(LocalDateTime.now());
-                    loginpassenger.setTokenId(jwtUtils.generateJwtPassenger(passenger));
-                    resultMap.put("token", jwtUtils.generateJwtPassenger(passenger));
-                    passengerLoginRepository.save(loginpassenger);
-                    passenger.setPassengerLastLogin(LocalDateTime.now());
-                    passengerRepository.save(passenger);
-                    return resultMap; 
-                }else{
-                    System.out.println("Driver is not match");
-                    throw new Exception();
-                    //Exception Admin Password Does not match
-                }
-        }else if(passengerLogin.get("token")!=null && passenger!=null && passenger.getPassengerIsActive()){
-            resultMap.put("email", jwtUtils.verify((String)passengerLogin.get("token")));
-            passenger.setPassengerLastLogin(LocalDateTime.now());
-            passengerRepository.save(passenger);
-            return resultMap; 
+    // public Map<String,Object> passengerLogin(Map<String,Object> passengerLogin) throws Exception{
+    //     Map<String, Object> resultMap = new HashMap<>();
+    //     passenger passenger=passengerRepository.findByPassengerPhone((BigInteger)passengerLogin.get("phone"));
+    //     if(passengerLogin.get("token")==null && passenger!=null && passenger.getPassengerIsActive()){
+    //             if(verifyPassword((String)passengerLogin.get("password"), passenger.getPassengerPassword())){
+    //                 //token creation and store login table
+    //                 PassengerLogin loginpassenger=new PassengerLogin();
+    //                 loginpassenger.setPassenger(passenger);
+    //                 loginpassenger.setTimestamp(LocalDateTime.now());
+    //                 loginpassenger.setTokenId(jwtUtils.generateJwtPassenger(passenger));
+    //                 resultMap.put("token", jwtUtils.generateJwtPassenger(passenger));
+    //                 passengerLoginRepository.save(loginpassenger);
+    //                 passenger.setPassengerLastLogin(LocalDateTime.now());
+    //                 passengerRepository.save(passenger);
+    //                 return resultMap; 
+    //             }else{
+    //                 System.out.println("Driver is not match");
+    //                 throw new Exception();
+    //                 //Exception Admin Password Does not match
+    //             }
+    //     }else if(passengerLogin.get("token")!=null && passenger!=null && passenger.getPassengerIsActive()){
+    //         resultMap.put("email", jwtUtils.verify((String)passengerLogin.get("token")));
+    //         passenger.setPassengerLastLogin(LocalDateTime.now());
+    //         passengerRepository.save(passenger);
+    //         return resultMap; 
 
-        }else{
-            System.out.println("Passenger is not active or not found");
-            throw new Exception();
-            //Exception Admin is not found
-        }
-    }
+    //     }else{
+    //         System.out.println("Passenger is not active or not found");
+    //         throw new Exception();
+    //         //Exception Admin is not found
+    //     }
+    // }
     
 
     //password encode method -- 

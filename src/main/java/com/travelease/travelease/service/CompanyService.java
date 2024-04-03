@@ -84,6 +84,7 @@ public class CompanyService {
             company.setCompanyIsActive(false);
             company.setCompanyDeletedTime(LocalDateTime.now());
             company.setCompanyLastUpdatedTime(LocalDateTime.now());
+            company.setRemarks(companys.getRemarks());
             companyRepository.save(company);
             return "Deleted";
         }       

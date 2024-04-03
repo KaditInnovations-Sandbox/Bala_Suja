@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +36,8 @@ public class Schedule {
     @Column(name = "ScheduleEndDate")
     private LocalDateTime ScheduleEndDate;
 
-    @Column(name = "ScheduleStatus")
-    private String ScheduleStatus;
+    @Column(name = "ScheduleCreatedAt")
+    private LocalDateTime ScheduleCreatedAt=LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "driverId", nullable = false)
