@@ -1,12 +1,14 @@
 package com.travelease.travelease.repository;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.companymodel.company;
 
 public interface AdminRepository extends JpaRepository<Admin,Long>{
     
@@ -21,4 +23,10 @@ public interface AdminRepository extends JpaRepository<Admin,Long>{
 
     @Query(nativeQuery = true, value ="SELECT admin_id from Admin e WHERE e.admin_email=:AdminEmail")
     Long findByAdminIdEmail(@Param("AdminEmail")String AdminEmail);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_is_active = true")
+    List<Admin> findByAccessTrue();
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_is_active = false")
+    List<Admin> findByAccessFalse();
 }

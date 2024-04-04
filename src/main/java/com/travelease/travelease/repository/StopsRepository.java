@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.model.routemodel.stops;
 
 public interface StopsRepository extends JpaRepository<stops,Long>{
@@ -18,5 +19,9 @@ public interface StopsRepository extends JpaRepository<stops,Long>{
 
     @Query(nativeQuery = true, value = "SELECT * from stops e WHERE e.stop_name =:stopname")
     stops findByStopname(@Param("stopname")String stopname);
+
+    @Query(nativeQuery = true, value ="SELECT * from stops e WHERE e.stop_name=:stopname AND e.route_id=:routeid")
+    stops findStopIdByStopName(@Param("stopname")String stopname,@Param("routeid")Long routeid);
+
     
 }

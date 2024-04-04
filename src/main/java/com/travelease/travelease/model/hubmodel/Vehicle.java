@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "Vehicle")
 public class Vehicle {
+
+    public interface PublicView {}
+    public interface PrivateView extends PublicView {}
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_id")
@@ -34,6 +39,7 @@ public class Vehicle {
     @Column(name = "vehicle_is_active")
     private Boolean VehicleIsActive = true;;
     @Column(name = "vehicle_type",  nullable = false)
+    @JsonView(PrivateView.class)
     private String VehicleType;
     @Column(name = "last_updated_time")
     private LocalDateTime LastUpdatedTime;

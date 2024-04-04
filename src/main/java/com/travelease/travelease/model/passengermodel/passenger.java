@@ -9,6 +9,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.routemodel.route;
+import com.travelease.travelease.model.routemodel.stops;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,11 +78,11 @@ public class passenger {
     @Column(name = "Remarks")
     private String Remarks;
 
-    
+    @JsonView(PublicView.class)
     @ManyToOne
-    @JoinColumn(name = "RouteId", nullable = false)
-    private route RouteId;
-    
+    @JoinColumn(name = "StopId", nullable = false)
+    private stops StopId;
+    @JsonView(PublicView.class)
     @ManyToOne
     @JoinColumn(name = "CompanyId", nullable = false)
     private company CompanyId;

@@ -68,7 +68,7 @@ public class PassengerController {
 
     //Edit for passenger	
 	@PutMapping("/Passenger")
-	public ResponseEntity<String> updateCompany(@RequestBody passenger passengerDetails) throws Exception{
+	public ResponseEntity<String> updateCompany(@RequestBody Map<String,Object> passengerDetails) throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(passengerService.updatePassenger(passengerDetails));
 	}
 

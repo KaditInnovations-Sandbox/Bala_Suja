@@ -22,6 +22,8 @@ import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.repository.CompanyRepository;
 import com.travelease.travelease.repository.PassengerRepository;
+import com.travelease.travelease.repository.RouteRepository;
+import com.travelease.travelease.repository.StopsRepository;
 import com.travelease.travelease.util.JwtUtils;
 
 @Service
@@ -35,6 +37,12 @@ public class PassengerService {
 
     @Autowired
     private CompanyRepository companyRepository;
+    
+    @Autowired
+    private StopsRepository stopsRepository;
+
+    @Autowired
+    private RouteRepository routeRepository;
   
     //get all passenger
     public List<passenger> getAllPassengerDetails(){
@@ -63,33 +71,22 @@ public class PassengerService {
 
     //create passenger
     public String createPassenger(String companyname, Map<String,Object> passengerDetails) {
-        if(companyRepository.findByComapnyName(companyname)!=null){
-            // if(passengerRepository.findByPassengerPhone(passengerDetails.get())==null){
-                // passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
-                
-
-
-                //Route and company must be added 
-                // passenger_id;
-                //  passenger_name;
-                //  passenger_email;
-                //  passenger-phone;
-                //  passenger_location;
-                //  passenger_password;
-                //  remarks;
-                //  route_id;
-
-
-
-
-
-
-
-                // passengerRepository.save(passenger);
+        company company=companyRepository.findByComapnyName(companyname);
+        if(company!=null){
+            if(passengerRepository.findByPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")))==null){
+                passenger passenger=new passenger();
+                passenger.setPassengerName((String)passengerDetails.get("passenger_name"));
+                passenger.setPassengerEmail((String)passengerDetails.get("passenger_email"));
+                passenger.setPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")));
+                passenger.setPassengerLocation((String)passengerDetails.get("passenger_location"));
+                passenger.setPassengerPassword(encodePassword((new BigInteger((String) passengerDetails.get("passenger_phone"))).toString()));
+                passenger.setCompanyId(company);
+                passenger.setStopId(stopsRepository.findStopIdByStopName((String)passengerDetails.get("stop_name"),routeRepository.findByRouteId((String)passengerDetails.get("route_id")).getId()));
+                passengerRepository.save(passenger);
                 return "created";
-            // }else{
-            //     throw new ResourceNotFoundException("Passenger already exists.");
-            // }
+            }else{
+                throw new ResourceNotFoundException("Passenger already exists.");
+            }
         }else{
             throw new ResourceNotFoundException("Company Not found.");
         }
@@ -97,14 +94,14 @@ public class PassengerService {
 
     //update passenger
     @SuppressWarnings("null")
-    public String updatePassenger(passenger passengerDetails)throws Exception{
-        passenger passenger=passengerRepository.checkById(passengerDetails.getPassengerId());
-        if(passengerRepository.findById(passengerDetails.getPassengerId()).isPresent() && passenger.getPassengerIsActive()){
-           passenger.setPassengerName(passengerDetails.getPassengerName());
-           passenger.setPassengerEmail(passengerDetails.getPassengerEmail());
-           passenger.setPassengerPhone(passengerDetails.getPassengerPhone());
-           passenger.setPassengerLocation(passengerDetails.getPassengerLocation());
-           passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
+    public String updatePassenger(Map<String,Object> passengerDetails)throws Exception{
+        passenger passenger=passengerRepository.checkById((Long)passengerDetails.get("passenger_id"));
+        if(passengerRepository.findById((Long)passengerDetails.get("passenger_id")).isPresent() && passenger.getPassengerIsActive()){
+           passenger.setPassengerName((String)passengerDetails.get("passenger_name"));
+           passenger.setPassengerEmail((String)passengerDetails.get("passenger_email"));
+           passenger.setPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")));
+           passenger.setPassengerLocation((String)passengerDetails.get("passenger_location"));
+           passenger.setStopId(stopsRepository.findStopIdByStopName((String)passengerDetails.get("stop_name"),routeRepository.findByRouteId((String)passengerDetails.get("route_id")).getId()));
            passenger.setLastUpdatedTime(LocalDateTime.now());
            passengerRepository.save(passenger);
            return "updated";
@@ -135,6 +132,7 @@ public class PassengerService {
             passenger.setPassengerIsActive(true);
             passenger.setPassengerDeletedTime(null);
             passenger.setLastUpdatedTime(LocalDateTime.now());
+            passenger.setRemarks(null);
             passengerRepository.save(passenger);
             return "Added";
         }else{
@@ -156,21 +154,12 @@ public class PassengerService {
                     passenger.setPassengerPhone(new BigInteger(data[2]));
                     passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
                     passenger.setPassengerLocation(data[3]);
+                    passenger.setCompanyId(companyRepository.findByComapnyName(companyname));
+                    passenger.setStopId(stopsRepository.findStopIdByStopName(data[5],routeRepository.findByRouteId(data[4]).getId()));
                     passengers.add(passenger);
                 }
             }
             passengerRepository.saveAll(passengers);
-            for (passenger item : passengers) {
-               
-
-
-                //Route and company must be added 
-
-
-
-
-
-            }
         }else{
             throw new ResourceNotFoundException("Company Not found.");
         }

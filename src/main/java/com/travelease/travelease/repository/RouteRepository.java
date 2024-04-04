@@ -22,7 +22,8 @@ public interface RouteRepository extends JpaRepository<route,Long>{
     @Query(nativeQuery = true, value = "SELECT * FROM route e WHERE e.route_is_active = false")
     List<route> findByAccessFalse();
 
-    
+    @Query(nativeQuery = true, value ="SELECT * from route e WHERE e.route_id=:RouteId")
+    route findByRouteId(@Param("RouteId")String RouteId);
 
 } 
    

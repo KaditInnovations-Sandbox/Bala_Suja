@@ -1,8 +1,15 @@
 package com.travelease.travelease.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +17,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
@@ -17,6 +25,7 @@ import com.travelease.travelease.util.JwtUtils;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 
 @Service
@@ -86,7 +95,8 @@ public class AdminService {
         }else{
             admin.setAdminIsActive(false);
             admin.setAdminDeletedTime(LocalDateTime.now());
-            admin.setRemarks(admin.getRemarks());
+            admin.setRemarks(admins.getRemarks());
+            System.out.println(admin);
             adminRepository.save(admin);
             return "Deleted";
         }
@@ -162,6 +172,44 @@ public class AdminService {
         }catch(Exception e){
             throw new Exception(e);
         }
+    }
+
+    //get all active vehicle
+    public List<Admin> getAllActiveAdmin(){
+        return adminRepository.findByAccessTrue();
+    }
+
+
+    //get all inactive vehicle
+    public List<Admin> getAllInactiveAdmin(){
+        return adminRepository.findByAccessFalse();
+    }
+
+     //data read from csv
+    public Integer saveAdminFromCsv(MultipartFile file) throws IOException {
+        List<Admin> admins = new ArrayList<>();
+        Integer count=0;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                Admin admin=new Admin();
+                count++;
+                if(adminRepository.findByAdminPhone(new BigInteger(data[2]))==null){
+                    admin.setAdminName(data[0]);
+                    admin.setAdminEmail(data[1]);
+                    admin.setAdminPhone(new BigInteger(data[2]));
+                    admin.setAdminRoleType(data[3]);
+                    admin.setAdminPassword(encodePassword(data[2]));
+                    admins.add(admin);
+                }else{
+                    throw new ResourceNotFoundException("Line Number "+count+" Phone Number already exist");
+                }          
+
+            }
+        }
+        adminRepository.saveAll(admins);
+        return count;
     }
 
        

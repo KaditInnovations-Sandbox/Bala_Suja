@@ -141,10 +141,10 @@ public class HubController {
     //get all Mapped Driver and Vehicle by type details
     @JsonView(Driver.PublicView.class) 
     @GetMapping("/AllDriverWithVehicle/{DriverType}")
-    public List<Map<String, Object>> getAllDriverWithVehicle(@RequestHeader String DriverType){
+    public ResponseEntity<List<Map<String, Object>>> getAllDriverWithVehicle(@RequestHeader String DriverType){
         List<Map<String, Object>> answer=hubService.getAllDriverWithVehicle(DriverType);
         System.out.println(answer);
-        return answer;
+        return ResponseEntity.ok(answer);
     }
     
      //get Driver based on type

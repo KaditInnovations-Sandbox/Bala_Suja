@@ -1,5 +1,6 @@
 package com.travelease.travelease.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.adminmodel.Admin;
+import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.service.AdminService;
 
 
@@ -82,5 +85,30 @@ public class AdminController {
 	public ResponseEntity<String> BindAdmin(@RequestBody Admin admin) throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.bindAdmin(admin));
 	}
+
+	//get all active Company details
+    @GetMapping("/ActiveAdmin")
+    public List<Admin> getAllActiveCompany(){
+        return adminService.getAllActiveAdmin();
+    }
+
+    //get all inactive Company details 
+    @GetMapping("/InactiveAdmin")
+    public List<Admin> getAllInactiveCompany(){
+        return adminService.getAllInactiveAdmin();
+    }
+
+	@PostMapping("/AdminUpload")
+    public ResponseEntity<String> uploadContractDriverCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please upload a CSV file!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.saveAdminFromCsv(file)+" Rows Added Successfully");
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
 }
