@@ -55,14 +55,10 @@ public class PassengerService {
     }
 
     //get passenger based on company
-    // public List<passenger> getCompanyBasedPassenger(Long companyid) {
-        // List<companyPassengerAssocaiation> companypassengers=companyPassengerRepository.findPassengerByCompany(companyid);
-        // List<passenger> passengers=new ArrayList<>();
-        // for (companyPassengerAssocaiation item : companypassengers) {
-        //     passengers.add(item.getPassengerId());
-        // }
-        // return passengers;
-    // }
+    public List<passenger> getCompanyBasedPassenger(String companyname) {
+        List<passenger> passengers=passengerRepository.findByCompanyId(companyRepository.findByComapnyName(companyname).getCompanyId());
+        return passengers;
+    }
 
     //get all inactive passenger
     public List<passenger> getAllInactivePassenger(){
@@ -72,7 +68,7 @@ public class PassengerService {
     //create passenger
     public String createPassenger(String companyname, Map<String,Object> passengerDetails) {
         company company=companyRepository.findByComapnyName(companyname);
-        if(company!=null){
+        if(company!=null && company.getCompanyIsActive()){
             if(passengerRepository.findByPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")))==null){
                 passenger passenger=new passenger();
                 passenger.setPassengerName((String)passengerDetails.get("passenger_name"));

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.travelease.travelease.model.passengermodel.passenger;
+import com.travelease.travelease.model.companymodel.company;
+
 
 public interface PassengerRepository extends JpaRepository<passenger,Long>{
     @Query(nativeQuery = true, value ="SELECT * from Passenger e WHERE e.passengerphone=:PassengerPhone")
@@ -21,6 +23,9 @@ public interface PassengerRepository extends JpaRepository<passenger,Long>{
 
     @Query(nativeQuery = true, value ="SELECT * from passenger e WHERE e.passengerid=:id")
     passenger checkById(@Param("id")Long passengerId);
+
+    @Query(nativeQuery = true, value ="SELECT * from passenger e WHERE e.company_id=:companyid")
+    List<passenger> findByCompanyId(@Param("companyid")Long companyId);
 
    
     

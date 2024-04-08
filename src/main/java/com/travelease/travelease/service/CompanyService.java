@@ -99,6 +99,7 @@ public class CompanyService {
         }else{
             company.setCompanyIsActive(true);
             company.setCompanyLastUpdatedTime(LocalDateTime.now());
+            company.setRemarks(null);
             company.setCompanyDeletedTime(null);
             companyRepository.save(company);
             return "Added";

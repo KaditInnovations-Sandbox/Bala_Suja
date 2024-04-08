@@ -3,12 +3,8 @@ package com.travelease.travelease.model.passengermodel;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
-import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.model.routemodel.stops;
 
 import jakarta.persistence.Column;
@@ -18,7 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;

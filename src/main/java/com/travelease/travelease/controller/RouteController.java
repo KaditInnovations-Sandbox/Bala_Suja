@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +28,9 @@ public class RouteController {
     private RouteService routeService;
 
     //create Route
-    @PostMapping("/Route")
-    public ResponseEntity<String> createVehicle(@RequestBody Map<String,Object> CompanyRoute)throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(routeService.createRoute(CompanyRoute));
+    @PostMapping("{companyname}/Route")
+    public ResponseEntity<String> createVehicle(@RequestHeader String companyname,@RequestBody Map<String,Object> CompanyRoute)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(routeService.createRoute(companyname,CompanyRoute));
     }
 
     //Get Route

@@ -28,23 +28,31 @@ public class Vehicle {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(PublicView.class)
     @Column(name = "vehicle_id")
     private Long vehicleId;
+    @JsonView(PublicView.class)
     @Column(name = "vehicle_capacity",  nullable = false)
     private String vehicleCapacity;
     @Column(name = "vehicle_number", unique = true, nullable = false)
+    @JsonView(PublicView.class)
     private String vehicleNumber;
     @Column (name = "vehicle_created_at")  
+    @JsonView(PublicView.class)
     private LocalDateTime vehicleCreatedAt = LocalDateTime.now();
     @Column(name = "vehicle_is_active")
+    @JsonView(PublicView.class)
     private Boolean VehicleIsActive = true;;
     @Column(name = "vehicle_type",  nullable = false)
     @JsonView(PrivateView.class)
     private String VehicleType;
     @Column(name = "last_updated_time")
+    @JsonView(PublicView.class)
     private LocalDateTime LastUpdatedTime;
     @Column(name = "vehicle_deleted_time")
+    @JsonView(PublicView.class)
     private LocalDateTime VehicleDeletedTime;
     @Column(name = "remarks")
+    @JsonView(PublicView.class)
     private String Remarks;
 }

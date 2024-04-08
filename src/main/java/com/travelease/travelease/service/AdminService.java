@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.travelease.travelease.repository.AdminLoginRepository;
@@ -25,7 +22,6 @@ import com.travelease.travelease.util.JwtUtils;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.adminmodel.Admin;
-import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.loginmodel.AdminLogin;
 
 @Service
@@ -210,6 +206,21 @@ public class AdminService {
         }
         adminRepository.saveAll(admins);
         return count;
+    }
+
+    //get admin by type
+    public List<Admin> getAdminByType(String type) {
+        return adminRepository.findByType(type);
+    }
+
+    //get active admin by type
+    public List<Admin> getActiveAdminByType(String type){
+        return adminRepository.findActiveAdminByType(type);
+    }
+
+    //get Inactive admin by type
+    public List<Admin> getInactiveAdminByType(String type){
+        return adminRepository.findInactiveAdminByType(type);
     }
 
        

@@ -2,7 +2,6 @@ package com.travelease.travelease.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,14 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.adminmodel.Admin;
-import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.service.AdminService;
 
 
@@ -38,21 +36,12 @@ public class AdminController {
 	private String crossorigin;
 
     //get all admin details
-	@JsonView(Admin.PublicView.class)
     @GetMapping("/Admin")
 	public List<Admin> getAllAdmin(){
 		return adminService.getAllAdmin();
 	}
 
-	//get all admin details
-    // @GetMapping("/AdminWithRole")
-	// public List<AdminRoleAssociation> getAllAdminWithRole(){
-	// 	return adminService.getAllAdminWithRole();
-	// }
-	
-
 	// get admin by email 
-	@JsonView(Admin.PublicView.class)
 	@GetMapping("/AdminByEmail")
 	public ResponseEntity<Object> getAdminById(@RequestBody String email) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(adminService.getAdminByEmail(email));
@@ -97,6 +86,24 @@ public class AdminController {
     public List<Admin> getAllInactiveCompany(){
         return adminService.getAllInactiveAdmin();
     }
+
+	//get admin by type
+    @GetMapping("/AdminByType")
+	public List<Admin> getAdminByType(@RequestHeader String type){
+		return adminService.getAdminByType(type);
+	}
+	
+	//get active admin by type
+    @GetMapping("/ActiveAdminByType")
+	public List<Admin> getActiveAdminByType(@RequestHeader String type){
+		return adminService.getActiveAdminByType(type);
+	}
+
+	//get Inactive admin by type
+    @GetMapping("/InactiveAdminByType")
+	public List<Admin> getInactiveAdminByType(@RequestHeader String type){
+		return adminService.getInactiveAdminByType(type);
+	}
 
 	@PostMapping("/AdminUpload")
     public ResponseEntity<String> uploadContractDriverCsv(@RequestParam("file") MultipartFile file) {

@@ -23,5 +23,5 @@ public interface StopsRepository extends JpaRepository<stops,Long>{
     @Query(nativeQuery = true, value ="SELECT * from stops e WHERE e.stop_name=:stopname AND e.route_id=:routeid")
     stops findStopIdByStopName(@Param("stopname")String stopname,@Param("routeid")Long routeid);
 
-    
+
 }

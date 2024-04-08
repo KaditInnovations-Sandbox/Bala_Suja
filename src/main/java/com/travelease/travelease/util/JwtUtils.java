@@ -22,8 +22,9 @@ public class JwtUtils {
 
     public String generateJwtAdmin(Admin admin){
 
+        long adminexpiryDuration = 30 * 60;
         long millisec = System.currentTimeMillis();
-        long expiryTime = millisec + expiryDuration * 1000;
+        long expiryTime = millisec + adminexpiryDuration * 1000;
 
         Date issueAt = new Date(millisec);
         Date expirDate = new Date(expiryTime);

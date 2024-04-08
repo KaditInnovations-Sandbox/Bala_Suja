@@ -66,8 +66,7 @@ public class CompanyController {
     //bind company
     @PutMapping("/BindCompany")
 	public ResponseEntity<String> BindCompany(@RequestBody company company) throws Exception{
-		String response=companyService.BindCompany(company);
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(companyService.BindCompany(company));
 	}
 
     // delete Company

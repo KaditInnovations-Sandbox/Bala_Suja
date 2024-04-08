@@ -29,4 +29,13 @@ public interface AdminRepository extends JpaRepository<Admin,Long>{
 
     @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_is_active = false")
     List<Admin> findByAccessFalse();
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_role_type =: type ")
+    List<Admin> findByType(@Param("type") String type);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_role_type =: type AND e.admin_is_active = true")
+    List<Admin> findActiveAdminByType(@Param("type") String type);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_role_type =: type AND e.admin_is_active = false")
+    List<Admin> findInactiveAdminByType(@Param("typte")String type);
 }

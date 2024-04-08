@@ -93,7 +93,7 @@ public class HubService {
 
     //Grand Access 
     public String bindVehicle(Vehicle vehicles){
-        Vehicle vehicle=vehicleRepository.findByVehicleNumber(vehicles.getVehicleNumber());
+        Vehicle vehicle=vehicleRepository.checkByVehicleNumber(vehicles.getVehicleNumber());
         if(vehicle==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
@@ -182,7 +182,7 @@ public class HubService {
                 drivervehicleAssociation.setDriverId(driver);
                 drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
-                return env.getProperty("Insidedrivertype")+" Driver and Vehicle Created";
+                return env.getProperty("Insidedrivertype")+" Driver and Vehicle Mapped successfully";
             }else{
                 throw new ResourceNotFoundException("Vehicle Mapped another driver");
             }   
@@ -347,12 +347,15 @@ public class HubService {
             drivervehicleAssociation.setDriverId(driver);
             if(driverdetails.get("DriverType").equals(env.getProperty("Insidedrivertype"))){
                 drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
+                driverVehicleAssociationRepository.save(drivervehicleAssociation);
                 return env.getProperty("Insidedrivertype")+" Driver Updated";
             }else if(driverdetails.get("DriverType").equals(env.getProperty("Outsidedrivertype"))){
                 Vehicle vehicle=vehicleRepository.findByVehicleId(drivervehicleAssociation.getVehicleId().getVehicleId());
                 vehicle.setVehicleNumber((String)driverdetails.get("VechicleNumber"));
                 vehicle.setVehicleCapacity((String)driverdetails.get("VehicleCapacity"));
                 vehicleRepository.save(vehicle);
+                drivervehicleAssociation.setVehicleId(vehicle);
+                driverVehicleAssociationRepository.save(drivervehicleAssociation);
                 return env.getProperty("Outsidedrivertype")+" Driver Updated";
             }else{
                 throw new Exception("DriverType missing");                

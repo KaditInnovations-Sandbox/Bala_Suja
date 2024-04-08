@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.passengermodel.passenger;
+import com.travelease.travelease.model.routemodel.stops;
 import com.travelease.travelease.service.PassengerService;
 
 @CrossOrigin(origins = "${crossorigin}")
@@ -35,18 +37,23 @@ public class PassengerController {
     @Value("${crossorigin}")
 	private String crossorigin;
 
+    public class CombinedPassengerPublicView {
+        public interface CombinedView extends passenger.PublicView, company.PublicView, stops.PublicView {}
+    }
+   
+
     //get all Passenger details
-	@JsonView(passenger.PublicView.class)
+    @JsonView(CombinedPassengerPublicView.CombinedView.class)
     @GetMapping("/Passenger")
 	public List<passenger> getAllPassengerDetatils(){
 		return passengerService.getAllPassengerDetails();
 	}
 
-	//get passenger based on company name
-	// @GetMapping("/CompanyBasedPassenger")
-    // public List<passenger> getCompanyBasedPassenger(@RequestParam Long companyid){
-    //     return passengerService.getCompanyBasedPassenger(companyid);
-    // }
+	// get passenger based on company name
+	@GetMapping("/CompanyBasedPassenger")
+    public List<passenger> getCompanyBasedPassenger(@RequestParam String companyname){
+        return passengerService.getCompanyBasedPassenger(companyname);
+    }
 
 	//get all active Passenger details
     @GetMapping("/ActivePassenger")

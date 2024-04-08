@@ -36,12 +36,6 @@ public class LoginController {
     @Value("${crossorigin}")
 	private String crossorigin;
 
-    @Autowired
-    private PassengerService passengerService;
-
-    @Autowired
-    private HubService hubService;
-
     //Admin Login
     @PostMapping("/AdminLogin")
 	public ResponseEntity<Map<String,String>> AdminLogin(@RequestBody Map<String,String> adminLogin) throws Exception{
