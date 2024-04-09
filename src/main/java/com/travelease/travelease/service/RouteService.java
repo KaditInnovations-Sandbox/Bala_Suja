@@ -118,6 +118,49 @@ public class RouteService {
         return listOfMappedData;
     }
 
+    //Get Route based on company
+    public List<Map<route, List<String>>> getRouteBasedCompany(String companyname){
+
+        List<route> routes=routeRepository.findByRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
+        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        for(route r:routes){
+            Map<route,List<String>> routeWithStop = new HashMap<>();
+            List<String> stops=stopsRepository.findStopByRouteId(r.getId());
+            routeWithStop.put(r,stops);
+            listOfMappedData.add(routeWithStop);
+        }
+        return listOfMappedData;
+    }
+
+    //Get Active Route based on company
+    public List<Map<route, List<String>>> getActiveRouteBasedCompany(String companyname){
+
+        List<route> routes=routeRepository.checkActiveRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
+        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        for(route r:routes){
+            Map<route,List<String>> routeWithStop = new HashMap<>();
+            List<String> stops=stopsRepository.findStopByRouteId(r.getId());
+            routeWithStop.put(r,stops);
+            listOfMappedData.add(routeWithStop);
+        }
+        return listOfMappedData;
+    }
+
+     //Get Inactive Route based on company
+     public List<Map<route, List<String>>> getInactiveRouteBasedCompany(String companyname){
+
+        List<route> routes=routeRepository.checkInactiveRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
+        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        for(route r:routes){
+            Map<route,List<String>> routeWithStop = new HashMap<>();
+            List<String> stops=stopsRepository.findStopByRouteId(r.getId());
+            routeWithStop.put(r,stops);
+            listOfMappedData.add(routeWithStop);
+        }
+        return listOfMappedData;
+    }
+
+
      //Get Active Route
      public List<Map<route, List<String>>> getActiveRoute(){
 
