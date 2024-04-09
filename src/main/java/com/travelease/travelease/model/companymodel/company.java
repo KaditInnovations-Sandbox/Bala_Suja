@@ -36,7 +36,7 @@ public class company {
     @Column(name = "companyname", unique = true, nullable = false)
     @JsonView(PublicView.class)
     private String companyName;
-    @Column(name = "companyemail")
+    @Column(name = "companyemail", unique = true)
     @JsonView(PublicView.class)
     private String companyEmail;
     @Column(name = "companyphone", unique = true, nullable = false)
