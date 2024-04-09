@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.adminmodel.Admin;
 import com.travelease.travelease.service.AdminService;
 
@@ -36,12 +37,14 @@ public class AdminController {
 	private String crossorigin;
 
     //get all admin details
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/Admin")
 	public List<Admin> getAllAdmin(){
 		return adminService.getAllAdmin();
 	}
 
 	// get admin by email 
+	@JsonView(Admin.PublicView.class)
 	@GetMapping("/AdminByEmail")
 	public ResponseEntity<Object> getAdminById(@RequestBody String email) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(adminService.getAdminByEmail(email));
@@ -76,32 +79,37 @@ public class AdminController {
 	}
 
 	//get all active Company details
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/ActiveAdmin")
     public List<Admin> getAllActiveCompany(){
         return adminService.getAllActiveAdmin();
     }
 
     //get all inactive Company details 
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/InactiveAdmin")
     public List<Admin> getAllInactiveCompany(){
         return adminService.getAllInactiveAdmin();
     }
 
 	//get admin by type
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/AdminByType")
-	public List<Admin> getAdminByType(@RequestHeader String type){
+	public List<Admin> getAdminByType(@RequestHeader(name = "AdminType") String type){
 		return adminService.getAdminByType(type);
 	}
 	
 	//get active admin by type
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/ActiveAdminByType")
-	public List<Admin> getActiveAdminByType(@RequestHeader String type){
+	public List<Admin> getActiveAdminByType(@RequestHeader(name = "AdminType") String type){
 		return adminService.getActiveAdminByType(type);
 	}
 
 	//get Inactive admin by type
+	@JsonView(Admin.PublicView.class)
     @GetMapping("/InactiveAdminByType")
-	public List<Admin> getInactiveAdminByType(@RequestHeader String type){
+	public List<Admin> getInactiveAdminByType(@RequestHeader(name = "AdminType") String type){
 		return adminService.getInactiveAdminByType(type);
 	}
 

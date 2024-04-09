@@ -39,7 +39,7 @@ public class company {
     @Column(name = "companyemail")
     @JsonView(PublicView.class)
     private String companyEmail;
-    @Column(name = "companyphone", nullable = false)
+    @Column(name = "companyphone", unique = true, nullable = false)
     @JsonView(PublicView.class)
     private BigInteger companyPhone;
     @Column(name = "companypoc")

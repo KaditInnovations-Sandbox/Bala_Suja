@@ -44,16 +44,14 @@ public class LoginController {
 
     //forgot password and OTP generationl
     @PostMapping("/AdminForgotPassword")
-    public String AdminForgotPassword(@RequestBody String email) throws Exception{
-        String access=loginService.AdminforgotPassword(email);
-        return access;
+    public ResponseEntity<String> AdminForgotPassword(@RequestBody String email) throws Exception{
+        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.AdminforgotPassword(email));
     }
 
     //verify OTP
     @PostMapping("/VerifyOTP")
 	public ResponseEntity<Boolean> VerifyOTP(@RequestBody String OTP,@RequestBody String email) throws Exception {
-		Boolean response=loginService.verifyOtp(email,OTP);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(loginService.verifyOtp(email,OTP));
 	}
 
     @DeleteMapping("/AdminLogOut")

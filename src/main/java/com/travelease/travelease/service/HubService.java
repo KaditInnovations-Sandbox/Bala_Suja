@@ -100,6 +100,7 @@ public class HubService {
             vehicle.setVehicleIsActive(true);
             vehicle.setVehicleDeletedTime(null);
             vehicle.setLastUpdatedTime(LocalDateTime.now());
+            vehicle.setRemarks(null);
             vehicleRepository.save(vehicle);
             return "Access Updated";
         }       
@@ -167,34 +168,34 @@ public class HubService {
 
     //Driver Create function
      public String CreateDriver(Map<String,Object> driverdetails)throws Exception{
-        Driver isDriver=driverRepository.findByDriverPhone((BigInteger)driverdetails.get("Driverphone"));
+        Driver isDriver=driverRepository.findByDriverPhone(new BigInteger(driverdetails.get("driver_phone").toString()));
         Driver driver=new Driver();
-        Vehicle vehicle=vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber"));
-        if(driverdetails.get("DriverType").equals(env.getProperty("Insidedrivertype"))&& isDriver==null&&vehicle!=null){
+        Vehicle vehicle=vehicleRepository.findByVehicleNumber((String)driverdetails.get("vehicle_number"));
+        if(driverdetails.get("driver_type").equals(env.getProperty("Insidedrivertype"))&& isDriver==null&&vehicle!=null){
             if(driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicle.getVehicleId())==null){
-                driver.setDriverName((String)driverdetails.get("DriverName"));
-                driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
-                driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
-                driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
+                driver.setDriverName((String)driverdetails.get("driver_name"));
+                driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("driver_phone"))));
+                driver.setDriverEmail((String)driverdetails.get("driver_email"));
+                driver.setDriverPassword(encodePassword((driverdetails.get("driver_phone")).toString()));
                 driver.setDriverType(env.getProperty("Insidedrivertype"));
                 driverRepository.save(driver);
                 DrivervehicleAssociation drivervehicleAssociation= new DrivervehicleAssociation();
                 drivervehicleAssociation.setDriverId(driver);
-                drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
+                drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("vehicle_number")));
                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
                 return env.getProperty("Insidedrivertype")+" Driver and Vehicle Mapped successfully";
             }else{
                 throw new ResourceNotFoundException("Vehicle Mapped another driver");
             }   
-        }else if(driverdetails.get("DriverType").equals(env.getProperty("Outsidedrivertype"))  && isDriver==null && vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber"))==null){
+        }else if(driverdetails.get("driver_type").equals(env.getProperty("Outsidedrivertype"))  && isDriver==null && vehicleRepository.findByVehicleNumber((String)driverdetails.get("vehicle_number"))==null){
             Vehicle newVehicle = new Vehicle();
-            driver.setDriverName((String)driverdetails.get("DriverName"));
-            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
-            driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
-            driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
+            driver.setDriverName((String)driverdetails.get("driver_name"));
+            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("driver_phone"))));
+            driver.setDriverEmail((String)driverdetails.get("driver_email"));
+            driver.setDriverPassword(encodePassword((driverdetails.get("driver_phone")).toString()));
             driver.setDriverType(env.getProperty("Outsidedrivertype"));
-            newVehicle.setVehicleCapacity((String)driverdetails.get("VehicleCapacity"));
-            newVehicle.setVehicleNumber((String)driverdetails.get("VehicleNumber"));
+            newVehicle.setVehicleCapacity((String)driverdetails.get("vehicle_capacity"));
+            newVehicle.setVehicleNumber((String)driverdetails.get("vehicle_number"));
             newVehicle.setVehicleType(env.getProperty("Outsidedrivertype"));
             vehicleRepository.save(newVehicle);
             driverRepository.save(driver);
@@ -335,24 +336,24 @@ public class HubService {
 
     //Update Driver
     public String UpdateDriver(Map<String,Object> driverdetails)throws Exception{
-        Driver driver=driverRepository.checkById(Long.valueOf(driverdetails.get("DriverId").toString()));
+        Driver driver=driverRepository.checkById(Long.valueOf(driverdetails.get("driver_id").toString()));
         DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(Long.valueOf(driverdetails.get("DriverId").toString()));
         if(driver!=null){
-            driver.setDriverName((String)driverdetails.get("DriverName"));
-            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("DriverPhone"))));
-            driver.setDriverEmail((String)driverdetails.get("DriverEmail"));
-            driver.setDriverPassword(encodePassword((driverdetails.get("DriverPhone")).toString()));
+            driver.setDriverName((String)driverdetails.get("driver_name"));
+            driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("driver_phone"))));
+            driver.setDriverEmail((String)driverdetails.get("driverEmail"));
+            driver.setDriverPassword(encodePassword((driverdetails.get("driver_phone")).toString()));
             driver.setLastUpdatedTime(LocalDateTime.now());
             driverRepository.save(driver);
             drivervehicleAssociation.setDriverId(driver);
-            if(driverdetails.get("DriverType").equals(env.getProperty("Insidedrivertype"))){
-                drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("VehicleNumber")));
+            if(driverdetails.get("driver_type").equals(env.getProperty("Insidedrivertype"))){
+                drivervehicleAssociation.setVehicleId(vehicleRepository.findByVehicleNumber((String)driverdetails.get("vehicle_number")));
                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
                 return env.getProperty("Insidedrivertype")+" Driver Updated";
-            }else if(driverdetails.get("DriverType").equals(env.getProperty("Outsidedrivertype"))){
+            }else if(driverdetails.get("driver_type").equals(env.getProperty("Outsidedrivertype"))){
                 Vehicle vehicle=vehicleRepository.findByVehicleId(drivervehicleAssociation.getVehicleId().getVehicleId());
-                vehicle.setVehicleNumber((String)driverdetails.get("VechicleNumber"));
-                vehicle.setVehicleCapacity((String)driverdetails.get("VehicleCapacity"));
+                vehicle.setVehicleNumber((String)driverdetails.get("vechicle_number"));
+                vehicle.setVehicleCapacity((String)driverdetails.get("vehicle_capacity"));
                 vehicleRepository.save(vehicle);
                 drivervehicleAssociation.setVehicleId(vehicle);
                 driverVehicleAssociationRepository.save(drivervehicleAssociation);
