@@ -5,18 +5,18 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// @SpringBootApplication
-public class LambdaHandler implements RequestHandler<Object, Object> {
+public class LambdaHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+    private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
-    @Override
-    public Object handleRequest(Object input, Context context) {
-        // Start Spring Boot application
-        SpringApplication.run(LambdaHandler.class);
-        return null;
+    static {
+        try {
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class); }
+        catch (ContainerInitializationException ex){
+            throw new RuntimeException("Unable to load spring boot application",ex); }
     }
 
-    public static void main(String[] args) {
-        // Start Spring Boot application when running locally
-        SpringApplication.run(LambdaHandler.class, args);
+    @Override
+    public AwsProxyResponse handleRequest(AwsProxyRequest input, Context context) {
+        return handler.proxy(input, context);
     }
 }
