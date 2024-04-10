@@ -1,28 +1,39 @@
 package com.travelease.travelease;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
+import com.amazonaws.serverless.exceptions.ContainerInitializationException;
+import com.amazonaws.serverless.proxy.internal.testutils.Timer;
+import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
+import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class LambdaHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
-    private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
-    private static AnnotationConfigApplicationContext appContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class LambdaHandler implements RequestStreamHandler {
+
+    private static final SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
     static {
         try {
-            appContext = new AnnotationConfigApplicationContext(Application.class);
-            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(appContext);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Unable to initialize Spring Boot application context", ex);
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(TraveleaseApplication.class);
+        } catch (ContainerInitializationException e) {
+            // if we fail here. We re-throw the exception to force another cold start
+            e.printStackTrace();
+            throw new RuntimeException("Could not initialize Spring Boot application", e);
         }
     }
 
+    // public StreamLambdaHandler() {
+    //     // we enable the timer for debugging. This SHOULD NOT be enabled in production.
+    //     Timer.enable();
+    // }
+
     @Override
-    public AwsProxyResponse handleRequest(AwsProxyRequest input, Context context) {
-        return handler.proxy(input, context);
+    public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
+            throws IOException {
+        handler.proxyStream(inputStream, outputStream, context);
     }
 }
