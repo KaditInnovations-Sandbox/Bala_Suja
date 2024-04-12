@@ -8,8 +8,8 @@ Resources:
       Handler: com.travelease.travelease.LambdaHandler::handleRequest
       Runtime: java17
       CodeUri:
-        Bucket: travelease
-        Key: travelease-0.0.1-SNAPSHOT.war
+        S3Bucket: travelease
+        S3Key: travelease-0.0.1-SNAPSHOT.war
       MemorySize: 512
       Timeout: 30
       Events:
