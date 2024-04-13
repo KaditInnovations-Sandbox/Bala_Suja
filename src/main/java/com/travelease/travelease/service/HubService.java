@@ -336,12 +336,13 @@ public class HubService {
 
     //Update Driver
     public String UpdateDriver(Map<String,Object> driverdetails)throws Exception{
+        System.out.println(driverdetails);
         Driver driver=driverRepository.checkById(Long.valueOf(driverdetails.get("driver_id").toString()));
-        DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(Long.valueOf(driverdetails.get("DriverId").toString()));
+        DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(Long.valueOf(driverdetails.get("driver_id").toString()));
         if(driver!=null){
             driver.setDriverName((String)driverdetails.get("driver_name"));
             driver.setDriverPhone(new BigInteger(String.valueOf(driverdetails.get("driver_phone"))));
-            driver.setDriverEmail((String)driverdetails.get("driverEmail"));
+            driver.setDriverEmail((String)driverdetails.get("driver_email"));
             driver.setDriverPassword(encodePassword((driverdetails.get("driver_phone")).toString()));
             driver.setLastUpdatedTime(LocalDateTime.now());
             driverRepository.save(driver);

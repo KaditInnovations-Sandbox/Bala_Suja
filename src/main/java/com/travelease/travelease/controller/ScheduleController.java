@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travelease.travelease.model.schedulemodel.Schedule;
-import com.travelease.travelease.repository.ScheduleRepository;
 import com.travelease.travelease.service.ScheduleService;
 
 @CrossOrigin(origins = "${crossorigin}")
@@ -27,27 +27,31 @@ public class ScheduleController {
     @Autowired 
     private ScheduleService scheduleService;
 
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
     //create Schedule
     @PostMapping("{companyname}/Schedule")
     public ResponseEntity<String> createSchedule(@RequestHeader String companyname,@RequestBody Map<String,Object> CompanySchedule)throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.createSchedule(companyname,CompanySchedule));
     }
 
-    
-    //Get Schedule by date 
-    @GetMapping("/ShowSchdeduleDate")
-    public boolean getshowschedule(@RequestHeader("start") LocalDate startdate, @RequestHeader("end") LocalDate enddate,@RequestHeader("days") List<String> days) {
-        return scheduleService.showschedule(startdate,enddate,days);
+    //get schedule based
+    @GetMapping("/Schdedule")
+    public List<Map<String, Object>> getSchedule() {
+        return scheduleService.getSchedule();
     }
 
-    @GetMapping("/ShowSchdedule")
-    public List<Schedule> getSchedule() {
-        return scheduleRepository.findAll();
+
+    //bind Route
+    @PutMapping("/Schdedule")
+    public ResponseEntity<String> BindRoute(@RequestBody Map<String,Object> CompanySchedule) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateSchedule(CompanySchedule));
     }
-    
+
+
+    //delete Route
+    @DeleteMapping("/Schdedule")
+    public ResponseEntity<String> DeleteRoute(@RequestBody Map<String,Object> CompanySchedule) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.DeleteSchedule(CompanySchedule));
+    } 
 
     
 }

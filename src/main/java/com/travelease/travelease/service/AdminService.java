@@ -81,7 +81,6 @@ public class AdminService {
             admin.setAdminPhone(adminDetails.getAdminPhone());
             admin.setAdminPassword(encodePassword(adminDetails.getAdminPhone().toString()));
             admin.setAdminRoleType(adminDetails.getAdminRoleType());
-            // admin.setAdminDateRegistered(LocalDateTime.now());
             adminRepository.save(admin);
             return "Updated";
         }	
@@ -119,7 +118,7 @@ public class AdminService {
                     adminRepository.save(admin);
                     return resultMap; 
                 }else{
-                    throw new ResourceNotFoundException("Admin not found");
+                    throw new ResourceNotFoundException("Password Incorrect");
                     //Exception Admin is not match
                 }
         }else if(adminLogin.get("token")!=null && admin!=null && admin.getAdminIsActive()){

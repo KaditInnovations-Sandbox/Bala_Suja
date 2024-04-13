@@ -2,13 +2,12 @@ package com.travelease.travelease.model.schedulemodel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.routemodel.route;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,11 +31,11 @@ public class Schedule {
     @Column(name = "ScheduleId")
     private Long ScheduleId;
 
-    @Column(name = "ScheduleStartDate")
-    private LocalDate ScheduleStartDate;
+    @Column(name = "ScheduleDate")
+    private LocalDate ScheduleDate;
 
-    @Column(name = "ScheduleEndDate")
-    private LocalDate ScheduleEndDate;
+    @Column(name = "LastUpdatedTime")
+    private LocalDateTime LastUpdatedTime;
 
     @Column(name = "ScheduleCreatedAt")
     private LocalDateTime ScheduleCreatedAt=LocalDateTime.now();
@@ -49,9 +48,14 @@ public class Schedule {
     @JoinColumn(name = "routeId", nullable = false)
     private route routeId;
 
-    @ElementCollection
-    @Column(name = "ScheduleDays")
-    private List<String> ScheduleDays;
+    @Column(name = "ScheduleIsActive")
+    private boolean ScheduleIsActive = true;
+
+    @Column(name = "ScheduleDeletedTime")
+    private LocalDateTime ScheduleDeletedTime;
+
+    @Column(name = "remarks")
+    private String Remarks;
 
     
 }

@@ -33,7 +33,6 @@ public interface DriverVehicleAssociationRepository extends JpaRepository<Driver
     List<Map<String, Object>> findDriversByType(@Param("driverType") String driverType);
 
 
-    
 
     
 }

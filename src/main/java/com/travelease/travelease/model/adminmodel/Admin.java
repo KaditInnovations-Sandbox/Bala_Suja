@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.type.descriptor.jdbc.LongVarbinaryJdbcType;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -48,7 +47,7 @@ public class Admin {
     @Column(name = "AdminName")
     private String AdminName;
     @JsonView(PublicView.class)
-    @Column(name = "AdminEmail")
+    @Column(name = "AdminEmail", unique = true, nullable = false)
     private String AdminEmail;
     @JsonView(PublicView.class)
     @Column(name = "AdminPhone", unique = true, nullable = false) 
