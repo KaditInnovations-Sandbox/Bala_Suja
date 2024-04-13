@@ -400,9 +400,8 @@ public class HubService {
     
             if (drivervehicleAssociation != null) {
                 DriverWithVehicle.put("Driver", d);
-                System.out.println(drivervehicleAssociation.getVehicleId());
                 DriverWithVehicle.put("Vehicle", vehicleRepository.findByVehicleId(drivervehicleAssociation.getVehicleId().getVehicleId()));
-                driverAndVehicle.add(DriverWithVehicle); // Assuming drivervehicleAssociation has a getVehicle() method
+                driverAndVehicle.add(DriverWithVehicle); // Assuming drivervehicleAssociation has a getVehicle method
             } else {
                 DriverWithVehicle.put("Driver", d);
                 DriverWithVehicle.put("Vehicle", "No Vehicle Associated");
@@ -511,5 +510,22 @@ public class HubService {
         }
     }
 
+    //find all vehicle capacity without mapped
+    public List<String> findallVehicleCapacity(){
+        return vehicleRepository.findAllVehicleCapacity();
+    }
+
+
+     //find all vehicle capacity based vehicle number
+     public List<String> vehicleCapacityBasedVehicleNumber(String vehicleNumber){
+        return vehicleRepository.vehicleCapacityBasedVehicleNumber(vehicleNumber);
+    }
+
+    //find Driver name based on vehicle Number
+    public String GetDriverNameBasedVehicleNumbr(String vehicleNumber){
+        Vehicle vehicle = vehicleRepository.checkByVehicleNumber(vehicleNumber);
+        Driver driver = driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicle.getVehicleId()).getDriverId();
+        return driver.getDriverName();
+    }
     
 }

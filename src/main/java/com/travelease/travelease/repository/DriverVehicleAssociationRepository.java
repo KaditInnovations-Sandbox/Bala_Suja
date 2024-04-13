@@ -22,8 +22,18 @@ public interface DriverVehicleAssociationRepository extends JpaRepository<Driver
                 "JOIN drivervehicle_association e ON d.driver_id = e.driver_id " +
                 "JOIN vehicle v ON e.vehicle_id = v.vehicle_id " +
                 "WHERE d.driver_type = :driverType AND d.driver_is_active = true", nativeQuery = true)
+    List<Map<String, Object>> findActiveDriversByType(@Param("driverType") String driverType);
+
+
+    @Query(value = "SELECT d.driver_id,d.driver_created_at,d.driver_deleted_time,d.driver_email,d.driver_is_active,d.driver_last_login,d.driver_name,d.driver_phone,d.driver_type,d.last_updated_time,d.login_time,d.remarks,d.driver_last_login, v.*, e.* " +
+                "FROM driver d " +
+                "JOIN drivervehicle_association e ON d.driver_id = e.driver_id " +
+                "JOIN vehicle v ON e.vehicle_id = v.vehicle_id " +
+                "WHERE d.driver_type = :driverType", nativeQuery = true)
     List<Map<String, Object>> findDriversByType(@Param("driverType") String driverType);
 
+
+    
 
     
 }

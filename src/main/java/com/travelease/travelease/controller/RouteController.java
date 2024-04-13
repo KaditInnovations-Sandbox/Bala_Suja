@@ -85,4 +85,10 @@ public class RouteController {
          return ResponseEntity.status(HttpStatus.OK).body(routeService.DeleteRoute(Route));
      }    
 
+     //get all Route Id
+    @GetMapping("/AllRouteId")
+    public List<String> getAllRouteId(){
+        return routeService.getAllRouteId();
+    }
+
 }

@@ -32,41 +32,55 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Driver_id")
     private Long DriverId;
+
     @JsonView(PublicView.class)
     @Column(name = "Driver_name")
     private String DriverName;
+
     @JsonView(PublicView.class)
     @Column(name = "Driver_phone",unique = true, nullable = false )
     private BigInteger DriverPhone;
+
     @Column(name = "Driver_email")
     @JsonView(PublicView.class)
     private String DriverEmail;
+
     @JsonView(PrivateView.class)
     @Column(name = "Driver_password")
     private String DriverPassword;
+
     @Column(name = "Driver_type")
     @JsonView(PublicView.class)
     private String DriverType;
+
     @Column(name = "Driver_is_active")
     @JsonView(PublicView.class)
     private Boolean DriverIsActive=true;
+
     @Column(name = "Driver-last_login")
     @JsonView(PublicView.class)
     private LocalDateTime DriverLastLogin;
+
     @Column(name = "Driver_created_at")
     @JsonView(PublicView.class)
     private LocalDateTime DriverCreatedAt=LocalDateTime.now();
+
+    @JsonView(PublicView.class)
     @Column(name = "Last_updated_time")
     private LocalDateTime LastUpdatedTime;
+
     @JsonView(PublicView.class)
     @Column(name = "Driver_deleted_time")
     private LocalDateTime DriverDeletedTime;
+
     @JsonView(PublicView.class)
     @Column(name = "Remarks")
     private String Remarks;
+
     @JsonView(PrivateView.class)
     @Column(name = "Token_id")
     private String TokenId;
+    
     @JsonView(PrivateView.class)
     @Column(name = "Login_time")
     private LocalDateTime LoginTime;

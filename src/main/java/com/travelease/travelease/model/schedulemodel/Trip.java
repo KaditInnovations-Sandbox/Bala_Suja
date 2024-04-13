@@ -3,6 +3,9 @@ package com.travelease.travelease.model.schedulemodel;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import org.checkerframework.checker.units.qual.C;
+
+import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.routemodel.route;
 
 import jakarta.persistence.Column;
@@ -30,17 +33,35 @@ public class Trip {
     @Column(name = "TripId")
     private Long TripId;
 
-    @Column(name = "TripStartDate")
-    private LocalDateTime TripStartDate;
+    @Column(name = "TripStartTime")
+    private LocalTime TripStartTime;
 
-    @Column(name = "TripEndDate")
-    private LocalDateTime TripEndDate;
+    @Column(name = "TripEndTime")
+    private LocalTime TripEndTime;
+
+    @Column(name = "TripDate")
+    private LocalDateTime TripDate;
+
+    @Column(name = "Logitude")
+    private String Logitude;
+
+    @Column(name = "Latitude")
+    private String Latitude;
+
+    @Column(name = "TripStatus")
+    private String TripStatus;
         
     @ManyToOne
-    @JoinColumn(name = "ScheduleId", nullable = false)
+    @JoinColumn(name = "ScheduleId")
     private Schedule ScheduleId;
 
     @ManyToOne
-    @JoinColumn(name = "routeId", nullable = false)
+    @JoinColumn(name = "driverId")
+    private Driver driverId;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicleId")
     private route routeId;
+
+
 }

@@ -50,8 +50,8 @@ public class LoginController {
 
     //verify OTP
     @PostMapping("/VerifyOTP")
-	public ResponseEntity<Boolean> VerifyOTP(@RequestBody String OTP,@RequestBody String email) throws Exception {
-		return ResponseEntity.status(HttpStatus.CREATED).body(loginService.verifyOtp(email,OTP));
+	public ResponseEntity<Boolean> VerifyOTP(@RequestBody Map<String,Object> verifyAdmin) throws Exception {
+		return ResponseEntity.status(HttpStatus.CREATED).body(loginService.verifyOtp(verifyAdmin));
 	}
 
     @DeleteMapping("/AdminLogOut")

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.travelease.travelease.exception.ResourceNotFoundException;
+import com.travelease.travelease.repository.AdminLoginRepository;
 import com.travelease.travelease.repository.AdminRepository;
 import com.travelease.travelease.util.JwtUtils;
 
@@ -15,12 +16,16 @@ public class ApiService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private AdminLoginRepository adminLoginRepository;
     
     public String AdminToken(String token) throws Exception {
         String email = jwtUtils.verify(token);
         if("true".equals(adminRepository.checkAdminExistence(email.substring(0, email.indexOf(","))))){
             return email.substring(email.indexOf(",")+1)+" is Present";
         }else{
+            adminLoginRepository.delete(adminLoginRepository.findByTokenId(token));
             throw new ResourceNotFoundException("Invalid User");
         }
     }

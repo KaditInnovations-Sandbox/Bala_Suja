@@ -77,7 +77,7 @@ public class PassengerService {
                 passenger.setPassengerLocation((String)passengerDetails.get("passenger_location"));
                 passenger.setPassengerPassword(encodePassword((new BigInteger((String) passengerDetails.get("passenger_phone"))).toString()));
                 passenger.setCompanyId(company);
-                passenger.setStopId(stopsRepository.findStopIdByStopName((String)passengerDetails.get("stop_name"),routeRepository.findByRouteId((String)passengerDetails.get("route_id")).getId()));
+                passenger.setRouteId(routeRepository.findByRouteId((String)passengerDetails.get("route_id")));
                 passengerRepository.save(passenger);
                 return "created";
             }else{
@@ -97,7 +97,7 @@ public class PassengerService {
            passenger.setPassengerEmail((String)passengerDetails.get("passenger_email"));
            passenger.setPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")));
            passenger.setPassengerLocation((String)passengerDetails.get("passenger_location"));
-           passenger.setStopId(stopsRepository.findStopIdByStopName((String)passengerDetails.get("stop_name"),routeRepository.findByRouteId((String)passengerDetails.get("route_id")).getId()));
+           passenger.setRouteId(routeRepository.findByRouteId((String)passengerDetails.get("route_id")));
            passenger.setLastUpdatedTime(LocalDateTime.now());
            passengerRepository.save(passenger);
            return "updated";
@@ -151,7 +151,7 @@ public class PassengerService {
                     passenger.setPassengerPassword(encodePassword((passenger.getPassengerPhone()).toString()));
                     passenger.setPassengerLocation(data[3]);
                     passenger.setCompanyId(companyRepository.findByComapnyName(companyname));
-                    passenger.setStopId(stopsRepository.findStopIdByStopName(data[5],routeRepository.findByRouteId(data[4]).getId()));
+                    // passenger.setStopId(stopsRepository.findStopIdByStopName(data[5],routeRepository.findByRouteId(data[4]).getId()));
                     passengers.add(passenger);
                 }
             }
@@ -224,5 +224,21 @@ public class PassengerService {
         return enteredHash.equals(storedHash);
     }
 
+    //Route based passenger
+    public List<passenger> getRouteBasedPassenger(String routeid) throws Exception{
+        route route = routeRepository.findByRouteId(routeid);
+        if(route == null){
+            throw new ResourceNotFoundException("RouteId not present");
+        }else{
+            return passengerRepository.findByRouteId(route.getId());
+        }
+        
+    }
+
+    public int getRouteBasedPassengerCount(String routeid) throws Exception{
+        int c = routeRepository.findByRouteIdCount(routeid);
+        return c;
+        
+    }
     
 }

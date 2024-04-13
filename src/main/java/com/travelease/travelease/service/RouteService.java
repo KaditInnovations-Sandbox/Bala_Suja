@@ -67,7 +67,6 @@ public class RouteService {
                 stopsRepository.save(stop);
             }
             return "Created";
-
         }else{
             throw new ResourceNotFoundException("Company Not Found");
         }
@@ -283,8 +282,12 @@ public class RouteService {
         
     }
 
+    public List<String> getAllRouteId(){
+        return routeRepository.findAllRouteId();
+    }
 
 
+    
 
     
 }

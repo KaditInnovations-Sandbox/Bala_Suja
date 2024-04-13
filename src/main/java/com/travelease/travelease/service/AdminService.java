@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,10 @@ public class AdminService {
         return adminRepository.findAll();
     }
    
-    public Object getAdminByEmail(String email){
-        return adminRepository.findByAdminEmail(email);
+    public Admin getAdminByEmail(String email){
+        Optional<Admin> adminOptional = Optional.ofNullable(adminRepository.findByAdminEmail(email));
+        return adminOptional.orElse(null);
+       
     }
 
     public String createAdmin(Admin admin) throws Exception{

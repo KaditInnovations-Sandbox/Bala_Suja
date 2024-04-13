@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.passengermodel.passenger;
+import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.model.routemodel.stops;
 import com.travelease.travelease.service.PassengerService;
 
@@ -38,7 +39,7 @@ public class PassengerController {
 	private String crossorigin;
 
     public class CombinedPassengerPublicView {
-        public interface CombinedView extends passenger.PublicView, company.PublicView, stops.PublicView {}
+        public interface CombinedView extends passenger.PublicView, company.PublicView, route.PublicView{}
     }
    
 
@@ -103,5 +104,17 @@ public class PassengerController {
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //get all inactive Passenger details 
+    @JsonView(CombinedPassengerPublicView.CombinedView.class)
+    @GetMapping("/RouteBasedPassenger")
+    public List<passenger> getRouteBasedPassenger(@RequestBody String routeid) throws Exception{
+       return passengerService.getRouteBasedPassenger(routeid);
+    }
+
+    @GetMapping("/RouteBasedPassengerCount")
+    public int getRouteBasedPassengerCount(@RequestBody String routeid) throws Exception{
+       return passengerService.getRouteBasedPassengerCount(routeid);
     }
 }

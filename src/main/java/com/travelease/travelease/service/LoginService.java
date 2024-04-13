@@ -1,6 +1,7 @@
 package com.travelease.travelease.service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +55,12 @@ public class LoginService {
     }  
 
     //verify otp
-    public Boolean verifyOtp(String email, String userEnteredOtp) {
-        OtpDto otpData = OTPStorage.getOtpData(email);
+    public Boolean verifyOtp(Map<String,Object> verifyAdmin) {
+        OtpDto otpData = OTPStorage.getOtpData((String)verifyAdmin.get("email"));
         if (otpData != null && LocalDateTime.now().isBefore(otpData.getExpirationTime())) {
-            return otpData.getOtp().equals(userEnteredOtp);
+            return otpData.getOtp().equals((String)verifyAdmin.get("otp"));
         } else {
-            return false; // OTP expired or not found
+            throw new ResourceNotFoundException("Time Expired"); // OTP expired or not found
         }
     }
 

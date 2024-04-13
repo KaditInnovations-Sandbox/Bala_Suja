@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
+import com.travelease.travelease.model.routemodel.route;
 import com.travelease.travelease.model.routemodel.stops;
 
 import jakarta.persistence.Column;
@@ -75,8 +76,8 @@ public class passenger {
 
     @JsonView(PublicView.class)
     @ManyToOne
-    @JoinColumn(name = "StopId", nullable = false)
-    private stops StopId;
+    @JoinColumn(name = "RouteId", nullable = false)
+    private route routeId;
     @JsonView(PublicView.class)
     @ManyToOne
     @JoinColumn(name = "CompanyId", nullable = false)

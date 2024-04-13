@@ -132,6 +132,7 @@ public class HubController {
      }
 
     //get all Mapped Driver by type details 
+    @JsonView(CombinedDriverVehiclePublicView.CombinedView.class)
     @GetMapping("/MappedDriver/{DriverType}")
     public List<Map<String, Object>> getAllMappedDriverByType(@RequestHeader String DriverType){
         return hubService.getAllMappedDriverByType(DriverType);
@@ -232,6 +233,24 @@ public class HubController {
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @GetMapping("/getNotAssignVehicleCapacity")
+    public List<String> GetNotAssignVehicleCapacity() {
+        return hubService.findallVehicleCapacity();
+    }
+
+
+    @GetMapping("/GetvehicleNumberBasedVehicleCapacity")
+    public List<String> GetvehicleCapacityBasedVehicleNumber(@RequestHeader("vehiclecapacity") String vehiclecapacity) {
+        return hubService.vehicleCapacityBasedVehicleNumber(vehiclecapacity);
+    }
+
+
+    @GetMapping("/GetDriverNameBasedVehicleNumbr")
+    public String GetDriverNameBasedVehicleNumbr(@RequestHeader("vehicleNumber") String vehicleNumber) {
+        return hubService.GetDriverNameBasedVehicleNumbr(vehicleNumber);
     }
 
 }

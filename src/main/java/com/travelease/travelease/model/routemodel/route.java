@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,14 +24,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "route")
+
 public class route {
     
     public interface PublicView {}
 
-    @Id
+    
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     @JsonView(PublicView.class)
+    @Id
     private Long Id;
     @Column(name = "RouteId", nullable = false, unique = true)
     @JsonView(PublicView.class)
