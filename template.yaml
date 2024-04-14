@@ -5,11 +5,11 @@ Resources:
   MyLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      Handler: com.travelease.travelease.StreamLambdaHandler::handleRequest
       Runtime: java17
       CodeUri: 
         Bucket: travelease
-        Key: travelease-0.0.1-SNAPSHOT-aws.jar
+        Key: travelease-0.0.1-SNAPSHOT-lambda-package.zip
       MemorySize: 1024
       Timeout: 40
       Events:
