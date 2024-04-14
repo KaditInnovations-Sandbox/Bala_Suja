@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.1</version>
+		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.travelease</groupId>
 	<artifactId>travelease</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<!-- <packaging>jar</packaging> -->
 	<name>travelease</name>
 	<description>Travel Ease Application</description>
 	<properties>
@@ -94,40 +94,25 @@
 		</dependency>
 
 		<!-- aws-lambda -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-lambda-java-core</artifactId>
 			<version>1.2.3</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws.serverless</groupId>
-			<artifactId>aws-serverless-java-container-core</artifactId>
-			<version>2.0.1</version>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-function-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws.serverless</groupId>
-			<artifactId>aws-serverless-java-container-springboot3</artifactId>
-			<version>2.0.0-M1</version>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-function-adapter-aws</artifactId>
 		</dependency>
 		
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 	<dependencyManagement>
 		<dependencies>
@@ -140,4 +125,50 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+	    <plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-deploy-plugin</artifactId>
+	            <configuration>
+	                <skip>true</skip>
+	            </configuration>
+	        </plugin>
+	        <plugin>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-maven-plugin</artifactId>
+	            <dependencies>
+	                <dependency>
+	                    <groupId>org.springframework.boot.experimental</groupId>
+	                    <artifactId>spring-boot-thin-layout</artifactId>
+	                    <version>1.0.28.RELEASE</version>
+	                </dependency>
+	            </dependencies>
+	        </plugin>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	            <version>3.2.4</version>
+	            <configuration>
+	                <createDependencyReducedPom>false</createDependencyReducedPom>
+	                <shadedArtifactAttached>true</shadedArtifactAttached>
+	                <shadedClassifierName>aws</shadedClassifierName>
+	            </configuration>
+	        </plugin>
+	    </plugins>
+	</build>
+
 </project>
