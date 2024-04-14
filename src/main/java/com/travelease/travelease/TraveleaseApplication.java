@@ -11,4 +11,13 @@ public class TraveleaseApplication {
 		SpringApplication.run(TraveleaseApplication.class, args);
 	}
 
+	@Bean
+	JsonPlaceholderService jsonPlaceholderService() {
+	    WebClient client = WebClient.builder()
+	            .baseUrl("https://jsonplaceholder.typicode.com")
+	            .build();
+	    HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(client)).build();
+	    return factory.createClient(JsonPlaceholderService.class);
+	}
+
 }
