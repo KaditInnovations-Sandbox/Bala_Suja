@@ -506,8 +506,9 @@ public class HubService {
             drivers.setDriverIsActive(true);
             drivers.setDriverDeletedTime(null);
             drivers.setLastUpdatedTime(LocalDateTime.now());
+            drivers.setRemarks(null);
             driverRepository.save(drivers);
-            return "Driver Added Successfully Please update vehicle";
+            return "Driver Added Successfully.";
         }
     }
 

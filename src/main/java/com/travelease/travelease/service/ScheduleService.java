@@ -89,10 +89,13 @@ public class ScheduleService {
         return showSchedulesList;
     }
     
+
+    //Update schedule
     public String updateSchedule(Map<String,Object> companyDetails){
 
         Schedule schedule = scheduleRepository.checkById((Long)companyDetails.get("schedule_id"));
         if(schedule != null){
+            System.out.println(schedule + " worked");
             schedule.setDriverId(driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicleRepository.checkByVehicleNumber((String)companyDetails.get("vehicle_number")).getVehicleId()).getDriverId());
             scheduleRepository.save(schedule);
             return "Updated successfully";

@@ -38,7 +38,8 @@ public class Admin {
             parameters = {
                     @Parameter(name = "sequence_name", value = "admin_sequence"),
                     @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1")
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1") 
             }
     )
     @Column(name = "AdminId")
