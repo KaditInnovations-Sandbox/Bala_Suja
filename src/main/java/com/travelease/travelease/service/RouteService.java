@@ -104,14 +104,14 @@ public class RouteService {
  
 
     //Get Route
-    public List<Map<route, List<String>>> getRoute(){
-
+    public List<Map<String, Object>> getRoute(){
         List<route> routes=routeRepository.findAll();
-        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        List<Map<String, Object>> listOfMappedData = new ArrayList<>();
         for(route r:routes){
-            Map<route,List<String>> routeWithStop = new HashMap<>();
+            Map<String,Object> routeWithStop = new HashMap<>();
             List<String> stops=stopsRepository.findStopByRouteId(r.getId());
-            routeWithStop.put(r,stops);
+            routeWithStop.put("route",r);
+            routeWithStop.put("stops", stops);
             listOfMappedData.add(routeWithStop);
         }
         return listOfMappedData;

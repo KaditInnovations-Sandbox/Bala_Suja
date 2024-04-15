@@ -37,7 +37,7 @@ public class RouteController {
 
     //Get Route
     @GetMapping("/Route")
-    public List<Map<route, List<String>>> getRoute() {
+    public List<Map<String, Object>> getRoute() {
         return routeService.getRoute();
     }
     
