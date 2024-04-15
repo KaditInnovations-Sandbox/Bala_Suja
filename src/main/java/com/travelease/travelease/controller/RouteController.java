@@ -61,19 +61,19 @@ public class RouteController {
 
     //get all Route details based on company
     @GetMapping("/CompanyBasedRoute")
-    public List<Map<route, List<String>>> getRouteBasedCompany(@RequestParam String companyname){
+    public List<Map<String, Object>> getRouteBasedCompany(@RequestParam String companyname){
         return routeService.getRouteBasedCompany(companyname);
     }
 
     //get all Route details based on company
     @GetMapping("/CompanyBasedActiveRoute")
-    public List<Map<route, List<String>>> getActiveRouteBasedCompany(@RequestParam String companyname){
+    public List<Map<String, Object>> getActiveRouteBasedCompany(@RequestParam String companyname){
         return routeService.getActiveRouteBasedCompany(companyname);
     }
 
     //get all Route details based on company
     @GetMapping("/CompanyBasedInactiveRoute")
-    public List<Map<route, List<String>>> getInactiveRouteBasedCompany(@RequestParam String companyname){
+    public List<Map<String, Object>> getInactiveRouteBasedCompany(@RequestParam String companyname){
         return routeService.getInactiveRouteBasedCompany(companyname);
     }
     

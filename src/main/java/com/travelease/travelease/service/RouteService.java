@@ -118,42 +118,45 @@ public class RouteService {
     }
 
     //Get Route based on company
-    public List<Map<route, List<String>>> getRouteBasedCompany(String companyname){
+    public List<Map<String, Object>> getRouteBasedCompany(String companyname){
 
         List<route> routes=routeRepository.findByRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
-        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        List<Map<String, Object>> listOfMappedData = new ArrayList<>();
         for(route r:routes){
-            Map<route,List<String>> routeWithStop = new HashMap<>();
+            Map<String,Object> routeWithStop = new HashMap<>();
             List<String> stops=stopsRepository.findStopByRouteId(r.getId());
-            routeWithStop.put(r,stops);
+            routeWithStop.put("route",r);
+            routeWithStop.put("stops", stops);
             listOfMappedData.add(routeWithStop);
         }
         return listOfMappedData;
     }
 
     //Get Active Route based on company
-    public List<Map<route, List<String>>> getActiveRouteBasedCompany(String companyname){
+    public List<Map<String, Object>> getActiveRouteBasedCompany(String companyname){
 
         List<route> routes=routeRepository.checkActiveRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
-        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        List<Map<String , Object>> listOfMappedData = new ArrayList<>();
         for(route r:routes){
-            Map<route,List<String>> routeWithStop = new HashMap<>();
+            Map<String, Object> routeWithStop = new HashMap<>();
             List<String> stops=stopsRepository.findStopByRouteId(r.getId());
-            routeWithStop.put(r,stops);
+            routeWithStop.put("route",r);
+            routeWithStop.put("stops", stops);
             listOfMappedData.add(routeWithStop);
         }
         return listOfMappedData;
     }
 
      //Get Inactive Route based on company
-     public List<Map<route, List<String>>> getInactiveRouteBasedCompany(String companyname){
+     public List<Map<String, Object>> getInactiveRouteBasedCompany(String companyname){
 
         List<route> routes=routeRepository.checkInactiveRouteBasedCompanyname(companyRepository.findByComapnyName(companyname).getCompanyId());
-        List<Map<route, List<String>>> listOfMappedData = new ArrayList<>();
+        List<Map<String, Object>> listOfMappedData = new ArrayList<>();
         for(route r:routes){
-            Map<route,List<String>> routeWithStop = new HashMap<>();
+            Map<String, Object> routeWithStop = new HashMap<>();
             List<String> stops=stopsRepository.findStopByRouteId(r.getId());
-            routeWithStop.put(r,stops);
+            routeWithStop.put("route",r);
+            routeWithStop.put("stops", stops);
             listOfMappedData.add(routeWithStop);
         }
         return listOfMappedData;
