@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +24,9 @@ import com.travelease.travelease.service.ScheduleService;
 @RestController
 @RequestMapping("/travelease/")
 public class ScheduleController {
+
+    @Value("${crossorigin}")
+	private String crossorigin;
 
     @Autowired 
     private ScheduleService scheduleService;

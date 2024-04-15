@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.exception.ResourceNotFoundException;
 import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.hubmodel.Vehicle;
-import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.repository.VehicleRepository;
 import com.travelease.travelease.service.HubService;
 
@@ -75,7 +74,6 @@ public class HubController {
     }
 
     //get vehicle by id
-    @SuppressWarnings("null")
     @GetMapping("/VehicleByID")
     public ResponseEntity<Vehicle> getEmployeeById(@RequestBody Long id) {
 		Vehicle vehicle = vehicleRepository.findById(id)
@@ -241,6 +239,8 @@ public class HubController {
         return hubService.findallVehicleCapacity();
     }
 
+
+    
 
     @GetMapping("/GetvehicleNumberBasedVehicleCapacity")
     public List<String> GetvehicleCapacityBasedVehicleNumber(@RequestHeader("vehiclecapacity") String vehiclecapacity) {
