@@ -13,7 +13,6 @@ public interface RouteRepository extends JpaRepository<route,Long>{
 
     @Query(nativeQuery = true, value ="SELECT * from route e WHERE e.id=:id")
     route checkById(@Param("id")Long id);
-
     
     @Query(nativeQuery = true, value = "SELECT * FROM route e WHERE e.route_is_active = true")
     List<route> findByAccessTrue();
