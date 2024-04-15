@@ -50,7 +50,7 @@ public class AdminService {
         if(adminRepository.findByAdminEmail(admin.getAdminEmail())==null){
             admin.setAdminPassword(encodePassword(admin.getAdminPhone().toString()));          
             adminRepository.save(admin); 
-            return "Created";
+            return "Admin Created Sccessfully";
         }else{  
             throw new ResourceNotFoundException("User Aleredy Exist");  
         }

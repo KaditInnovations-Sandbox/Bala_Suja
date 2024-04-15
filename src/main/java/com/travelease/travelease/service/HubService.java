@@ -529,11 +529,14 @@ public class HubService {
         }
     }
 
-    //find all vehicle capacity without mapped
+    //find all vehicle capacity without mapped for schedule page
     public List<String> findallVehicleCapacity(){
         return vehicleRepository.findAllVehicleCapacity();
     }
-
+    //find vehicle not mapped with driver
+    public List<String> VehicleNotMappedWithDriver(){
+        return vehicleRepository.VehicleNotMappedWithDriver();
+    }
 
      //find all vehicle capacity based vehicle number
      public List<String> vehicleCapacityBasedVehicleNumber(String vehicleNumber){

@@ -33,4 +33,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle,Long> {
     
     @Query(nativeQuery = true, value = "SELECT vehicle_number FROM vehicle WHERE vehicle_capacity=:vehiclecapacity AND vehicle_is_active")
     List<String> vehicleCapacityBasedVehicleNumber(@Param("vehiclecapacity") String vehiclecapacity);
+
+    @Query(nativeQuery = true, value = "SELECT vehicle_capacity FROM vehicle o WHERE NOT EXISTS ( SELECT 1 FROM drivervehicle_association c WHERE o.vehicle_id = c.vehicle_id );")
+    List<String> VehicleNotMappedWithDriver();
 }

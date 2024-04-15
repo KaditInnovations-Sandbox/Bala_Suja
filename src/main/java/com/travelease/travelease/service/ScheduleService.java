@@ -4,13 +4,11 @@ package com.travelease.travelease.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,20 +68,22 @@ public class ScheduleService {
     }
 
     //get schedule
-    public List<Map<String, Object>> getSchedule(){
+    public List<Map<String, Object>> getSchedule(String companyname){
         List<Map<String, Object>> showSchedulesList = new ArrayList<>();
         List<Schedule> schedules=scheduleRepository.findAll();
         for(Schedule schedule : schedules){
-            Map<String, Object> showSchedulesMap = new HashMap<>();
-            showSchedulesMap.put("schedule_id", schedule.getScheduleId());
-            showSchedulesMap.put("schedule_date", schedule.getScheduleDate());
-            showSchedulesMap.put("last_updated_time", schedule.getLastUpdatedTime());
-            showSchedulesMap.put("route_id", routeRepository.checkById(schedule.getRouteId().getId()).getRouteId());
-            showSchedulesMap.put("vehicle_capacity",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleCapacity());
-            showSchedulesMap.put("vehicle_number",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleNumber());
-            showSchedulesMap.put("driver_name", schedule.getDriverId().getDriverName());
-            showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
-            showSchedulesList.add(showSchedulesMap);
+            if(schedule.getRouteId().getCompanyId().getCompanyName()==companyname){
+                Map<String, Object> showSchedulesMap = new HashMap<>();
+                showSchedulesMap.put("schedule_id", schedule.getScheduleId());
+                showSchedulesMap.put("schedule_date", schedule.getScheduleDate());
+                showSchedulesMap.put("last_updated_time", schedule.getLastUpdatedTime());
+                showSchedulesMap.put("route_id", routeRepository.checkById(schedule.getRouteId().getId()).getRouteId());
+                showSchedulesMap.put("vehicle_capacity",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleCapacity());
+                showSchedulesMap.put("vehicle_number",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleNumber());
+                showSchedulesMap.put("driver_name", schedule.getDriverId().getDriverName());
+                showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
+                showSchedulesList.add(showSchedulesMap);
+            }
         }
 
         return showSchedulesList;

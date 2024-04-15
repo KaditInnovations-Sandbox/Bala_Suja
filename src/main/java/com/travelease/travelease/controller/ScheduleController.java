@@ -39,8 +39,8 @@ public class ScheduleController {
 
     //get schedule based
     @GetMapping("/Schdedule")
-    public List<Map<String, Object>> getSchedule() {
-        return scheduleService.getSchedule();
+    public List<Map<String, Object>> getSchedule(@RequestHeader String companyname) {
+        return scheduleService.getSchedule(companyname);
     }
 
 

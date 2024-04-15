@@ -239,7 +239,11 @@ public class HubController {
         return hubService.findallVehicleCapacity();
     }
 
-
+    //get vehicle capacity not mapped with driver
+    @GetMapping("/getVehicleNotMappedWithDriver")
+    public List<String> VehicleNotMappedWithDriver() {
+        return hubService.VehicleNotMappedWithDriver();
+    }
     
 
     @GetMapping("/GetvehicleNumberBasedVehicleCapacity")
