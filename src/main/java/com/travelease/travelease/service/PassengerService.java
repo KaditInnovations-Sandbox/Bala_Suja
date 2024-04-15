@@ -89,7 +89,6 @@ public class PassengerService {
     }
 
     //update passenger
-    @SuppressWarnings("null")
     public String updatePassenger(Map<String,Object> passengerDetails)throws Exception{
         passenger passenger=passengerRepository.checkById((Long)passengerDetails.get("passenger_id"));
         if(passengerRepository.findById((Long)passengerDetails.get("passenger_id")).isPresent() && passenger.getPassengerIsActive()){
