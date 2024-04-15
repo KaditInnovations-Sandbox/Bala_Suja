@@ -60,17 +60,17 @@ public class HubService {
         
     }
 
-    //vehicle Remove access
+    //vehicle Remove vehicle
     public String DeleteVehicle(Vehicle vehicle) throws Exception{
         Vehicle vehicles=vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
         if(vehicles==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
-            vehicles.setVehicleIsActive(false);
-            vehicles.setVehicleDeletedTime(LocalDateTime.now());
-            vehicles.setRemarks(vehicle.getRemarks());
-            vehicleRepository.save(vehicles);
-            return "Deleted";
+                vehicles.setVehicleIsActive(false);
+                vehicles.setVehicleDeletedTime(LocalDateTime.now());
+                vehicles.setRemarks(vehicle.getRemarks());
+                vehicleRepository.save(vehicles);
+                return "Vehicle deleted successfully";
         }       
         
     }
@@ -97,12 +97,19 @@ public class HubService {
         if(vehicle==null){
             throw new ResourceNotFoundException("Vehicle Not found");
         }else{
-            vehicle.setVehicleIsActive(true);
-            vehicle.setVehicleDeletedTime(null);
-            vehicle.setLastUpdatedTime(LocalDateTime.now());
-            vehicle.setRemarks(null);
-            vehicleRepository.save(vehicle);
-            return "Access Updated";
+            if(vehicles.getVehicleType().equals(env.getProperty("Insidedrivertype"))){
+                vehicle.setVehicleIsActive(true);
+                vehicle.setVehicleDeletedTime(null);
+                vehicle.setLastUpdatedTime(LocalDateTime.now());
+                vehicle.setRemarks(null);
+                vehicleRepository.save(vehicle);
+                return "Access Updated";
+            }else if (vehicles.getVehicleType().equals(env.getProperty("Outsidedrivertype"))) {
+                throw new IllegalArgumentException("Please ensure Contract driver is Active state.");
+            }else{
+                return "Vehicle type incorrect";
+            }
+         
         }       
     }
     
@@ -476,7 +483,6 @@ public class HubService {
     }
 
     //Remove Driver Access
-    @SuppressWarnings("null")
     public String DeleteDriver(Driver driver) {
 
         Driver drivers=driverRepository.checkById(driver.getDriverId());
@@ -485,15 +491,26 @@ public class HubService {
         }else{
             drivers.setDriverIsActive(false);
             drivers.setDriverDeletedTime(LocalDateTime.now());
+            drivers.setLastUpdatedTime(LocalDateTime.now());
             drivers.setRemarks(driver.getRemarks());
             driverRepository.save(drivers);
-            System.out.println(drivers);
             if(drivers.getDriverType().equals(env.getProperty("Insidedrivertype"))){
                 DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(driver.getDriverId());
                 driverVehicleAssociationRepository.delete(drivervehicleAssociation);
                 return env.getProperty("Insidedrivertype")+" Deleted Successflly";
+            }else if(drivers.getDriverType().equals(env.getProperty("Outsidedrivertype"))){
+                DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(driver.getDriverId());
+                Vehicle vehicle = drivervehicleAssociation.getVehicleId();
+                vehicle.setVehicleIsActive(false);
+                vehicle.setVehicleDeletedTime(LocalDateTime.now());
+                vehicle.setLastUpdatedTime(LocalDateTime.now());
+                vehicle.setRemarks("Driver is removed for this vechicle");
+                vehicleRepository.save(vehicle);
+                return env.getProperty("Outsidedrivertype")+"Deleted successfylly";
+            }else{
+                return "Driver type is Invalid";
             }
-            return env.getProperty("Outsidedrivertype")+"Deleted successfylly";
+            
         }  
     }
 
