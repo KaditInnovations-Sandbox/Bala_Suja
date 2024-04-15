@@ -109,12 +109,12 @@ public class PassengerController {
     //get all inactive Passenger details 
     @JsonView(CombinedPassengerPublicView.CombinedView.class)
     @GetMapping("/RouteBasedPassenger")
-    public List<passenger> getRouteBasedPassenger(@RequestHeader("routeid") String routeid) throws Exception{
+    public List<passenger> getRouteBasedPassenger(@RequestParam String routeid) throws Exception{
        return passengerService.getRouteBasedPassenger(routeid);
     }
 
     @GetMapping("/RouteBasedPassengerCount")
-    public int getRouteBasedPassengerCount(@RequestHeader("routeid") String routeid) throws Exception{
+    public int getRouteBasedPassengerCount(@RequestParam String routeid) throws Exception{
        return passengerService.getRouteBasedPassengerCount(routeid);
     }
 }
