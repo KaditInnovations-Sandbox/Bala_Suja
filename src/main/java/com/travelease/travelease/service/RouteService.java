@@ -290,7 +290,15 @@ public class RouteService {
         return routeRepository.findAllRouteId();
     }
 
-
+    //check route id is already exists
+    public boolean CheckRouteId(String RouteId) throws Exception{
+        route route=routeRepository.findByRouteId(RouteId);
+        if(route == null){
+            return true; // If Route id is not present then return true
+        }else{
+            throw new ResourceNotFoundException("Route Id must be Unique");
+        }  
+    }
     
 
     
