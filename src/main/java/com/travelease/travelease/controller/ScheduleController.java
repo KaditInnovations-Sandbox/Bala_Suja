@@ -40,7 +40,7 @@ public class ScheduleController {
 
     //get schedule based
     @GetMapping("/Schdedule")
-    public List<Map<String, Object>> getSchedule(@RequestHeader String companyname) {
+    public List<Map<String, Object>> getSchedule(@RequestParam String companyname) {
         return scheduleService.getSchedule(companyname);
     }
 

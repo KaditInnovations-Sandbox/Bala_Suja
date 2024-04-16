@@ -68,11 +68,13 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.deleteAdmin(admin));
 	}
 
+	//update password
 	@PutMapping("/updatePassword")
 	public ResponseEntity<String> updatePassword(@RequestParam String password,@RequestParam String email) throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.PasswordChange(email,password));
 	}
 
+	//grand access
 	@PutMapping("/BindAdmin")
 	public ResponseEntity<String> BindAdmin(@RequestBody Admin admin) throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.bindAdmin(admin));
@@ -113,6 +115,7 @@ public class AdminController {
 		return adminService.getInactiveAdminByType(type);
 	}
 
+	//file upload
 	@PostMapping("/AdminUpload")
     public ResponseEntity<String> uploadContractDriverCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -125,5 +128,13 @@ public class AdminController {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+	//Check Admin by email
+	@GetMapping("/CheckAdminByEmail")
+	public  ResponseEntity<Boolean> CheckAdminByEmail(@RequestParam("email") String email) {
+		return ResponseEntity.status(HttpStatus.OK).body(adminService.CheckAdminByEmail(email));
+	}
+
+	//Check Admin by phone
     
 }

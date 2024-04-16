@@ -11,6 +11,9 @@ import com.travelease.travelease.model.adminmodel.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin,Long>{
     
+    @Query(nativeQuery = true, value = "SELECT * from Admin e WHERE e.admin_id=:id")
+    Admin checkById(@Param("id")Long id);
+    
     @Query(nativeQuery = true, value = "SELECT case WHEN COUNT(e.admin_id) > 0 THEN 'true' ELSE 'false' END FROM admin e WHERE e.admin_email = :email GROUP BY e.admin_is_active")
     String checkAdminExistence(@Param("email")String email);
 
@@ -37,4 +40,6 @@ public interface AdminRepository extends JpaRepository<Admin,Long>{
 
     @Query(nativeQuery = true, value = "SELECT * FROM Admin e WHERE e.admin_role_type =:type AND e.admin_is_active = false")
     List<Admin> findInactiveAdminByType(@Param("type")String type);
+
+    
 }

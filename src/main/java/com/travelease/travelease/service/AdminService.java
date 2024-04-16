@@ -36,19 +36,21 @@ public class AdminService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    //get all admin
     public List<Admin> getAllAdmin(){
         return adminRepository.findAll();
     }
    
+    //get admin by email
     public Admin getAdminByEmail(String email){
         Optional<Admin> adminOptional = Optional.ofNullable(adminRepository.findByAdminEmail(email));
-        return adminOptional.orElse(null);
-       
+        return adminOptional.orElse(null); 
     }
 
+    //post admin
     public String createAdmin(Admin admin) throws Exception{
         if(adminRepository.findByAdminEmail(admin.getAdminEmail())==null){
-            admin.setAdminPassword(encodePassword(admin.getAdminPhone().toString()));          
+            admin.setAdminPassword(encodePassword(admin.getAdminPhone().toString()));           
             adminRepository.save(admin); 
             return "Admin Created Sccessfully";
         }else{  
@@ -58,7 +60,7 @@ public class AdminService {
 
     //Grand Access 
     public String bindAdmin(Admin adminDetails){
-        Admin admin=adminRepository.findByAdminEmail(adminDetails.getAdminEmail());
+        Admin admin=adminRepository.checkById(adminDetails.getAdminId());
         if(admin==null){
             throw new ResourceNotFoundException("Admin Not found");
         }else{
@@ -71,8 +73,9 @@ public class AdminService {
         }       
     }
 
+    //Update Admin
     public String updateAdmin(Admin adminDetails)throws Exception{
-        Admin admin=adminRepository.findByAdminEmail(adminDetails.getAdminEmail());
+        Admin admin=adminRepository.checkById(adminDetails.getAdminId());
         if(admin==null){
             throw new ResourceNotFoundException("Admin not found");
         }else{
@@ -86,8 +89,9 @@ public class AdminService {
         }	
     }
 
+    //Delete admin
     public String deleteAdmin(Admin admins) throws Exception{
-        Admin admin=adminRepository.findByAdminEmail(admins.getAdminEmail());
+        Admin admin=adminRepository.checkById(admins.getAdminId());
         if(admin==null){
             throw new ResourceNotFoundException("Admin not found");
         }else{
@@ -119,7 +123,6 @@ public class AdminService {
                     return resultMap; 
                 }else{
                     throw new ResourceNotFoundException("Password Incorrect");
-                    //Exception Admin is not match
                 }
         }else if(adminLogin.get("token")!=null && admin!=null && admin.getAdminIsActive()){
             resultMap.put("email", jwtUtils.verify(adminLogin.get("token")));
@@ -129,7 +132,6 @@ public class AdminService {
 
         }else{
             throw new ResourceNotFoundException("Admin not Active");
-            //Exception Admin is not found or not active
         }
     }
   
@@ -177,13 +179,12 @@ public class AdminService {
         return adminRepository.findByAccessTrue();
     }
 
-
     //get all inactive vehicle
     public List<Admin> getAllInactiveAdmin(){
         return adminRepository.findByAccessFalse();
     }
 
-     //data read from csv
+    //data read from csv
     public Integer saveAdminFromCsv(MultipartFile file) throws IOException {
         List<Admin> admins = new ArrayList<>();
         Integer count=0;
@@ -225,6 +226,15 @@ public class AdminService {
         return adminRepository.findInactiveAdminByType(type);
     }
 
+    //Check Admin by email
+    public boolean CheckAdminByEmail(String email){
+        Admin admin = adminRepository.findByAdminEmail(email);
+        if(admin == null){
+            return true;
+        }else{
+            return false;
+        }  
+    }
        
 }
 
