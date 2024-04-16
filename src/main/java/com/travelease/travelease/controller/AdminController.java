@@ -131,13 +131,13 @@ public class AdminController {
     }
 
 	//Check Admin by email
-	@GetMapping("/CheckAdminByEmail")
+	@PostMapping("/CheckAdminByEmail")
 	public  ResponseEntity<Boolean> CheckAdminByEmail(@RequestParam("email") String email) {
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.CheckAdminByEmail(email));
 	}
 
 	//Check Admin by phone
-	@GetMapping("/CheckAdminByEmail")
+	@PostMapping("/CheckAdminByPhoneNumber")
 	public  ResponseEntity<Boolean> CheckAdminByPhone(@RequestParam("phone") BigInteger phone) {
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.CheckAdminByPhone(phone));
 	}

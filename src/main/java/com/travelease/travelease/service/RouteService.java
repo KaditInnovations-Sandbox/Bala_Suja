@@ -45,13 +45,14 @@ public class RouteService {
         if(company!=null && company.getCompanyIsActive()){
             route route=new route();
             // need to add routeId based on pickukp and drop location 
-            if(((String) companyRoute.get("route_pickup")).equals(company.getCompanyName())){
-                route.setRouteId(generateRouteIdOut((String)companyRoute.get("route_pickup"),(String)companyRoute.get("route_drop")));
-            }else if(((String) companyRoute.get("route_drop")).equals(company.getCompanyName())){
-                route.setRouteId(generateRouteIdIn((String)companyRoute.get("route_pickup"),(String)companyRoute.get("route_drop")));
-            }else{
-                throw new ResourceNotFoundException("You Must have Pickup or Drop point as a company name");
-            }        
+            // if(((String) companyRoute.get("route_pickup")).equals(company.getCompanyName())){
+            //     route.setRouteId(generateRouteIdOut((String)companyRoute.get("route_pickup"),(String)companyRoute.get("route_drop")));
+            // }else if(((String) companyRoute.get("route_drop")).equals(company.getCompanyName())){
+            //     route.setRouteId(generateRouteIdIn((String)companyRoute.get("route_pickup"),(String)companyRoute.get("route_drop")));
+            // }else{
+            //     throw new ResourceNotFoundException("You Must have Pickup or Drop point as a company name");
+            // }  
+            route.setRouteId((String)companyRoute.get("route_id"));      
             route.setCompanyId(company);
             route.setRoutePickup((String)companyRoute.get("route_pickup"));
             route.setRouteDrop((String)companyRoute.get("route_drop"));

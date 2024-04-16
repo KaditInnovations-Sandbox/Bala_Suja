@@ -172,7 +172,7 @@ public class AdminService {
         }catch(Exception e){
             throw new Exception(e);
         }
-    }
+    } 
 
     //get all active vehicle
     public List<Admin> getAllActiveAdmin(){
