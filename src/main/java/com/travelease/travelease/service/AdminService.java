@@ -230,12 +230,21 @@ public class AdminService {
     public boolean CheckAdminByEmail(String email){
         Admin admin = adminRepository.findByAdminEmail(email);
         if(admin == null){
-            return true;
+            return true; // If email is unique then return true
         }else{
             return false;
         }  
     }
        
+    //Check Admin by phone
+    public boolean CheckAdminByPhone(BigInteger phone){
+        Admin admin = adminRepository.findByAdminPhone(phone);
+        if(admin == null){
+            return true; // If Phone number is unique then return true
+        }else{
+            return false;
+        }  
+    }
 }
 
 

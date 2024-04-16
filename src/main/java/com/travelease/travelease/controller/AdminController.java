@@ -1,6 +1,7 @@
 package com.travelease.travelease.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +137,9 @@ public class AdminController {
 	}
 
 	//Check Admin by phone
+	@GetMapping("/CheckAdminByEmail")
+	public  ResponseEntity<Boolean> CheckAdminByPhone(@RequestParam("phone") BigInteger phone) {
+		return ResponseEntity.status(HttpStatus.OK).body(adminService.CheckAdminByPhone(phone));
+	}
     
 }
