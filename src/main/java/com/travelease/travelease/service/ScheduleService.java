@@ -72,7 +72,7 @@ public class ScheduleService {
         List<Schedule> schedules=scheduleRepository.findAll();
         for(Schedule schedule : schedules){
             System.out.println(schedule.getRouteId().getCompanyId().getCompanyName());
-            if(schedule.getRouteId().getCompanyId().getCompanyName()==companyname){
+            // if(schedule.getRouteId().getCompanyId().getCompanyName()==companyname){
                 Map<String, Object> showSchedulesMap = new HashMap<>();
                 showSchedulesMap.put("schedule_id", schedule.getScheduleId());
                 showSchedulesMap.put("schedule_date", schedule.getScheduleDate());
@@ -83,7 +83,7 @@ public class ScheduleService {
                 showSchedulesMap.put("driver_name", schedule.getDriverId().getDriverName());
                 showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
                 showSchedulesList.add(showSchedulesMap);
-            }
+            // }
         }
 
         return showSchedulesList;
