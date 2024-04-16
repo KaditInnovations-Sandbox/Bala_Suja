@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travelease.travelease.service.ScheduleService;
@@ -32,8 +33,8 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     //create Schedule
-    @PostMapping("{companyname}/Schedule")
-    public ResponseEntity<String> createSchedule(@RequestHeader String companyname,@RequestBody Map<String,Object> CompanySchedule)throws Exception{
+    @PostMapping("/Schedule")
+    public ResponseEntity<String> createSchedule(@RequestParam String companyname,@RequestBody Map<String,Object> CompanySchedule)throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.createSchedule(companyname,CompanySchedule));
     }
 

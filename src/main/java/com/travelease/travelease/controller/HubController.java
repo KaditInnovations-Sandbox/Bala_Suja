@@ -255,7 +255,7 @@ public class HubController {
 
 
     @GetMapping("/GetDriverNameBasedVehicleNumbr")
-    public String GetDriverNameBasedVehicleNumbr(@RequestHeader("vehicleNumber") String vehicleNumber) {
+    public String GetDriverNameBasedVehicleNumbr(@RequestParam("vehicleNumber") String vehicleNumber) {
         return hubService.GetDriverNameBasedVehicleNumbr(vehicleNumber);
     }
 

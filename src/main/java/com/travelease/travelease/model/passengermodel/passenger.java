@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.routemodel.route;
-import com.travelease.travelease.model.routemodel.stops;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,12 +34,22 @@ public class passenger {
     @Id
     @Column(name = "passengerid")
     @JsonView(PublicView.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "passengerIdGenerator")
+    @GenericGenerator(
+            name = "passengerIdGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "passenger_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1")
+            }
+    )
     private Long PassengerId;
     @Column(name = "passengername", nullable = false)
     @JsonView(PublicView.class)
     private String PassengerName;
-    @Column(name = "passengeremail")
+    @Column(name = "passengeremail", unique = true)
     @JsonView(PublicView.class)
     private String PassengerEmail;
     @Column(name = "passengerphone", unique = true, nullable = false)

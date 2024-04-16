@@ -2,9 +2,9 @@ package com.travelease.travelease.model.hubmodel;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +27,17 @@ public class Vehicle {
     public interface PrivateView extends PublicView {}
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "vehicleIdGenerator")
+    @GenericGenerator(
+            name = "vehicleIdGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "vehicle_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1")
+            }
+    )
     @JsonView(PublicView.class)
     @Column(name = "vehicle_id")
     private Long vehicleId;

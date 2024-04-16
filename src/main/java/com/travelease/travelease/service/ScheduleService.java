@@ -46,7 +46,6 @@ public class ScheduleService {
     public String createSchedule(String companyname,Map<String, Object> CompanySchedule) throws Exception{
         company company = companyRepository.findByComapnyName(companyname);
         if(company!=null && company.getCompanyIsActive()){
-           
             LocalDate date = LocalDate.parse((String)CompanySchedule.get("start_date"));
             int count=0;
             while (!date.isAfter(LocalDate.parse((String)CompanySchedule.get("end_date")))) {
@@ -72,6 +71,7 @@ public class ScheduleService {
         List<Map<String, Object>> showSchedulesList = new ArrayList<>();
         List<Schedule> schedules=scheduleRepository.findAll();
         for(Schedule schedule : schedules){
+            System.out.println(schedule.getRouteId().getCompanyId().getCompanyName());
             if(schedule.getRouteId().getCompanyId().getCompanyName()==companyname){
                 Map<String, Object> showSchedulesMap = new HashMap<>();
                 showSchedulesMap.put("schedule_id", schedule.getScheduleId());

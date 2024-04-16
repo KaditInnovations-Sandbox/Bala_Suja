@@ -3,9 +3,10 @@ package com.travelease.travelease.model.hubmodel;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +30,17 @@ public class Driver {
 
     @Id
     @JsonView(PublicView.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "driverIdGenerator")
+    @GenericGenerator(
+            name = "driverIdGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "driver_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1")
+            }
+    )
     @Column(name = "Driver_id")
     private Long DriverId;
 
@@ -41,7 +52,7 @@ public class Driver {
     @Column(name = "Driver_phone",unique = true, nullable = false )
     private BigInteger DriverPhone;
 
-    @Column(name = "Driver_email")
+    @Column(name = "Driver_email", unique = true)
     @JsonView(PublicView.class)
     private String DriverEmail;
 
@@ -49,7 +60,7 @@ public class Driver {
     @Column(name = "Driver_password")
     private String DriverPassword;
 
-    @Column(name = "Driver_type")
+    @Column(name = "Driver_type", nullable = false)
     @JsonView(PublicView.class)
     private String DriverType;
 

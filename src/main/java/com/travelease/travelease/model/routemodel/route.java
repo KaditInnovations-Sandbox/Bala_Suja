@@ -5,9 +5,10 @@ import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +31,17 @@ public class route {
     public interface PublicView {}
 
     
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "routeIdGenerator")
+    @GenericGenerator(
+            name = "routeIdGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "route_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1")
+            }
+    )
     @Column(name = "Id")
     @JsonView(PublicView.class)
     @Id
@@ -38,16 +49,16 @@ public class route {
     @Column(name = "RouteId", nullable = false, unique = true)
     @JsonView(PublicView.class)
     private String RouteId;
-    @Column(name = "RoutePickup")
+    @Column(name = "RoutePickup", nullable = false)
     @JsonView(PublicView.class)
     private String RoutePickup;
-    @Column(name = "RouteDrop")
+    @Column(name = "RouteDrop", nullable = false)
     @JsonView(PublicView.class)
     private String RouteDrop;
-    @Column(name = "RouteStartTime")
+    @Column(name = "RouteStartTime", nullable = false)
     @JsonView(PublicView.class)
     private LocalTime RouteStartTime;
-    @Column(name = "RouteEndTime")
+    @Column(name = "RouteEndTime", nullable = false)
     @JsonView(PublicView.class)
     private LocalTime RouteEndTime;
     @Column(name = "RouteIsActive")

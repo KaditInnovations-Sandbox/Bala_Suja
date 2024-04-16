@@ -3,6 +3,8 @@ package com.travelease.travelease.model.schedulemodel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import com.travelease.travelease.model.hubmodel.Driver;
 import com.travelease.travelease.model.routemodel.route;
@@ -27,7 +29,17 @@ import lombok.NoArgsConstructor;
 public class Schedule {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "scheduleIdGenerator")
+    @GenericGenerator(
+            name = "scheduleIdGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "schedule_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1"),
+                    @Parameter(name = "allocationSize", value = "1")
+            }
+    )
     @Column(name = "ScheduleId")
     private Long ScheduleId;
 

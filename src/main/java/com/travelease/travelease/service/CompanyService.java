@@ -42,7 +42,7 @@ public class CompanyService {
             companyRepository.save(company);
             return "created";
         }else{
-            throw new ResourceNotFoundException("Company Name or Phone already exist");
+            throw new ResourceNotFoundException("Company Name already exist");
         }
     }
 
