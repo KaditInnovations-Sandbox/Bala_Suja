@@ -1,6 +1,7 @@
 package com.travelease.travelease.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(company));
 	}
 
-    //Edit for company	
+    //Edit company	
 	@PutMapping("/Company")
 	public ResponseEntity<String> updateCompany(@RequestBody company companyDetails) throws Exception{
 		String response=companyService.updateCompany(companyDetails);
@@ -76,6 +77,7 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+    //company file upload
 	@PostMapping("/Companyupload")
     public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -89,4 +91,18 @@ public class CompanyController {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //check company name
+    @PostMapping("/CheckCompanyByName")
+	public  ResponseEntity<Boolean> CheckCompanyByName(@RequestParam("companyname") String companyname) {
+		return ResponseEntity.status(HttpStatus.OK).body(companyService.CheckCompanyByName(companyname));
+	}
+
+    //check company phone 
+    @PostMapping("/CheckCompanyByPhone")
+	public  ResponseEntity<Boolean> CheckCompanyByPhone(@RequestParam("companyphone") BigInteger companyphone) {
+		return ResponseEntity.status(HttpStatus.OK).body(companyService.CheckCompanyByPhone(companyphone));
+	}
+
+    //check company email
 }

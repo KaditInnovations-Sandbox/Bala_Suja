@@ -96,4 +96,10 @@ public class RouteController {
         return routeService.getAllRouteId();
     }
 
+    @PostMapping("/CheckRouteId")
+    public ResponseEntity<Boolean> CheckRouteId(@RequestParam("RouteId")String RouteId)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(routeService.CheckRouteId(RouteId));
+    }
+
+
 }

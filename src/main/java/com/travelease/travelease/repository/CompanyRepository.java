@@ -1,5 +1,6 @@
 package com.travelease.travelease.repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,8 @@ public interface CompanyRepository extends JpaRepository<company,Long>{
 
     @Query(nativeQuery = true, value = "SELECT * FROM company WHERE companyname=:companyName")
     company findByComapnyName(@Param("companyName") String  companyName);
+    
+    @Query(nativeQuery = true, value = "SELECT * FROM company WHERE companyphone=:companyPhone")
+    company findByComapnyPhone(@Param("companyPhone") BigInteger companyPhone);
 
 }

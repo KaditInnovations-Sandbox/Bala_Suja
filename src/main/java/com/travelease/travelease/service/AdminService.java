@@ -232,7 +232,7 @@ public class AdminService {
         if(admin == null){
             return true; // If email is unique then return true
         }else{
-            return false;
+            throw new ResourceNotFoundException("Admin Email already exist");
         }  
     }
        
@@ -242,7 +242,7 @@ public class AdminService {
         if(admin == null){
             return true; // If Phone number is unique then return true
         }else{
-            return false;
+            throw new ResourceNotFoundException("Admin Phone already exist");
         }  
     }
 }

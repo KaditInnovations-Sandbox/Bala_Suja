@@ -126,5 +126,24 @@ public class CompanyService {
         }
         companyRepository.saveAll(companys);
     }
+
+    //check companyname
+    public boolean CheckCompanyByName(String companyname){
+        company company = companyRepository.findByComapnyName(companyname);
+        if(company == null){
+            return true; // If company name is not present then return true
+        }else{
+            throw new ResourceNotFoundException("company name already exist");
+        }  
+    }
+    //
+    public boolean CheckCompanyByPhone(BigInteger phone){
+        company company = companyRepository.findByComapnyPhone(phone);
+        if(company == null){
+            return true; // If company name is not present then return true
+        }else{
+            throw new ResourceNotFoundException("company Phone already exist");
+        }  
+    }
     
 }
