@@ -105,4 +105,8 @@ public class CompanyController {
 	}
 
     //check company email
+    @PostMapping("/CheckCompanyByEmail")
+	public  ResponseEntity<Boolean> CheckCompanyByEmail(@RequestParam("companyemail") String companyemail) {
+		return ResponseEntity.status(HttpStatus.OK).body(companyService.CheckCompanyByEmail(companyemail));
+	}
 }

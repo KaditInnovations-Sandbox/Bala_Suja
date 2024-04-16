@@ -25,4 +25,6 @@ public interface CompanyRepository extends JpaRepository<company,Long>{
     @Query(nativeQuery = true, value = "SELECT * FROM company WHERE companyphone=:companyPhone")
     company findByComapnyPhone(@Param("companyPhone") BigInteger companyPhone);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM company WHERE companyemail=:companyEmail")
+    company findByComapnyEmail(@Param("companyEmail") String companyEmail);
 }
