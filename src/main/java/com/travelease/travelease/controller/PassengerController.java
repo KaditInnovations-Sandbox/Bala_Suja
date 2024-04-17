@@ -1,6 +1,7 @@
 package com.travelease.travelease.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.passengermodel.passenger;
 import com.travelease.travelease.model.routemodel.route;
-import com.travelease.travelease.model.routemodel.stops;
 import com.travelease.travelease.service.PassengerService;
 
 @CrossOrigin(origins = "${crossorigin}")
@@ -117,4 +117,16 @@ public class PassengerController {
     public int getRouteBasedPassengerCount(@RequestParam String routeid) throws Exception{
        return passengerService.getRouteBasedPassengerCount(routeid);
     }
+
+    //Check Passenger by email
+	@PostMapping("/CheckPassengerByEmail")
+	public  ResponseEntity<Boolean> CheckPassengerByEmail(@RequestParam("email") String email) {
+		return ResponseEntity.status(HttpStatus.OK).body(passengerService.CheckPassengerByEmail(email));
+	}
+
+	//Check Passenger by phone
+	@PostMapping("/CheckPassengerByPhoneNumber")
+	public  ResponseEntity<Boolean> CheckPassengerByPhone(@RequestParam("phoneNumber") BigInteger phone) {
+		return ResponseEntity.status(HttpStatus.OK).body(passengerService.CheckPassengerByPhone(phone));
+	}
 }

@@ -81,6 +81,10 @@ public class ScheduleService {
                 showSchedulesMap.put("vehicle_capacity",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleCapacity());
                 showSchedulesMap.put("vehicle_number",driverVehicleAssociationRepository.findDriverVehicleByDriverId(schedule.getDriverId().getDriverId()).getVehicleId().getVehicleNumber());
                 showSchedulesMap.put("driver_name", schedule.getDriverId().getDriverName());
+                showSchedulesMap.put("schedule_created_at",schedule.getScheduleCreatedAt());
+                showSchedulesMap.put("schedule_is_active", schedule.isScheduleIsActive());
+                showSchedulesMap.put("schedule_deleted_time", schedule.getScheduleDeletedTime());
+                showSchedulesMap.put("remarks", schedule.getRemarks());
                 showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
                 showSchedulesList.add(showSchedulesMap);
             // }

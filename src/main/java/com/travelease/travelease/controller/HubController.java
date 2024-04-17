@@ -1,6 +1,7 @@
 package com.travelease.travelease.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -258,5 +259,25 @@ public class HubController {
     public String GetDriverNameBasedVehicleNumbr(@RequestParam("vehicleNumber") String vehicleNumber) {
         return hubService.GetDriverNameBasedVehicleNumbr(vehicleNumber);
     }
+
+    //Check Vehicle Number 
+	@PostMapping("/CheckVehicleByVehicleNumber")
+	public  ResponseEntity<Boolean> checkVehicleByVehicleNumber(@RequestParam("vehicleNumber") String vehicleNumber) {
+		return ResponseEntity.status(HttpStatus.OK).body(hubService.checkVehicleByVehicleNumber(vehicleNumber));
+	}
+    
+
+    //Check Admin by email
+	@PostMapping("/CheckDriverByEmail")
+	public  ResponseEntity<Boolean> CheckDriverByEmail(@RequestParam("email") String email) {
+		return ResponseEntity.status(HttpStatus.OK).body(hubService.CheckDriverByEmail(email));
+	}
+
+	//Check Admin by phone
+	@PostMapping("/CheckDriverByPhoneNumber")
+	public  ResponseEntity<Boolean> CheckDriverByPhone(@RequestParam("phoneNumber") BigInteger phone) {
+		return ResponseEntity.status(HttpStatus.OK).body(hubService.CheckDriverByPhone(phone));
+	}
+
 
 }

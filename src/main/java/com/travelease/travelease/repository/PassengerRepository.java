@@ -14,6 +14,9 @@ import com.travelease.travelease.model.companymodel.company;
 public interface PassengerRepository extends JpaRepository<passenger,Long>{
     @Query(nativeQuery = true, value ="SELECT * from Passenger e WHERE e.passengerphone=:PassengerPhone")
     passenger findByPassengerPhone(@Param("PassengerPhone")BigInteger PassengerPhone);
+    
+    @Query(nativeQuery = true, value ="SELECT * from Passenger e WHERE e.passengeremail=:PassengerEmail")
+    passenger findByPassengerEmail(@Param("PassengerEmail")String passengerEmail);
 
     @Query(nativeQuery = true, value = "SELECT * FROM passenger e WHERE e.passenger_is_active = true")
     List<passenger> findByAccessTrue();

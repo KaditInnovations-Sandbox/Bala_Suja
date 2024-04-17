@@ -239,5 +239,25 @@ public class PassengerService {
         return c;
         
     }
+
+    //Check Passenger by email
+    public boolean CheckPassengerByEmail(String email){
+        passenger passenger=passengerRepository.findByPassengerEmail(email);
+        if(passenger == null){
+            return true; // If email is unique then return true
+        }else{
+            throw new ResourceNotFoundException("Passenger Email already exist");
+        }  
+    }
+       
+    //Check Passenger by phone
+    public boolean CheckPassengerByPhone(BigInteger phone){
+        passenger passenger=passengerRepository.findByPassengerPhone(phone);
+        if(passenger == null){
+            return true; // If Phone number is unique then return true
+        }else{
+            throw new ResourceNotFoundException("Passenger Phone Number already exist");
+        }  
+    }
     
 }

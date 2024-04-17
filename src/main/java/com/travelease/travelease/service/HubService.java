@@ -549,5 +549,35 @@ public class HubService {
         Driver driver = driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicle.getVehicleId()).getDriverId();
         return driver.getDriverName();
     }
+
+    //Check Vehicle by vehicleNumber
+    public boolean checkVehicleByVehicleNumber(String vehicleNumber){
+        Vehicle vehicle=vehicleRepository.checkByVehicleNumber(vehicleNumber);
+        if(vehicle == null){
+            return true; // If Phone number is unique then return true
+        }else{
+            throw new ResourceNotFoundException("Vehicle Number already exist");
+        }  
+    }
+
+    //Check Driver by email
+    public boolean CheckDriverByEmail(String email){
+        Driver driver=driverRepository.findByDriverEmail(email);
+        if(driver == null){
+            return true; // If email is unique then return true
+        }else{
+            throw new ResourceNotFoundException("Driver Email already exist");
+        }  
+    }
+       
+    //Check Driver by phone
+    public boolean CheckDriverByPhone(BigInteger phone){
+        Driver driver=driverRepository.findByDriverPhone(phone);
+        if(driver == null){
+            return true; // If Phone number is unique then return true
+        }else{
+            throw new ResourceNotFoundException("Driver Phone Number already exist");
+        }  
+    }
     
 }
