@@ -17,6 +17,7 @@ import com.travelease.travelease.model.companymodel.company;
 import com.travelease.travelease.model.schedulemodel.Schedule;
 import com.travelease.travelease.repository.CompanyRepository;
 import com.travelease.travelease.repository.DriverVehicleAssociationRepository;
+import com.travelease.travelease.repository.PassengerRepository;
 import com.travelease.travelease.repository.RouteRepository;
 import com.travelease.travelease.repository.ScheduleRepository;
 import com.travelease.travelease.repository.VehicleRepository;
@@ -39,6 +40,9 @@ public class ScheduleService {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private PassengerRepository passengerRepository;
 
 
     //create schedule
@@ -71,7 +75,6 @@ public class ScheduleService {
         List<Map<String, Object>> showSchedulesList = new ArrayList<>();
         List<Schedule> schedules=scheduleRepository.findAll();
         for(Schedule schedule : schedules){
-            System.out.println(schedule.getRouteId().getCompanyId().getCompanyName()+"   ****************************************** "+companyname);
             if((schedule.getRouteId().getCompanyId().getCompanyName().equals(companyname))){
                 Map<String, Object> showSchedulesMap = new HashMap<>();
                 showSchedulesMap.put("schedule_id", schedule.getScheduleId());
@@ -85,7 +88,7 @@ public class ScheduleService {
                 showSchedulesMap.put("schedule_is_active", schedule.isScheduleIsActive());
                 showSchedulesMap.put("schedule_deleted_time", schedule.getScheduleDeletedTime());
                 showSchedulesMap.put("remarks", schedule.getRemarks());
-                showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
+                showSchedulesMap.put("passenger_count",passengerRepository.findByRouteIdPassengerCount(schedule.getRouteId().getId()));
                 showSchedulesList.add(showSchedulesMap);
             }else{
                 throw new ResourceNotFoundException("This company don't have any schedules");
@@ -99,7 +102,6 @@ public class ScheduleService {
     public String updateSchedule(Map<String,Object> companyDetails){
         Schedule schedule = scheduleRepository.checkById((Long)companyDetails.get("schedule_id"));
         if(schedule != null){
-            System.out.println(schedule + " worked");
             schedule.setDriverId(driverVehicleAssociationRepository.findDriverVehicleByVehicleId(vehicleRepository.checkByVehicleNumber((String)companyDetails.get("vehicle_number")).getVehicleId()).getDriverId());
             scheduleRepository.save(schedule);
             return "Updated successfully";

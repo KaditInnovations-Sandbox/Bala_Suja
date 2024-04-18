@@ -33,5 +33,7 @@ public interface PassengerRepository extends JpaRepository<passenger,Long>{
     @Query(nativeQuery = true, value = "SELECT * FROM passenger e WHERE e.route_id =:routeid")
     List<passenger> findByRouteId(@Param("routeid") Long routeid);
    
+    @Query(nativeQuery = true, value ="SELECT COUNT(*) from passenger e WHERE e.route_id=:routeId")
+    int findByRouteIdPassengerCount(@Param("routeId")Long routeId);
     
 }

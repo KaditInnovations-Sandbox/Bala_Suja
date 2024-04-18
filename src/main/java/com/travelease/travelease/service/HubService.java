@@ -343,7 +343,6 @@ public class HubService {
 
     //Update Driver
     public String UpdateDriver(Map<String,Object> driverdetails)throws Exception{
-        System.out.println(driverdetails);
         Driver driver=driverRepository.checkById(Long.valueOf(driverdetails.get("driver_id").toString()));
         DrivervehicleAssociation drivervehicleAssociation=driverVehicleAssociationRepository.findDriverVehicleByDriverId(Long.valueOf(driverdetails.get("driver_id").toString()));
         if(driver!=null){
@@ -368,8 +367,7 @@ public class HubService {
                 return env.getProperty("Outsidedrivertype")+" Driver Updated";
             }else{
                 throw new Exception("DriverType missing");                
-            }
-            
+            }     
         }else{
             throw new Exception("Driver already exists");
         }
@@ -421,6 +419,7 @@ public class HubService {
     
         return driverAndVehicle;
     }
+
     
     
     //Driver Login
@@ -540,6 +539,10 @@ public class HubService {
 
      //find all vehicle capacity based vehicle number
      public List<String> vehicleCapacityBasedVehicleNumber(String vehicleNumber){
+        List<String> vehicles = vehicleRepository.vehicleCapacityBasedVehicleNumber(vehicleNumber);
+        // for(String v : vehicles){
+            
+        // }
         return vehicleRepository.vehicleCapacityBasedVehicleNumber(vehicleNumber);
     }
 
@@ -578,6 +581,10 @@ public class HubService {
         }else{
             throw new ResourceNotFoundException("Driver Phone Number already exist");
         }  
+    }
+
+    public void setEnvironment(org.eclipse.jetty.util.component.Environment env2) {
+        this.env = env;
     }
     
 }

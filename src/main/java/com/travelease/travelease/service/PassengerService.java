@@ -57,6 +57,7 @@ public class PassengerService {
     //get passenger based on company
     public List<passenger> getCompanyBasedPassenger(String companyname) {
         List<passenger> passengers=passengerRepository.findByCompanyId(companyRepository.findByComapnyName(companyname).getCompanyId());
+        // List<Map<String, Object>> passengerwithroute = new ArrayList<>();
         return passengers;
     }
 
@@ -235,7 +236,7 @@ public class PassengerService {
     }
 
     public int getRouteBasedPassengerCount(String routeid) throws Exception{
-        int c = routeRepository.findByRouteIdCount(routeid);
+        int c = passengerRepository.findByRouteIdPassengerCount(routeRepository.findByRouteId(routeid).getId());
         return c;
         
     }
