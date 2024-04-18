@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,17 +32,8 @@ public class Admin {
         
     @Id
     @JsonView(PublicView.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "adminIdGenerator")
-    @GenericGenerator(
-            name = "adminIdGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "admin_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1"),
-                    @Parameter(name = "allocationSize", value = "1") 
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admin_seq")
+    @SequenceGenerator(name = "admin_seq", sequenceName = "admin_sequence", allocationSize = 1)
     @Column(name = "AdminId")
     private Long AdminId;
     @JsonView(PublicView.class)

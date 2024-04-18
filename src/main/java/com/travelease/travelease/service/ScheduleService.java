@@ -71,8 +71,8 @@ public class ScheduleService {
         List<Map<String, Object>> showSchedulesList = new ArrayList<>();
         List<Schedule> schedules=scheduleRepository.findAll();
         for(Schedule schedule : schedules){
-            System.out.println(schedule.getRouteId().getCompanyId().getCompanyName());
-            // if(schedule.getRouteId().getCompanyId().getCompanyName()==companyname){
+            System.out.println(schedule.getRouteId().getCompanyId().getCompanyName()+"   ****************************************** "+companyname);
+            if((schedule.getRouteId().getCompanyId().getCompanyName().equals(companyname))){
                 Map<String, Object> showSchedulesMap = new HashMap<>();
                 showSchedulesMap.put("schedule_id", schedule.getScheduleId());
                 showSchedulesMap.put("schedule_date", schedule.getScheduleDate());
@@ -87,16 +87,16 @@ public class ScheduleService {
                 showSchedulesMap.put("remarks", schedule.getRemarks());
                 showSchedulesMap.put("passenger_count",routeRepository.findByRouteIdCount(schedule.getRouteId().getRouteId()));
                 showSchedulesList.add(showSchedulesMap);
-            // }
+            }else{
+                throw new ResourceNotFoundException("This company don't have any schedules");
+            }
         }
-
         return showSchedulesList;
     }
     
 
     //Update schedule
     public String updateSchedule(Map<String,Object> companyDetails){
-
         Schedule schedule = scheduleRepository.checkById((Long)companyDetails.get("schedule_id"));
         if(schedule != null){
             System.out.println(schedule + " worked");
@@ -106,8 +106,6 @@ public class ScheduleService {
         }else{
             throw new ResourceNotFoundException("schdele Id incorrect");
         }
-
-        
     }
 
     public String DeleteSchedule(Map<String,Object> companyDetails){

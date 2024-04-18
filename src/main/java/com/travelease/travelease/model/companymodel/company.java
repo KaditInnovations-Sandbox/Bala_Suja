@@ -15,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,17 +31,8 @@ public class company {
     public interface PublicView {}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "companyIdGenerator")
-    @GenericGenerator(
-            name = "companyIdGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "company_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1"),
-                    @Parameter(name = "allocationSize", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
+    @SequenceGenerator(name = "company_seq", sequenceName = "company_sequence", allocationSize = 1)
     @Column(name = "companyid")
     @JsonView(PublicView.class)
     private long companyId;

@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,17 +31,8 @@ public class Driver {
 
     @Id
     @JsonView(PublicView.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "driverIdGenerator")
-    @GenericGenerator(
-            name = "driverIdGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "driver_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1"),
-                    @Parameter(name = "allocationSize", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_seq")
+    @SequenceGenerator(name = "driver_seq", sequenceName = "driver_sequence", allocationSize = 1)
     @Column(name = "Driver_id")
     private Long DriverId;
 

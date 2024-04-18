@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,17 +28,8 @@ public class Vehicle {
     public interface PrivateView extends PublicView {}
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "vehicleIdGenerator")
-    @GenericGenerator(
-            name = "vehicleIdGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "vehicle_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1"),
-                    @Parameter(name = "allocationSize", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq")
+    @SequenceGenerator(name = "vehicle_seq", sequenceName = "vehicle_sequence", allocationSize = 1)
     @JsonView(PublicView.class)
     @Column(name = "vehicle_id")
     private Long vehicleId;

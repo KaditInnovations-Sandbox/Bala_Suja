@@ -47,7 +47,7 @@ public class AdminController {
 	// get admin by email 
 	@JsonView(Admin.PublicView.class)
 	@GetMapping("/AdminByEmail")
-	public ResponseEntity<Object> getAdminById(@RequestBody String email) {
+	public ResponseEntity<Object> getAdminById(@RequestParam("email") String email) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(adminService.getAdminByEmail(email));
 	}
     
@@ -61,7 +61,7 @@ public class AdminController {
 	@PutMapping("/Admin")
 	public ResponseEntity<String> updateAdmin(@RequestBody Admin admindetails) throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(admindetails));
-	}
+	} 
 
     // delete admin
 	@DeleteMapping("/Admin")
