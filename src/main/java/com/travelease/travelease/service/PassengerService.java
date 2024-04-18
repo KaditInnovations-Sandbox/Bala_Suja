@@ -91,18 +91,18 @@ public class PassengerService {
 
     //update passenger
     public String updatePassenger(Map<String,Object> passengerDetails)throws Exception{
-        passenger passenger=passengerRepository.checkById((Long)passengerDetails.get("passenger_id"));
-        if(passengerRepository.findById((Long)passengerDetails.get("passenger_id")).isPresent() && passenger.getPassengerIsActive()){
+        passenger passenger=passengerRepository.checkById(Long.valueOf((Integer) passengerDetails.get("passenger_id")));
+        if(passenger!=null && passenger.getPassengerIsActive()){
            passenger.setPassengerName((String)passengerDetails.get("passenger_name"));
            passenger.setPassengerEmail((String)passengerDetails.get("passenger_email"));
-           passenger.setPassengerPhone(new BigInteger((String) passengerDetails.get("passenger_phone")));
+           passenger.setPassengerPhone(BigInteger.valueOf((Long) passengerDetails.get("passenger_phone")));
            passenger.setPassengerLocation((String)passengerDetails.get("passenger_location"));
            passenger.setRouteId(routeRepository.findByRouteId((String)passengerDetails.get("route_id")));
            passenger.setLastUpdatedTime(LocalDateTime.now());
            passengerRepository.save(passenger);
            return "updated";
         }else{
-            throw new Exception();
+            throw new ResourceNotFoundException("Passenger not found");
         }
     }
 
